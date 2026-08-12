@@ -1,9 +1,3 @@
-"""Build and save a simple FAISS index for SmartWaste-AI embeddings.
-
-This is Phase 5 of the RAG pipeline. It stores vectors for later semantic
-search, but it does not implement user-query retrieval or GPT generation yet.
-"""
-
 from __future__ import annotations
 
 import json

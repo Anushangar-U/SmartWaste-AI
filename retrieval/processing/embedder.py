@@ -1,10 +1,3 @@
-"""Create in-memory text embeddings for SmartWaste-AI chunk records.
-
-This is Phase 4 of the RAG pipeline. It receives chunks created by
-``retrieval.processing.chunker`` and adds one Sentence Transformers embedding
-to each chunk. It does not save vectors or build a vector index.
-"""
-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Sequence, TypedDict

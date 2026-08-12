@@ -1,10 +1,3 @@
-"""Split ingested PDF pages into smaller text chunks.
-
-This module is Phase 3 of the SmartWaste-AI RAG pipeline. It only prepares
-text chunks and metadata for later retrieval work; it does not create
-embeddings, vector indexes, or GPT responses.
-"""
-
 from __future__ import annotations
 
 import re

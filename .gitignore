@@ -34,7 +34,8 @@ dist/
 Thumbs.db
 
 # Local vector stores and FAISS indexes
-retrieval/vector_store/
+retrieval/vector_store/data/*
+!retrieval/vector_store/data/.gitkeep
 retrieval/faiss_index/
 *.faiss
 *.index

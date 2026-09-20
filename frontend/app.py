@@ -78,6 +78,8 @@ if "auth_username" not in st.session_state:
     st.session_state["auth_username"] = None
 if "view_mode" not in st.session_state:
     st.session_state["view_mode"] = "citizen"  # or "staff"
+if "complaint_text" not in st.session_state:
+    st.session_state["complaint_text"] = ""
 
 # ---------- Styling ----------
 st.markdown(
@@ -182,13 +184,14 @@ if st.session_state["view_mode"] == "citizen":
         for label, text in EXAMPLE_COMPLAINTS.items():
             if st.button(label, use_container_width=True, key=f"ex_{label}"):
                 st.session_state["complaint_text"] = text
+                st.rerun()
 
     with left:
         with st.form("complaint_form"):
             location = st.selectbox("Location type", LOCATION_OPTIONS)
             complaint_text = st.text_area(
                 "Describe the waste issue",
-                value=st.session_state.get("complaint_text", ""),
+                key="complaint_text",
                 placeholder=(
                     "e.g. There has been a pile of mixed organic and plastic "
                     "waste behind the school for about 5 days now."
@@ -198,15 +201,17 @@ if st.session_state["view_mode"] == "citizen":
             submitted = st.form_submit_button("🚀 Submit complaint", use_container_width=True)
 
         if submitted:
-            if not complaint_text.strip():
+            submitted_complaint = complaint_text.strip()
+            if not submitted_complaint:
                 st.warning("Please describe the issue before submitting.")
             else:
+                request_payload = {"text": submitted_complaint}
                 with st.spinner("Analyzing complaint, retrieving evidence, and generating a recommendation..."):
                     try:
                         resp = requests.post(
                             f"{BACKEND_URL}/complaints/process",
-                            json={"text": complaint_text},
-                            timeout=60,
+                            json=request_payload,
+                            timeout=180,
                         )
                         resp.raise_for_status()
                         payload = resp.json()
@@ -230,7 +235,7 @@ if st.session_state["view_mode"] == "citizen":
                     st.session_state["complaints"].append(
                         {
                             "id": tracking_id,
-                            "text": complaint_text,
+                            "text": submitted_complaint,
                             "location": location,
                             "submitted_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
                             **result,

@@ -40,3 +40,10 @@ retrieval/faiss_index/
 *.faiss
 *.index
 *.pkl
+.env
+venv/
+logs/
+__pycache__/
+git add .gitignore
+git commit -m "chore: stop tracking logs, update gitignore"
+git push origin feature/gowsikan

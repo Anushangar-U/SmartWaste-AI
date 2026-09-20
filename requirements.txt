@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic>=2
+pydantic-settings
+python-multipart
+bcrypt
+PyJWT
+google-genai
+openai
+groq>=0.11.0
+python-dotenv>=1.0.1
+streamlit>=1.38.0
+requests>=2.32.0
+PyMuPDF
+sentence-transformers
+faiss-cpu
+numpy

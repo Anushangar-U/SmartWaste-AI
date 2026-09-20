@@ -1,65 +1,77 @@
-SmartWaste-AI
+# SmartWaste-AI
 
-SmartWaste-AI is a university project for IT3041 Information Retrieval and Web Analytics. It will be developed as a multi-agent AI system that supports waste-management decisions through information retrieval and specialized AI agents.
+SmartWaste-AI is a three-agent decision-support system for waste complaints:
 
-This repository currently contains the initial project foundation only. AI workflows, APIs, retrieval pipelines, and user-interface functionality will be added in later stages.
+1. Agent 1 uses Gemini to convert a complaint into structured waste analysis.
+2. Agent 2 retrieves evidence from the local FAISS knowledge base and uses OpenRouter to produce a grounded summary.
+3. Agent 3 uses Groq to recommend a priority and action, followed by deterministic safety validation.
 
-Member 4 — Decision Agent, UI, Responsible AI
-What's here
-agents/decision/
-├── __init__.py
-├── prompts.py    # system prompt + JSON contract for Agent 3
-├── agent.py      # decide(analysis, evidence) -> validated decision dict (uses Groq)
-└── rules.py      # deterministic Responsible-AI / validation checks
+The FastAPI backend orchestrates the agents. The Streamlit frontend provides a public complaint form and an authenticated staff review view. AI recommendations are decision support only; high-risk, critical, uncertain, and low-confidence cases require authorized human review.
 
-frontend/
-└── app.py        # Streamlit UI — citizen complaint form + hidden staff dashboard
+## Setup
 
-tests/
-└── test_rules_no_api.py   # tests rules.py with fake data, no API key/cost needed
+Create a local `.env` from `.env.example` and replace every placeholder locally. Never commit `.env` or real credentials.
 
-requirements-member4.txt
-.env.example (GROQ_API_KEY, GROQ_MODEL, BACKEND_URL)
-Agent 3 runs on Groq, not Claude
+Install dependencies:
 
-The original plan named Claude for Agent 3, but this project uses Groq's free API (model: llama-3.3-70b-versatile) instead, to avoid a paid dependency. The decide(analysis, evidence) function signature and output shape are unchanged, so this doesn't affect how the backend calls it — just worth mentioning in the viva if it comes up.
+```bash
+python -m pip install -r requirements.txt
+```
 
-Get a free key at https://console.groq.com/keys and put it in .env as GROQ_API_KEY. Never commit .env — only .env.example.
+For a no-API demo, set `USE_MOCK_AGENTS=true`. For the real three-agent pipeline, set it to `false` and configure the Gemini, OpenRouter, and Groq keys.
 
-The frontend has two modes
-Citizen view (default): the complaint form everyone sees.
-Staff view: reached only via the small 🔒 icon in the top-right corner — shows a login form, then a priority-sorted complaints queue. Deliberately not a visible tab, so it doesn't compete with the public form.
-Backend contract needed for staff login (for Member 3)
-POST /auth/login
-body: {"username": "...", "password": "..."}
-success (200): {"access_token": "..."}   (or {"token": "..."})
-failure: any non-2xx status
+## Rebuild the FAISS knowledge base
 
-The frontend doesn't yet attach the token to any other request, since the complaints queue is still stored in Streamlit's own session memory (no shared database wired up yet). Once a real GET /complaints / PATCH /complaints/{id} endpoint exists, those calls should send headers={"Authorization": f"Bearer {token}"}.
+Generated FAISS files are intentionally ignored by Git. Build `retrieval/vector_store/data/smartwaste.faiss` and `retrieval/vector_store/data/metadata.json` from the committed PDFs with:
 
-Running it yourself
-bash
-pip install -r requirements-member4.txt
+```bash
+python -m retrieval.vector_store.faiss_store
+```
+
+The command runs PDF ingestion, chunking, MiniLM embedding, FAISS indexing, persistence, and validation.
+
+## Run
+
+Start the backend:
+
+```bash
+python -m uvicorn backend.main:app --reload
+```
+
+Start the frontend in another terminal:
+
+```bash
 python -m streamlit run frontend/app.py
+```
 
-The UI expects a backend at POST {BACKEND_URL}/complaints and POST {BACKEND_URL}/auth/login (see contract above) — point BACKEND_URL in .env at wherever the real backend ends up running.
+Public complaints are submitted to `POST /complaints/process` without authentication. Authentication is required for staff access and for the individual `/agents/*` debugging endpoints.
 
-Testing the Responsible AI rules without any API key
-bash
+## Response contract
+
+The complaint endpoint returns:
+
+```text
+request_id
+analysis
+retrieval
+  query, answer, grounded
+  sources[]: source, page
+  evidence[]: chunk_id, source, page, text, score
+decision
+  priority, recommended_action, explanation
+  supporting_sources, requires_human_review, confidence, validation
+validation
+  passed, warnings
+disclaimer
+```
+
+## Tests
+
+Run deterministic tests without external API calls:
+
+```bash
 python tests/test_rules_no_api.py
+python -m unittest tests.test_integration -v
+```
 
-Confirms priority validation, fabricated-citation stripping, and the human-review triggers (low confidence, missing evidence, hazardous keywords) all work — no cost, no key needed, and unaffected by whether GROQ_API_KEY is real or a placeholder.
-
-Contract relied on from Agents 1 & 2
-
-decide(analysis, evidence) expects:
-
-analysis: dict (waste_types, location, duration_days, severity, issue_type, summary)
-evidence: list of {"source": str, "snippet": str}
-
-Flag this with Members 1–3 early so field names don't drift.
-
-Still to build
-Wire decide() into the real /agents/decide endpoint once Member 3's backend exists.
-Real JWT auth on the backend to replace the placeholder /auth/login contract.
-Persist complaints in the shared database instead of Streamlit session memory, so the staff dashboard survives a refresh and works across users.
+`tests/test_waste_analyzer.py` is a manual Gemini smoke test and requires a configured Gemini key.

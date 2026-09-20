@@ -63,18 +63,32 @@ requires_human_review, confidence.
 """
 
 
-def build_user_prompt(analysis: dict, evidence: list) -> str:
-    """Builds the user-turn content sent to Claude for a single complaint."""
+def build_user_prompt(
+    analysis: dict,
+    evidence: list,
+    grounded_knowledge: str | None = None,
+) -> str:
+    """Build the user-turn content sent to the decision model."""
     evidence_block = "\n".join(
-        f"- [{item.get('source', 'unknown source')}] {item.get('snippet', '')}"
+        (
+            f"- [{item.get('source', 'unknown source')}, "
+            f"page {item.get('page', 'unknown')}, "
+            f"score {item.get('score', 'unknown')}] "
+            f"{item.get('snippet', item.get('text', ''))}"
+        )
         for item in evidence
     ) or "(no evidence retrieved)"
+
+    knowledge_block = grounded_knowledge or "(no grounded summary available)"
 
     return f"""Complaint analysis (from Agent 1):
 {analysis}
 
 Retrieved evidence (from Agent 2):
 {evidence_block}
+
+Grounded knowledge summary (from Agent 2):
+{knowledge_block}
 
 Produce the JSON decision object now.
 """

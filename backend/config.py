@@ -11,8 +11,10 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:8501,http://localhost:3000,http://127.0.0.1:5500"
 
     gemini_api_key: str = ""
-    openai_api_key: str = ""
-    anthropic_api_key: str = ""
+    openrouter_api_key: str = ""
+    openrouter_model: str = "openai/gpt-oss-20b:free"
+    groq_api_key: str = ""
+    groq_model: str = "llama-3.3-70b-versatile"
 
     admin_username: str = "admin"
     admin_password: str = ""

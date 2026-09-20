@@ -17,8 +17,8 @@ admin/staff entry points (e.g. a small "Staff login" link in a footer).
 CONTRACT FOR MEMBER 3 (backend/auth) — unchanged from before
 =====================================================================
     POST {BACKEND_URL}/auth/login
-    body: {"username": "...", "password": "..."}
-    success (200): {"access_token": "..."} or {"token": "..."}
+    form body: username=...&password=...
+    success (200): {"access_token": "...", "role": "admin"}
     failure: any non-2xx status.
 =====================================================================
 
@@ -204,12 +204,20 @@ if st.session_state["view_mode"] == "citizen":
                 with st.spinner("Analyzing complaint, retrieving evidence, and generating a recommendation..."):
                     try:
                         resp = requests.post(
-                            f"{BACKEND_URL}/complaints",
-                            json={"text": complaint_text, "location_type": location},
+                            f"{BACKEND_URL}/complaints/process",
+                            json={"text": complaint_text},
                             timeout=60,
                         )
                         resp.raise_for_status()
-                        result = resp.json()
+                        payload = resp.json()
+                        decision = payload.get("decision") or {}
+                        result = {
+                            **decision,
+                            "analysis": payload.get("analysis") or {},
+                            "retrieval": payload.get("retrieval") or {},
+                            "pipeline_validation": payload.get("validation") or {},
+                            "disclaimer": payload.get("disclaimer", ""),
+                        }
                     except requests.exceptions.RequestException as exc:
                         st.error(f"Could not reach the backend: {exc}")
                         result = None
@@ -255,11 +263,50 @@ if st.session_state["view_mode"] == "citizen":
                     st.markdown("**Explanation**")
                     st.write(result.get("explanation", "—"))
 
+                    analysis = result.get("analysis") or {}
+                    retrieval = result.get("retrieval") or {}
+                    with st.expander("🔎 Analysis and retrieved knowledge"):
+                        st.markdown("**Waste analysis**")
+                        st.write(
+                            "Waste types: "
+                            + ", ".join(analysis.get("waste_types") or ["unknown"])
+                        )
+                        st.write(f"Location: {analysis.get('location', 'unknown')}")
+                        st.write(
+                            f"Duration: {analysis.get('duration_days', 'unknown')} days"
+                        )
+                        st.write(f"Severity: {analysis.get('severity', 'unknown')}")
+                        st.write(f"Issue type: {analysis.get('issue_type', 'unknown')}")
+                        st.write(f"Summary: {analysis.get('summary', '—')}")
+
+                        st.markdown("**Knowledge retrieval**")
+                        st.write(f"Query: {retrieval.get('query', '—')}")
+                        st.write(retrieval.get("answer", "—"))
+                        st.caption(
+                            "Grounded answer: "
+                            + ("yes" if retrieval.get("grounded") else "no")
+                        )
+
                     sources = result.get("supporting_sources") or []
                     if sources:
                         st.markdown("**Supporting sources**")
-                        for s in sources:
-                            st.markdown(f"- {s}")
+                        retrieved_sources = (
+                            result.get("retrieval", {}).get("sources", [])
+                        )
+                        cited_references = [
+                            item
+                            for item in retrieved_sources
+                            if item.get("source") in sources
+                        ]
+                        if cited_references:
+                            for item in cited_references:
+                                st.markdown(
+                                    f"- {item.get('source')} "
+                                    f"(page {item.get('page', 'unknown')})"
+                                )
+                        else:
+                            for source in sources:
+                                st.markdown(f"- {source}")
 
                     confidence = result.get("confidence")
                     if confidence is not None:
@@ -269,10 +316,15 @@ if st.session_state["view_mode"] == "citizen":
 
                     st.markdown("</div>", unsafe_allow_html=True)
 
-                    validation = result.get("validation")
-                    if validation and not validation.get("passed", True):
+                    agent_validation = result.get("validation") or {}
+                    pipeline_validation = result.get("pipeline_validation") or {}
+                    validation_notes = [
+                        *agent_validation.get("issues", []),
+                        *pipeline_validation.get("warnings", []),
+                    ]
+                    if validation_notes:
                         with st.expander("🔧 Validation notes (for reviewers)"):
-                            for issue in validation.get("issues", []):
+                            for issue in validation_notes:
                                 st.markdown(f"- {issue}")
 
                     st.caption(
@@ -300,16 +352,19 @@ else:
                 try:
                     resp = requests.post(
                         f"{BACKEND_URL}/auth/login",
-                        json={"username": username, "password": password},
+                        data={"username": username, "password": password},
                         timeout=15,
                     )
                     if resp.status_code == 200:
                         data = resp.json()
                         token = data.get("access_token") or data.get("token")
-                        if token:
+                        role = data.get("role")
+                        if token and role in {"admin", "staff"}:
                             st.session_state["auth_token"] = token
                             st.session_state["auth_username"] = username
                             st.rerun()
+                        elif token:
+                            st.error("This account is not authorized for the staff area.")
                         else:
                             st.error(
                                 "Login endpoint returned 200 but no "

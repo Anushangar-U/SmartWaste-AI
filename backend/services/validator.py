@@ -1,25 +1,59 @@
-from backend.schemas import (AnalysisResult, RetrievalResult,
-                             DecisionResult, ValidationReport, Severity)
+from backend.schemas import (
+    AnalysisResult,
+    DecisionResult,
+    Priority,
+    RetrievalResult,
+    Severity,
+    ValidationReport,
+)
 
-def validate(analysis: AnalysisResult,
-             retrieval: RetrievalResult,
-             decision: DecisionResult) -> ValidationReport:
-    warnings = []
+
+LOW_CONFIDENCE_THRESHOLD = 0.6
+
+
+def validate(
+    analysis: AnalysisResult,
+    retrieval: RetrievalResult,
+    decision: DecisionResult,
+) -> ValidationReport:
+    warnings: list[str] = []
 
     if not retrieval.evidence:
-        warnings.append("No supporting evidence retrieved; recommendation is unsupported.")
-        decision.human_review = True
+        warnings.append(
+            "No supporting evidence retrieved; recommendation is unsupported."
+        )
+        decision.requires_human_review = True
 
-    if not decision.recommendation.strip():
+    if not retrieval.grounded:
+        warnings.append(
+            "Agent 2 could not produce a sufficiently grounded knowledge answer."
+        )
+        decision.requires_human_review = True
+
+    if not decision.recommended_action.strip():
         warnings.append("Empty recommendation.")
-        decision.human_review = True
+        decision.requires_human_review = True
 
-    unknown = set(decision.sources) - set(retrieval.sources)
+    retrieved_sources = {item.source for item in retrieval.sources}
+    unknown = set(decision.supporting_sources) - retrieved_sources
     if unknown:
-        warnings.append(f"Recommendation cites sources not retrieved: {sorted(unknown)}")
-        decision.human_review = True
+        warnings.append(
+            f"Recommendation cites sources not retrieved: {sorted(unknown)}"
+        )
+        decision.requires_human_review = True
 
-    if analysis.severity == Severity.high and not decision.human_review:
-        decision.human_review = True   # high-risk cases always need a human
+    if decision.confidence < LOW_CONFIDENCE_THRESHOLD:
+        warnings.append("Low-confidence recommendation requires human review.")
+        decision.requires_human_review = True
 
-    return ValidationReport(passed=len(warnings) == 0, warnings=warnings)
+    if not decision.validation.passed:
+        warnings.extend(
+            f"Agent 3 validation: {issue}"
+            for issue in decision.validation.issues
+        )
+        decision.requires_human_review = True
+
+    if analysis.severity == Severity.high or decision.priority == Priority.critical:
+        decision.requires_human_review = True
+
+    return ValidationReport(passed=not warnings, warnings=warnings)

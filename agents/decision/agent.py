@@ -15,10 +15,13 @@ difference from calling Claude (which takes system as a separate field).
 import json
 import os
 
+from dotenv import load_dotenv
 from groq import Groq
 
 from .prompts import SYSTEM_PROMPT, build_user_prompt
 from .rules import validate_decision
+
+load_dotenv()
 
 # Default model can be overridden via env var without touching code.
 # llama-3.3-70b-versatile is Groq's recommended general-purpose chat model.
@@ -56,7 +59,11 @@ def _extract_json(text: str) -> dict:
     return json.loads(text[start : end + 1])
 
 
-def decide(analysis: dict, evidence: list) -> dict:
+def decide(
+    analysis: dict,
+    evidence: list,
+    grounded_knowledge: str | None = None,
+) -> dict:
     """
     Calls Groq to produce a decision, then runs it through the
     Responsible-AI validation layer before returning it.
@@ -74,7 +81,14 @@ def decide(analysis: dict, evidence: list) -> dict:
         temperature=0.2,
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": build_user_prompt(analysis, evidence)},
+            {
+                "role": "user",
+                "content": build_user_prompt(
+                    analysis,
+                    evidence,
+                    grounded_knowledge=grounded_knowledge,
+                ),
+            },
         ],
     )
 

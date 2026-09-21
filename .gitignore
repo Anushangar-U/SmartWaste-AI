@@ -40,3 +40,4 @@ retrieval/faiss_index/
 *.faiss
 *.index
 *.pkl
+.local_complaints_store.json

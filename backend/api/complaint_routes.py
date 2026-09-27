@@ -51,8 +51,10 @@ def track(tracking_id: str):
 
 @router.get("/staff/complaints")
 def listing(status: cases.Status | None = None, search: str | None = Query(default=None, max_length=120),
-            limit: int = Query(default=100, ge=1, le=500), offset: int = Query(default=0, ge=0), user=Depends(staff)):
-    return repo.list_cases(status.value if status else None, search, limit, offset)
+            limit: int = Query(default=100, ge=1, le=500), offset: int = Query(default=0, ge=0),
+            priority: Priority | None = None, review_needed: bool | None = None, user=Depends(staff)):
+    return repo.list_cases(status.value if status else None, search, limit, offset,
+        priority.value if priority else None, review_needed)
 
 
 @router.get("/staff/complaints/{identity}")

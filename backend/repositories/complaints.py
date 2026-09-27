@@ -73,7 +73,7 @@ def events(identity):
         return [dict(r) for r in db.execute("SELECT * FROM complaint_events WHERE complaint_id=? ORDER BY id", (identity,))]
 
 
-def list_cases(status=None, search=None, limit=100, offset=0):
+def list_cases(status=None, search=None, limit=100, offset=0, priority=None, review_needed=None):
     clauses, params = [], []
     if status:
         clauses.append("status=?")
@@ -81,6 +81,12 @@ def list_cases(status=None, search=None, limit=100, offset=0):
     if search:
         clauses.append("(text LIKE ? OR tracking_id LIKE ? OR location_context LIKE ?)")
         params.extend(["%" + search + "%"] * 3)
+    if priority:
+        clauses.append("COALESCE(human_priority, json_extract(decision,'$.priority'))=?")
+        params.append(priority)
+    if review_needed is not None:
+        clauses.append("requires_human_review=?")
+        params.append(int(review_needed))
     sql = "SELECT * FROM complaints" + (" WHERE " + " AND ".join(clauses) if clauses else "")
     with connection() as db:
         return [decode(r) for r in db.execute(sql + " ORDER BY submitted_at DESC LIMIT ? OFFSET ?", [*params, limit, offset])]

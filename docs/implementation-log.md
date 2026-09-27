@@ -24,3 +24,10 @@ on every protected request: disabled/deleted users are rejected and current role
 Registration always creates normal users. Staff/admin share case operations; agent debug
 routes stay admin-only. Lifespan initialization permits fully isolated test databases.
 Verification: 7 auth/workflow tests passed, including two independent ASGI clients.
+
+## Phase 3
+Streamlit submits persisted cases, retains an idempotency key on retries, looks up safe
+tracking history and reads the shared staff queue. Filters, pagination, details,
+approve/override, assignment, resolution and retry are connected. Citizen responses omit
+private details; dynamic complaint/evidence text uses plain rendering.
+Verification: 6 frontend/auth tests passed. AppTest path resolution was corrected before committing.

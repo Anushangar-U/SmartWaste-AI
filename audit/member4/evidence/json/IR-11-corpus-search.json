@@ -1,0 +1,633 @@
+{
+  "executed_at": "2026-09-27T16:07:08.274659+00:00",
+  "method": "Search all extractable PDF pages; matches are candidate passages, not legal conclusions.",
+  "documents": [
+    {
+      "source": "beyond_age_of_waste.pdf",
+      "page_count": 116,
+      "hits": [
+        {
+          "page": 55,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "ions of\nfood waste since disease-spreading house flies lay eggs on\nfood waste that can hatch within 24 hours. Most residents\nwill not want to store kitchen waste in the home for any\nlength of time, meaning food waste collections need to\ntake place more frequ",
+              "ions of food waste\nsince disease-spreading house\nflies lay eggs on food waste that\ncan hatch within 24 hours.\nSome of the technical barriers to waste reduction and\nimproving waste management are universal, while others\nare context-specific.\nUniversal barrier"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 57,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              " - Global Waste Management Outlook 2024\nDespite extensive studies and online content regarding\nthe concept of a circular economy, implementation of\ncircular economy models is limited (Rizos and Br"
+            ]
+          }
+        },
+        {
+          "page": 62,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "e internet is far from equal. Yet due to its ubiquity\nin modern life, online access could now be considered a\nhuman right (Reglitz 2023). For example, there is a distinct\ngender gap in access to m"
+            ]
+          }
+        },
+        {
+          "page": 63,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              " The objective of this initiative is to design and\ndevelop a regional online system for data management\nand dissemination on solid waste management in Latin\nAmerica and the Caribbean, as well as t"
+            ]
+          }
+        },
+        {
+          "page": 81,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "2023). Endocrine disruptors and infertility.\nReproductive BioMedicine Online 47, Supplement, 103443.\nhttps://doi.org/10.1016/j.rbmo.2023.103443.\nAccessed 26 January 2024.\nAlao, J.O. (2023). Impact"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": "safe_healthcare_waste.pdf",
+      "page_count": 200,
+      "hits": [
+        {
+          "page": 9,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "conomic Activities\nIVM\nintegrated vector management\nMOOC\nmassive open online course\nNBSAP\nNational Biodiversity Strategies and Action Plan\nNCA\nnational competent authority\nNCD\nnoncommunicable dise"
+            ]
+          }
+        },
+        {
+          "page": 13,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "alth (see Annex).\nThis compendium will be available in both print and online versions. References in the former will be located at\nthe end of the document, while references in the latter will be i"
+            ]
+          }
+        },
+        {
+          "page": 37,
+          "matches": {
+            "complaint": [
+              "complaint hotline or similar system (67).\nHealth\nNational;\ncommunity\nAssessment and\nsurveillance;\ninformation,\neducation and\ncommunication"
+            ],
+            "deadline": [],
+            "hours": [],
+            "online": []
+          }
+        },
+        {
+          "page": 56,
+          "matches": {
+            "complaint": [
+              "complaints; if necessary,\nupdate the risk assessment.\nMore information is provided in the Guidelines on recreational water\nquality. Volume 1: coastal and fresh waters (33).\n3. Conduct ongoin"
+            ],
+            "deadline": [],
+            "hours": [],
+            "online": []
+          }
+        },
+        {
+          "page": 71,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "d Bank 2020: Solid Waste Management (MOOC) (1)\nThis is a massive open online course (MOOC) on solid waste management.\nWorld Bank 2020: Solid Waste Management Knowledge Silo Breaker (KSB) (13)\nThis",
+              " providers. Children’s health and the environment (4)\nEIT Climate-KIC Online course “The E-Waste Challenge MOOC” (18)\nReferences\n1.\nSolid Waste Management (MOOC). Open learning campus. Washington:"
+            ]
+          }
+        },
+        {
+          "page": 72,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "tps://www.climate-kic.org/news/eit-\nclimate-kic-launches-massive-open-online-e-waste-course/, accessed 7 October 2020)."
+            ]
+          }
+        },
+        {
+          "page": 150,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "oughly.\nKeep food at safe temperatures\n•\nDo not leave cooked food at room temperature for more than\n2 hours.\n•\nRefrigerate promptly all cooked and perishable food\n(preferably below 5°C).\n•\nKeep cooked food piping hot (more than 60°C) prior to\nserving.\n•\nDo "
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 158,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "od and Agriculture Organization; 2020 (http://www.fao.org/3/\nca9692en/online/ca9692en.html, accessed 8 June 2021).\n7.\nHealthy diet. Key facts. Geneva: World Health Organization; 2020 (https://www."
+            ]
+          }
+        },
+        {
+          "page": 168,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "reading.\nFAO 2020: City region food systems programme (10)\nA suite of online guidance, tools and information that offers concrete policy and programme opportunities\nthrough which rural and urban a"
+            ]
+          }
+        },
+        {
+          "page": 196,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [],
+            "online": [
+              "rmation in this Annex is part of WHO's\nHealth Advice, an upcoming WHO online resource for the public. The resource provides advice for people’s\nhealth and wellbeing at all ages. It also has advice"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source": "sri_lanka_plastic_action_plan.pdf",
+      "page_count": 60,
+      "hits": []
+    },
+    {
+      "source": "sri_lanka_waste_policy.pdf",
+      "page_count": 50,
+      "hits": [
+        {
+          "page": 45,
+          "matches": {
+            "complaint": [
+              "complain\nagainst violations including disposal of plastic\nor other waste, problems of operations of\nproduction factories\n1.4.4 Key Regulations relevant to Management to\nPlastics\n1.4.4.1 Fo"
+            ],
+            "deadline": [],
+            "hours": [],
+            "online": []
+          }
+        }
+      ]
+    },
+    {
+      "source": "who_un_environment_guidance.pdf",
+      "page_count": 329,
+      "hits": [
+        {
+          "page": 25,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "red\ncytostatic drugs or of their metabolites, and which should be considered genotoxic for at least 48 hours and\nsometimes up to 1 week after drug administration.\nIn specialized oncological hospitals, genotoxic waste (containing cytostatic or radioactive sub"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 54,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "& Hart, 1987). It is\nalso resistant to brief exposure to boiling water and remains viable for up to 10 hours at a temperature of 60 °C. It\ncan survive exposure to some antiseptics and to 70% ethanol.\nBy contrast, HIV is much less resistant. It survives for n"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 66,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "y in suitable containers, and is stored\nin suitable sites not exceeding the recommended duration of 48 hours or less. This may be adjusted by taking\ninto consideration the local climatic conditions. Wastes transported off the site must be in containers that "
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 110,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "p between generation and treatment) should\nnot exceed the following periods:\n• temperate climate\n--\n72 hours in winter\n--\n48 hours in summer\n• warm climate\n--\n48 hours during the cool season\n--\n24 hours during the hot season.\nPathological waste storage\nPatho"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 121,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "ge times before treatment or disposal of infectious waste are not longer than\n--\ntemperate climate: 72 hours in winter and 48 hours in summer\n--\nwarm climate: 48 hours during the cooler season and 24 hours during the hot season.\n• Staff receive instruction o"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 130,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "using biological indicators should be performed at periodic intervals\n(typically, every week, every 40 hours of use, or once a month, depending on usage). As an added check, colour-\nchanging chemical indicators, such as strips that contain thermochromic agen"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 138,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              " chamber includes a fuel burner, used to start\nthe process. Waste residence time can vary from 1 to 4 hours, depending on the size of the installation. The gases\nproduced in the primary chamber are burned at high temperature (ranging from 1100 to 1600 °C) i"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 142,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "ny 24-hour period must meet this value.\nThe sampling period for dioxins/furans must be a minimum of 6 hours and a maximum of 8 hours under the EU directive.\nAP 42 (EPA, 1996) are emission estimates for incinerators without air pollution equipment and are sh"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 158,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "3). Updated opinion and report on a treatment of animal\nwaste by means of high temperature (150 °C, 3 hours) and high pressure alkaline hydrolysis. Brussels, Scientific\nSteering Committee, European Commission, Health & Consumer Protection Directorate-Genera"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 179,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "solids is directly\ndependent upon the retention time within the tank, which should be not less than 24 hours. Anaerobic bacteria\npartly break down this solid matter.\nNote that excessive build-up of sludge and scum reduces the capacity of the detention zone, "
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 208,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              " of PEP.\n• PEP should be initiated as soon as possible within the first few hours and no later than 72 hours after exposure\nto potentially infected blood or body fluids.\n• PEP should not be prescribed to a person already known to be infected with HIV.\n• In a"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 269,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "on\nModule 1: Health and environmental impacts of infectious and other hazardous health-care\nwaste\n2.5 hours\nModule 2: International and national health-care waste-management legislation and laws\n2 hours\nModule 3: Health-care waste-management planning and gu",
+              "iding principles\n2.5 hours\nModule 4: Worker health and safety and contingency planning\n2.5 hours\nModule 5: Health-care waste-management review walkthrough\n4 hoursa\nModule 6a: Specific waste – infectious waste management\n2.5 hours\nModule 6b: Speci",
+              "fic waste – chemical waste management\n2 hours\nModule 6a: Specific waste – wastewater management\n1.5 hours\nModule 7a: Health-care waste-management system – classification and segregation\n2 hours\nModule 7b: Health-care waste-management system – handling and",
+              " storage\n2 hours\nModule 7c: Health-care waste-management system – onsite transport\n1.5 hours\nModule 8: Institutionalizing a health-care waste-management programme – organization,\ntraining, budget and quality control\n4 hours\nModule 9: Models o",
+              "f health-care waste management around the world\n1 hour\nMini presentations\n2 hoursb\nEvaluation\n1 hour\nTotal\n33 hours\nPlease note: all modules include time for group activity and debriefing.\na The walkthrough includes time to instruct the group about t"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 270,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              " Health and environmental impacts of infectious and other hazardous health-care waste\n• Duration: 2.5 hours\n• Methodology:\n--\nLecture/discussion\n--\nSmall-group activity\n• Training aids:\n--\nProjector\n--\nPowerPoint presentation\n--\nFlip chart and marker pens a"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 272,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              " mg, dissolved in 3 mol/litre sulfuric acid, 10 ml, is destroyed by potassium\npermanganate, 1 g, in 2 hours.\nA3"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 273,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "te: To avoid frothing, add the potassium permanganate in small increments.\n3.1.3 Allow to react for 2 hours with stirring.\n3.1.4 Neutralize with 8 g/100 ml sodium hydroxide solution, and discard.\n3.2 Aqueous solutions\n3.2.1 Estimate the amount of drug to be"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 274,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              " Immerse in a freshly prepared solution of potassium permanganate/sulfuric acid. Allow to react for 2 hours.\n3.4.2 Clean the glass by immersion in a solution of ascorbic acid or sodium bisulfite.\n3.5 Spills of solid compounds\n3.5.1 Isolate the area, and put",
+              " contaminated area. If the purple\ncolour fades, add more potassium permanganate. Allow to react for 2 hours.\n3.5.3 Decolorize the surface with a solution of ascorbic acid or sodium bisulfite.\n3.5.4 Neutralize by addition of solid sodium carbonate.\n3.5.5 Rem"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 275,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "mpound\nDissolve in 3 mol/litre\nH2SO4 to 3 mg/ml\nAdd 1 g KMnO4 per\n10 ml solution\nAllow to react for\n2 hours\nCheck for completeness of\ndegradation if desired\nAdd ascorbic acid if\nrequired\nNeutralize and discard\nAqueous solution\nDilute to 3 mg/ml\nMake 3 mol/l",
+              "ject-\nable pharmaceutical\npreparation\nGlassware\nImmerse in KMnO4/\nH2SO4 solution\nAllow to react for\n2 hours\nClean glass by immersion\nin ascorbic acid or sodium\nbisulﬁ te solution\nDiscard solution\nFigure A3.1\nSchematic representation of procedure for destruc"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 276,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "d, dissolved in 3 mol/litre sulfuric acid,\n10 ml, is destroyed by potassium permanganate, 0.5 g, in 1 hour.\nNote: In the case of pharmaceutical preparations of dichloromethotrexate, up to 50 mg can be dissolved in 10 ml of\n3 mol/litre sulfuric acid and can",
+              " To avoid frothing, add the potassium permanganate in small increments.\n3.1.3 Continue stirring for 1 hour.\n3.1.4 Neutralize with 8 g/100 ml sodium hydroxide solution and discard."
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 277,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "re solution.\n3.3.3 Add 1 g potassium permanganate for each 10 ml solution and continue stirring for 1 hour.\nNote: To avoid frothing, add potassium permanganate in small increments.\n3.4.4 Proceed as in 3.1.4.\n3.4 Glassware\n3.4.1 Immerse in a freshly prepare",
+              "d solution of potassium permanganate/sulfuric acid. Allow to react for 1 hour\nor more.\n3.4.2 Clean the glass by immersion in a solution of ascorbic acid or sodium bisulfite.\n3.5 Spills of solid compounds\n3.5.1 Isolate the area,",
+              "terial in a beaker and cover with potassium permanganate/sulfuric acid solution.\nAllow to react for 1 hour or more. If the purple colour fades, add more potassium permanganate.\n3.5.5 Neutralize by addition of solid sodium carbonate. Discard.\n3.6 Spills of "
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 278,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "d 1 g KMNO4 per 10 ml\nsolution\nAdd 0.5 g KMNO4 per\n10 ml solution\nAllow to react under\nstirring for 1 hour\nCheck for completeness\nof degradation if desired\nAdd ascorbic acid if\nrequired\nNeutralize and discard\nCover absorbent material\nwith KMNO4/H2SO4\nsolut",
+              "orbent material and\nplace in a beaker\nGlassware\nImmerse in KMnO4/\nH2SO4 solution\nAllow to react for\n2 hours\nClean glass by immersion\nin ascorbic acid or sodium\nbisulﬁ te solution\nDiscard solution\nFigure A3.2\nSchematic representation of procedure for destruc"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 283,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "ylformamide, 20 ml, is destroyed by 12 g/100 ml sodium\nhydroxide solution, 10 ml, when refluxed for 4 hours.\n1. Reagents\n• Sodium hydroxide: technical grade\n• Sodium hydroxide solution: ~10 mol/litre (40 g/100 ml), aqueous ~3 mol/litre (12 g/100 ml)\n• Dimet",
+              "ompounds\n3.1.1 For each 100 mg of sample, add 30 ml DMF/sodium hydroxide solution.\n3.1.2 Reflux for 4 hours.\n3.1.3 Dilute with water and discard.\n3.2 Aqueous solutions and pharmaceutical solutions\n3.2.1 Dilute with 40 g/100 ml sodium hydroxide solution to o"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 284,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "thods for cytostatic drugs\nhydroxide solution.\n3.4.5 Repeat steps 3.4.3 and 3.4.4.\n3.4.6 Reflux for 4 hours.\n3.5 Spills of aqueous solutions\n3.5.1 Isolate the area, and put on suitable protective clothing.\n3.5.2 Take up the spill with absorbent material, an",
+              "/litre and\n> 12 g/100 ml NaOH\nAdd 2 ml DMF per\nml solution\nAdd 30 ml DMF/NaOH\nper 100 mg\nReﬂ ux for 4 hours\nDilute\nDiscard\nRinse with 2\nsuccessive portions of\nNaOH solution and\n2 successive portions\nof water\nTreat with DMF/NaOH\nsolution\nTake up twice with a"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 285,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "mide dissolved in 10 ml of 1 mol/litre hydrochloric acid is completely hydrolysed\nwhen refluxed for 1 hour. After addition of 1.5 g sodium thiosulfate to the neutralized reaction mixture, the medium\nis made strongly alkaline with 20 g/100 ml sodium hydroxi",
+              "de solution and the reaction is allowed to proceed for\n1 hour.\n1. Reagents\n• Sodium hydroxide: technical grade\n• Sodium hydroxide solution: 5 mol/litre (20 g/100 ml), aqueous\n• Sodium thiosulfate: technical grad",
+              "pound\n3.1.1 For each 250 mg of sample, add 10 ml of 1 mol/litre hydrochloric acid.\n3.1.2 Reflux for 1 hour. Allow to cool to room temperature.\n3.1.3 Add 20 g/100 ml sodium hydroxide solution until a pH of about 6 is obtained. Allow to cool to room\ntemperat",
+              "ide and make strongly alkaline with 20 g/100 ml\nsodium hydroxide solution.\n3.1.5 Allow to react for 1 hour.\n3.1.6 Dilute with water and discard.\n3.2 Aqueous solutions and injectable pharmaceutical preparations\n3.2.1 Dilute if necessary to obtain a maximum "
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 287,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "eparation\nGlassware\nDilute to 2.5% and add\nHCl to 1 mol/litre\nCover with 1 mol/litre HCl\nReﬂ ux for 1 hour\nDilute\nDiscard\nRinse 4 times with\n1 mol/litre HCl\nWash area 4 times with 1 mol/\nlitre HCl. Absorb and place in\nsame beaker\nCollect solid in beaker\nSp",
+              "6 with\nNaOH solution\nAdd Na2S2O3, then\nmake strongly\nalkaline with\nNaOH solution\nAllow to react for\n1 hour\nFigure A3.6\nSchematic representation of procedure for destruction of cyclophosphamide using acid\nhydrolysis followed by addition of sodium thiosulfat",
+              "n 10 ml of 3 mol/litre sulfuric acid, is completely destroyed by\n0.5 g of potassium permanganate in 2 hours.\n1. Reagents\n• Potassium permanganate: technical grade\n• Sulfuric acid (concentrated): relative density 1.84 (18 mol/litre), technical grade\n• Sulfur"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 288,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "tirrer; add 0.5 g potassium permanganate per 10 ml of solution from 3.1.1.\n3.1.3 Allow to react for 2 hours or more, with stirring.\n3.1.4 Neutralize with 8 g/100 ml sodium hydroxide solution and discard.\n3.2 Aqueous solutions\n3.2.1 Estimate the amount of dr"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 289,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              " Immerse in a freshly prepared solution of potassium permanganate/sulfuric acid. Allow to react for 2 hours\nor more.\n3.4.2 Clean the glass by immersion in a solution of ascorbic acid or sodium bisulfite.\n3.5 Spills of solid compounds\n3.5.1 Isolate the area,",
+              "nts of the beaker from 3.5.3 with potassium permanganate/sulfuric acid solution. Allow to\nreact for 2 hours. If the purple colour fades, add more potassium permanganate.\n3.5.5 Discard.\n3.6 Spills of aqueous solutions or solutions of pharmaceutical preparati"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 290,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "nd\nDilute to 0.1 mg/ml\nwith 3 mol/litre H2SO4\nAdd 0.5 g KMnO4 per\n10 ml solution\nAllow to react for\n2 hours or more\nAqueous solution\nDilute to 1 mg/ml\nwith 3 mol/litre\nH2SO4\nPharmaceutical\npreparation\nCover with KMnO4/\nH2SO4 solution\nSpill of solid\ncompound",
+              "ution\nof a pharmaceutical\npreparation\nGlassware\nImmerse in KMnO4/\nH2SO4 solution\nAllow to react for\n2 hours\nClean glass by immersing\nin ascorbic acid or sodium\nbisulﬁ te solution\nDiscard solution\nDiscard\nTreat spill area with\nwater, absorb and\nplace in beak",
+              "issolved in 20 ml of 3 mol/litre sulfuric acid, is destroyed by 0.13 g\npotassium permanganate in 10–12 hours.\n1. Reagents\n• Potassium permanganate: technical grade\n--\nSulfuric acid (concentrated): relative density 1.84 (about 18 mol/litre); technical grade s"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 292,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "erse in a freshly prepared solution of potassium permanganate/sulfuric acid. Allow to react for 10–\n12 hours.\n3.5.2 Clean the glass by immersion in a solution of ascorbic acid or sodium bisulfite.\n3.6 Spills\n3.6.1 Isolate the area, and put on suitable protec"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 293,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "in, 30 mg, dissolved in 2 mol/litre sulfuric acid, 50 ml, is destroyed by zinc powder, 1.5 g, in 10–12 hours.\n1. Reagents\n• Sulfuric acid (concentrated): relative density 1.84 (about 18 mol/litre); technical grade sulfuric acid (dilute): ~2\nmol/litre and ~4 "
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 295,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "on\nDilute to 0.6 mg/ml with\n2 mol/litre H2SO4\nAdd 3 g Zn powder\nper 100 ml solution\nand stir for\n10–12 hours\nDilute with water\nto < 0.6 mg/ml\nSolid compound\nMake 2 mol/litre\nwith H2SO4\nGlassware\nRinse 4 times\nwith water\nDiscard\nNeutralize\nFigure A3.9\nSchemat"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 297,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "aded by 5 ml of a 0.3 mol/ litre solution of potassium permanganate\nin 3 mol/litre sulfuric acid in 16 hours.\n1. Reagents\n• Potassium permanganate, technical grade\n• Sulfuric acid (concentrated): relative density 1.84 (about 18 mol/litre)\n• Sulfuric acid (di"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 299,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "n ultrasound bath may be used for this\npurpose.)\n4. Allow to react at room temperature for at least 1 hour.\n5. If necessary, check for completeness of degradation."
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 300,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "n ultrasound bath may be used for this\npurpose.)\n4. Allow to react at room temperature for at least 1 hour.\n5. If necessary, check for completeness of degradation.\n6. Dilute with water and discard.\nDegradation by a Fenton reagent\n1. Measure the volume of t",
+              "ring, 10 ml of a 30% hydrogen peroxide solution.\n5. Allow to react at room temperature for at least 1 hour.\n6. If necessary, check for completeness of degradation.\n7. Dilute and discard."
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 305,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "\n+\n–\nAzathioprine\n+\n–?\n–\n+\n–\nBleomycin, 10 mg/\nml\n+\n–\n–\n+/–a\n+/–a\nCarboplatin\n+\n–\n+\n–\nCarmustine:\n• 1 hour\n+\n+\n+\n–/Toxic\n+\n+\n• 4 hours\n+\n–\n+\n–/Toxic\nNot tested\nChlormethine\n(mustine)\n+\n–\n–\n–\nCisplatin\n+\n–\n+\n– (+)b\n+\n–\nCyclophosphamide\n+\n–\n+\n–\n+\n– (+)c\nCyta",
+              "luorouracil\n+\n–\n+\nToxic\n+\n–\nIdarubicin\n+\n–\n–\n+\n–\nIfosfamide\n+\n–\n+\n– (+)c\n+\n–\nLomustine, 5 mg/\nml:\n• 1 hour\n+\n+\n+\nTf\n+g/–\n–g\n• 4 hours\n+\n–\n+\nTf\nNot tested\nLomustine, 1 mg/\nml:\n• 1 hour\n+\n–\n+\nTf\n+\n–\n• 4 hours\n+\n–\n+\nTf\nNot tested\n6-Mercaptopurine\n+\n–\n+\n–\n+\n–\n"
+            ],
+            "online": []
+          }
+        },
+        {
+          "page": 306,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "ual drug was detected;.the sample tested for mutagenicity was >99.5% degraded.\nh A reaction time of 24 hours was found necessary for efficient degradation.\ni Residual concentration after degradation, 0.7%.\nReferences\nAmerican Society of Hospital Pharmacists "
+            ],
+            "online": [
+              "fs/2004-165.pdf)\nPolovich M (2004). Safe handling of hazardous drugs. Online Journal of Issues in Nursing. Vol. 9 No. 3, Manuscript 5.\n(www.nursingworld.org/MainMenuCategories/ANAMarketplace/ANAPe"
+            ]
+          }
+        },
+        {
+          "page": 324,
+          "matches": {
+            "complaint": [],
+            "deadline": [],
+            "hours": [
+              "rocessed in a given time under certain specified\nconditions, usually expressed in terms of mass per 24 hours.\nCharacterization\nThe determination of the physical and chemical and – for radioactive waste – radiological\nproperties of waste, or of other features"
+            ],
+            "online": []
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "executed_at": "2026-09-27T16:00:55.420372+00:00",
+  "mode": "Observers attached to real pipeline; only recorded fields were reached. Agent 1 provider failed before an output or Agent 2 call.",
+  "analysis_input": "Household garbage has not been collected for two days.\nLocation type selected by reporter: Near a school.",
+  "limitation": "OpenRouter HTTP 401, independently recorded in IR-01; public route returned analyst-stage 502."
+}

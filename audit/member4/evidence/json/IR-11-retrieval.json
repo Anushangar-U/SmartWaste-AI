@@ -1,0 +1,140 @@
+{
+  "test_id": "IR-11",
+  "executed_at": "2026-09-27T15:56:48.477448+00:00",
+  "input": "What exact number of hours does Sri Lankan national law require a municipal crew to collect household garbage after a citizen submits an online complaint? Cite the law and clause. If no source gives this exact deadline, say so.",
+  "transport_limit": "Audit-only 60 second request timeout, zero SDK retries. Production source and model unchanged.",
+  "agent1_limitation": {
+    "type": "AuthenticationError",
+    "http_status": 401
+  },
+  "agent1_mode": "audit-authored structured fixture; NOT Agent 1 output",
+  "analysis_fixture": {
+    "waste_types": [
+      "household"
+    ],
+    "location": "Sri Lanka",
+    "duration_days": null,
+    "severity": "medium",
+    "issue_type": "legal collection deadline after online complaint",
+    "summary": "What exact number of hours does Sri Lankan national law require a municipal crew to collect household garbage after a citizen submits an online complaint? Cite the law and clause. If no source gives this exact deadline, say so."
+  },
+  "retrieval_query": "household legal collection deadline after online complaint near Sri Lanka What exact number of hours does Sri Lankan national law require a municipal crew to collect household garbage after a citizen submits an online complaint? Cite the law and clause. If no source gives this exact deadline, say so",
+  "before_filter": [
+    {
+      "chunk_id": "sri_lanka_waste_policy_p45_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 45,
+      "text": "33\nNational Action Plan on Plastic Waste Management 2021–2030\n1. Summary\n1.1 Constitutional provisions\n1.2 Provision in governing legislations of\nLocal Authorities\n1.3 Provision under provincial statues\n1.4 Provisions under acts and regulations\n\n1.1 Constitutional Provisions\n• Article 27 (14) of the Constitution\n“The State shall protect, preserve and\nimprove the environment for the benefit of\nthe community”.\n• Article 28 (F)\n“It is the duty of every person to protect the\nnature and the natural resources of Sri Lanka”.\nThese provisions are implemented through\nthe institutional structure created under the\nlegislations enacted by the parliament.\nFollowing Institutions specifically, are entrusted\nwith the protection of environment in the\ncountry.\n1.2 Local Authorities\n• Municipal Councils ordinance No 16,of\n1947,Chapter 252,sections 129,130,131\nSpecial reference to procedure Act No. 15 of\n1979-Public Nuisances: Section 98\n• Urban Council Ordinance No. 61 of 1947:\nSection 118, 119, and 120",
+      "score": 0.5858837366104126
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p13_c03",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 13,
+      "text": "lack of\nmunicipal capacity for proper waste management\nand irresponsible and improper disposal by\nconsumers have resulted in municipal plastic waste\n(MPW) management becoming a national burden for\nthe country. Sri Lanka’s MPW is mostly present as\nmixed waste in the forms of solid, liquid or airborne\nwaste. In terms of total waste, 10,768 tonnes per\nday (MT/D) is generated and 3,458 MT/D is collected,\nthus only about one third of generated waste is\ncollected, with most of the uncollected waste being\ndumped in the open and surrounding environment\n(JICA, 2016). Further, according to secondary data\nfrom recent studies of Negombo Municipal Council\n(NMC) and Kurunegala Municipal Council, a high\nproportion of MSW is disposed of within generators’\npremises or outside by burning, burying or other\nillegal means (Karunarathna et al., 2019, JICA, 2019).\nThe number of open dumpsites in Sri Lanka is\nestimated to be 349 and of the various types of\nplastic in wide use in the country, over 50% ends up",
+      "score": 0.5750622749328613
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p21_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 21,
+      "text": "Chapter 3 Overview of Plastic Waste Management in Sri Lanka\n9\nNational Action Plan on Plastic Waste Management 2021–2030\n2011\n2012\n2013\n2014\n2015\nYears\n2016\n2017\n2018\n2019\n2020\n22\n29\nAverage collection per year (MT)\n36\n58\n80\n85\n126\n250\n200\n180\nCentral Environmental Authority. In reality, however,\nmore private sector and established recyclers exist\nin Colombo than the registered. During the UNIDO\nproject\non\nsubcontracting\nand\npartnership\nexchange, a comprehensive survey was carried out\non the capacity of in-house and independent\nrecyclers in order to promote sub-contracting, and\nnoted that many successful partnerships had\nemerged during that period.\nFigure 6 shows a very high number of recyclers and\ncollectors are registered in the Colombo and Matara\ndistrict compare to other regions of the country as\nof September 2020. It does not show related figures\nfor in-house recycling carried out by plastic\nmanufacturers. In-house operators could support\nthe recycling of MSW, if suitably",
+      "score": 0.5537070035934448
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p43_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 43,
+      "text": "31\nNational Action Plan on Plastic Waste Management 2021–2030\nReferences\n1. Aidis, R., Khaled, D., (2019). Women’s Economic\nEmpowerment and Equality (WE3) Gender\nAnalysis of Waste Management and Recycling\nSector, USAID. Women’s Economic\nEmpowerment and Equality Technical Assistance\nTask Order under the Advancing the Agenda of\nGender Equality (Advantage) indefinite delivery,\nindefinite quantity (IDIQ) contact.\n2. CEA, (2021). Waste Collectors and Recyclers in\nSri Lanka. <http://www.cea.lk/web/en/component/\ncontent/article/2-uncategorised/1407-waste-\ncollectors-and-recyclers-in-sri-lanka>\n(Accessed April, 2021).\n3. CEIC, (2019). Sri Lanka GDP per Capita. <https://\nwww.ceicdata.com/en/indicator/sri-lanka/\ngdp-per-capita> (Accessed July 2020).\n4. Central Environmental Authority (CEA), (2020).\nNational Solid Waste Management Programme in\nSri Lanka. <https://www.unescap.org/sites/\ndefault/files/6_CEA.pdf> (Accessed February,\n2020).\n5. Coca Cola, (2018). We collect and Recycle PET\nBottles in",
+      "score": 0.5420897006988525
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p20_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 20,
+      "text": "Chapter 3 Overview of Plastic Waste Management in Sri Lanka\n8 National Action Plan on Plastic Waste Management 2021–2030\n0\n10\n20\n30\n40\n50\n60\n70\nColombo\nGampaha\nKalutara\nRatnapura\nKurunegala\nKandy\nHambantota\nBadulla\nPuttalam\nMatale\nMatara\nKegalle\nGalle\nTrincomalee\nPolannaruwa\nVavuniya\nJaffna\nBatticaloa\nMullaitivu\nAmpara\nNuwara Eliya\nNo. of registered collectors/recyclers\nDistricts\nCollector\nCollector and Exporter\nCollector and Recycler\nRecycler\nDistrict boundary\nSource: Esri, DigitalGlobe, GeoEye, Earthstar Geograhics,\nCNES/Airbus DS, USDA, USGS, AeroGRID, IGN,\nand the GIS User Community\nJaffna\nKilinochchi\nMullaitivu\nMannar\nVavuniya\nTrincomalee\nAnuradhapura\nPuttalam\nKurunegala\nMatale\nPolonnaruwa\nBatticaloa\nAmpara\nMoneragala\nBadulla\nKandy\nKegalle\nGampaha\nColombo\nKalutara\nRatnapura\nGalle\nMatara\nHambantota\nNuwara Eliya\n\nrecycling. Total uncollected waste is estimated at\n638.12 MT/D, of which about 8.45 MT/D is directly\ndiscarded to water sources, 139.82 MT/D is self-\ndisposed at",
+      "score": 0.5395678281784058
+    }
+  ],
+  "qualifying_by_threshold": [
+    {
+      "chunk_id": "sri_lanka_waste_policy_p45_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 45,
+      "text": "33\nNational Action Plan on Plastic Waste Management 2021–2030\n1. Summary\n1.1 Constitutional provisions\n1.2 Provision in governing legislations of\nLocal Authorities\n1.3 Provision under provincial statues\n1.4 Provisions under acts and regulations\n\n1.1 Constitutional Provisions\n• Article 27 (14) of the Constitution\n“The State shall protect, preserve and\nimprove the environment for the benefit of\nthe community”.\n• Article 28 (F)\n“It is the duty of every person to protect the\nnature and the natural resources of Sri Lanka”.\nThese provisions are implemented through\nthe institutional structure created under the\nlegislations enacted by the parliament.\nFollowing Institutions specifically, are entrusted\nwith the protection of environment in the\ncountry.\n1.2 Local Authorities\n• Municipal Councils ordinance No 16,of\n1947,Chapter 252,sections 129,130,131\nSpecial reference to procedure Act No. 15 of\n1979-Public Nuisances: Section 98\n• Urban Council Ordinance No. 61 of 1947:\nSection 118, 119, and 120",
+      "score": 0.5858837366104126
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p13_c03",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 13,
+      "text": "lack of\nmunicipal capacity for proper waste management\nand irresponsible and improper disposal by\nconsumers have resulted in municipal plastic waste\n(MPW) management becoming a national burden for\nthe country. Sri Lanka’s MPW is mostly present as\nmixed waste in the forms of solid, liquid or airborne\nwaste. In terms of total waste, 10,768 tonnes per\nday (MT/D) is generated and 3,458 MT/D is collected,\nthus only about one third of generated waste is\ncollected, with most of the uncollected waste being\ndumped in the open and surrounding environment\n(JICA, 2016). Further, according to secondary data\nfrom recent studies of Negombo Municipal Council\n(NMC) and Kurunegala Municipal Council, a high\nproportion of MSW is disposed of within generators’\npremises or outside by burning, burying or other\nillegal means (Karunarathna et al., 2019, JICA, 2019).\nThe number of open dumpsites in Sri Lanka is\nestimated to be 349 and of the various types of\nplastic in wide use in the country, over 50% ends up",
+      "score": 0.5750622749328613
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p21_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 21,
+      "text": "Chapter 3 Overview of Plastic Waste Management in Sri Lanka\n9\nNational Action Plan on Plastic Waste Management 2021–2030\n2011\n2012\n2013\n2014\n2015\nYears\n2016\n2017\n2018\n2019\n2020\n22\n29\nAverage collection per year (MT)\n36\n58\n80\n85\n126\n250\n200\n180\nCentral Environmental Authority. In reality, however,\nmore private sector and established recyclers exist\nin Colombo than the registered. During the UNIDO\nproject\non\nsubcontracting\nand\npartnership\nexchange, a comprehensive survey was carried out\non the capacity of in-house and independent\nrecyclers in order to promote sub-contracting, and\nnoted that many successful partnerships had\nemerged during that period.\nFigure 6 shows a very high number of recyclers and\ncollectors are registered in the Colombo and Matara\ndistrict compare to other regions of the country as\nof September 2020. It does not show related figures\nfor in-house recycling carried out by plastic\nmanufacturers. In-house operators could support\nthe recycling of MSW, if suitably",
+      "score": 0.5537070035934448
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p43_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 43,
+      "text": "31\nNational Action Plan on Plastic Waste Management 2021–2030\nReferences\n1. Aidis, R., Khaled, D., (2019). Women’s Economic\nEmpowerment and Equality (WE3) Gender\nAnalysis of Waste Management and Recycling\nSector, USAID. Women’s Economic\nEmpowerment and Equality Technical Assistance\nTask Order under the Advancing the Agenda of\nGender Equality (Advantage) indefinite delivery,\nindefinite quantity (IDIQ) contact.\n2. CEA, (2021). Waste Collectors and Recyclers in\nSri Lanka. <http://www.cea.lk/web/en/component/\ncontent/article/2-uncategorised/1407-waste-\ncollectors-and-recyclers-in-sri-lanka>\n(Accessed April, 2021).\n3. CEIC, (2019). Sri Lanka GDP per Capita. <https://\nwww.ceicdata.com/en/indicator/sri-lanka/\ngdp-per-capita> (Accessed July 2020).\n4. Central Environmental Authority (CEA), (2020).\nNational Solid Waste Management Programme in\nSri Lanka. <https://www.unescap.org/sites/\ndefault/files/6_CEA.pdf> (Accessed February,\n2020).\n5. Coca Cola, (2018). We collect and Recycle PET\nBottles in",
+      "score": 0.5420897006988525
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p20_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 20,
+      "text": "Chapter 3 Overview of Plastic Waste Management in Sri Lanka\n8 National Action Plan on Plastic Waste Management 2021–2030\n0\n10\n20\n30\n40\n50\n60\n70\nColombo\nGampaha\nKalutara\nRatnapura\nKurunegala\nKandy\nHambantota\nBadulla\nPuttalam\nMatale\nMatara\nKegalle\nGalle\nTrincomalee\nPolannaruwa\nVavuniya\nJaffna\nBatticaloa\nMullaitivu\nAmpara\nNuwara Eliya\nNo. of registered collectors/recyclers\nDistricts\nCollector\nCollector and Exporter\nCollector and Recycler\nRecycler\nDistrict boundary\nSource: Esri, DigitalGlobe, GeoEye, Earthstar Geograhics,\nCNES/Airbus DS, USDA, USGS, AeroGRID, IGN,\nand the GIS User Community\nJaffna\nKilinochchi\nMullaitivu\nMannar\nVavuniya\nTrincomalee\nAnuradhapura\nPuttalam\nKurunegala\nMatale\nPolonnaruwa\nBatticaloa\nAmpara\nMoneragala\nBadulla\nKandy\nKegalle\nGampaha\nColombo\nKalutara\nRatnapura\nGalle\nMatara\nHambantota\nNuwara Eliya\n\nrecycling. Total uncollected waste is estimated at\n638.12 MT/D, of which about 8.45 MT/D is directly\ndiscarded to water sources, 139.82 MT/D is self-\ndisposed at",
+      "score": 0.5395678281784058
+    }
+  ],
+  "threshold": 0.35,
+  "direct_complaint_ranking": [
+    {
+      "chunk_id": "sri_lanka_waste_policy_p13_c03",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 13,
+      "text": "lack of\nmunicipal capacity for proper waste management\nand irresponsible and improper disposal by\nconsumers have resulted in municipal plastic waste\n(MPW) management becoming a national burden for\nthe country. Sri Lanka’s MPW is mostly present as\nmixed waste in the forms of solid, liquid or airborne\nwaste. In terms of total waste, 10,768 tonnes per\nday (MT/D) is generated and 3,458 MT/D is collected,\nthus only about one third of generated waste is\ncollected, with most of the uncollected waste being\ndumped in the open and surrounding environment\n(JICA, 2016). Further, according to secondary data\nfrom recent studies of Negombo Municipal Council\n(NMC) and Kurunegala Municipal Council, a high\nproportion of MSW is disposed of within generators’\npremises or outside by burning, burying or other\nillegal means (Karunarathna et al., 2019, JICA, 2019).\nThe number of open dumpsites in Sri Lanka is\nestimated to be 349 and of the various types of\nplastic in wide use in the country, over 50% ends up",
+      "score": 0.6376528739929199
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p45_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 45,
+      "text": "33\nNational Action Plan on Plastic Waste Management 2021–2030\n1. Summary\n1.1 Constitutional provisions\n1.2 Provision in governing legislations of\nLocal Authorities\n1.3 Provision under provincial statues\n1.4 Provisions under acts and regulations\n\n1.1 Constitutional Provisions\n• Article 27 (14) of the Constitution\n“The State shall protect, preserve and\nimprove the environment for the benefit of\nthe community”.\n• Article 28 (F)\n“It is the duty of every person to protect the\nnature and the natural resources of Sri Lanka”.\nThese provisions are implemented through\nthe institutional structure created under the\nlegislations enacted by the parliament.\nFollowing Institutions specifically, are entrusted\nwith the protection of environment in the\ncountry.\n1.2 Local Authorities\n• Municipal Councils ordinance No 16,of\n1947,Chapter 252,sections 129,130,131\nSpecial reference to procedure Act No. 15 of\n1979-Public Nuisances: Section 98\n• Urban Council Ordinance No. 61 of 1947:\nSection 118, 119, and 120",
+      "score": 0.6343881487846375
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p26_c02",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 26,
+      "text": "r not priority is given to PWM\n• Level of implementation of PWM programmes\n• Monitoring level\n• Level of Authority\n3.6.2 Provisions in governing legislations of local\nauthorities\nLocal authorities are legally bound for carrying out\neffecting proper solid waste management initiatives\nin their respective authority areas, as can be clearly\nunderstood from the provisions allotted to them.\nThe mandate and rules of the Western Province\nWaste Management Authority provide sufficient\nlaws to take action against local authorities in\nWestern Province for any violations. Although local\nauthorities have been granted powers related to\nsolid waste management in their respective areas, it\nappears that they are not performing effectively due\nto several reasons including lack of commitment.\n3.7 Policies, guidelines and\nmultinational agreements\nthat support overcoming\nchallenges in plastic waste\nmanagement in Sri Lanka\nMany policies and guidelines have been formulated\nand issued by various institutions",
+      "score": 0.590817928314209
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p20_c02",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 20,
+      "text": "Galle\nMatara\nHambantota\nNuwara Eliya\n\nrecycling. Total uncollected waste is estimated at\n638.12 MT/D, of which about 8.45 MT/D is directly\ndiscarded to water sources, 139.82 MT/D is self-\ndisposed at individual premises, about 419.47 MT/D\nis openly burnt in individual premises and about 70\nMT/D is illegally dumped into the surrounding\nenvironment.\n3.3 Recycling and\nreprocessing (formal/\ninformal) in Sri Lanka\nIn Sri Lanka, recycling of plastics is mainly carried\nout in-house by the production sector. A few large-\nscale recyclers exist, for whom waste collection is\nmainly carried out by the informal sector. This sector\ncollects waste from homes, streets, commercial and\nindustrial establishments and from the final disposal\nsites\nand\ncontributes\nto\nthe\nwider\nwaste\nmanagement system by providing the service to\nmunicipalities, central government and residents.\nSome 20 million people around the world depend on\ninformal recycling from municipal solid wastes for\ntheir livelihoods, the main",
+      "score": 0.5856727361679077
+    },
+    {
+      "chunk_id": "sri_lanka_waste_policy_p20_c01",
+      "source": "sri_lanka_waste_policy.pdf",
+      "page": 20,
+      "text": "Chapter 3 Overview of Plastic Waste Management in Sri Lanka\n8 National Action Plan on Plastic Waste Management 2021–2030\n0\n10\n20\n30\n40\n50\n60\n70\nColombo\nGampaha\nKalutara\nRatnapura\nKurunegala\nKandy\nHambantota\nBadulla\nPuttalam\nMatale\nMatara\nKegalle\nGalle\nTrincomalee\nPolannaruwa\nVavuniya\nJaffna\nBatticaloa\nMullaitivu\nAmpara\nNuwara Eliya\nNo. of registered collectors/recyclers\nDistricts\nCollector\nCollector and Exporter\nCollector and Recycler\nRecycler\nDistrict boundary\nSource: Esri, DigitalGlobe, GeoEye, Earthstar Geograhics,\nCNES/Airbus DS, USDA, USGS, AeroGRID, IGN,\nand the GIS User Community\nJaffna\nKilinochchi\nMullaitivu\nMannar\nVavuniya\nTrincomalee\nAnuradhapura\nPuttalam\nKurunegala\nMatale\nPolonnaruwa\nBatticaloa\nAmpara\nMoneragala\nBadulla\nKandy\nKegalle\nGampaha\nColombo\nKalutara\nRatnapura\nGalle\nMatara\nHambantota\nNuwara Eliya\n\nrecycling. Total uncollected waste is estimated at\n638.12 MT/D, of which about 8.45 MT/D is directly\ndiscarded to water sources, 139.82 MT/D is self-\ndisposed at",
+      "score": 0.5813596844673157
+    }
+  ],
+  "generation_limitation": {
+    "not_attempted_after_provider_failure": {
+      "type": "AuthenticationError",
+      "http_status": 401
+    }
+  }
+}

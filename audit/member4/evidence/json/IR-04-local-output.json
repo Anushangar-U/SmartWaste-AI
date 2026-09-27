@@ -1,0 +1,12 @@
+{
+  "executed_at": "2026-09-27T16:05:47.760885+00:00",
+  "mode": "real FAISS and generate_answer; labelled structured input from IR-04; provider must not be called",
+  "provider_client_calls": 0,
+  "output": {
+    "query": "laptop battery maintenance near unknown How should I maintain my laptop battery to maximize its lifespan during everyday use?",
+    "answer": "I don't have enough reliable information in the knowledge base to answer this confidently. No sufficiently relevant policy or waste-management guidance was found for this query.",
+    "grounded": false,
+    "sources": [],
+    "evidence": []
+  }
+}

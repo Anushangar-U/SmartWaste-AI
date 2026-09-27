@@ -1,0 +1,14 @@
+{
+  "executed_at": "2026-09-27T16:00:55.418752+00:00",
+  "mode": "local TestClient ASGI request, live configured AI providers, no auth",
+  "request": {
+    "text": "Household garbage has not been collected for two days.",
+    "location_context": "Near a school"
+  },
+  "response": {
+    "status": 502,
+    "body": {
+      "detail": "The analyst service is temporarily unavailable. Please retry."
+    }
+  }
+}

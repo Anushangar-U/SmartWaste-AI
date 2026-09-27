@@ -1,0 +1,11 @@
+{
+  "executed_at": "2026-09-27T16:00:54.264287+00:00",
+  "mode": "Executed Test - Streamlit AppTest; synthetic session presence only, no bearer token or credentials; no browser JS execution",
+  "exception_count": 0,
+  "rendered_rows": [
+    "<div class=\"swa-row\" style=\"border-left-color:#854d0e;\">\n    <span class=\"swa-badge\" style=\"background:#fef9c3; color:#854d0e; font-size:0.85rem;\">\n        🟡 MEDIUM\n    </span>\n    &nbsp; <span class=\"swa-tid\">audit_display</span>\n    &nbsp; <span style=\"color:#6b7280; font-size:0.85rem;\">audit time · &lt;school&gt;</span>\n    <div style=\"margin-top:0.4rem;\">&lt;script&gt;alert(&#x27;audit&#x27;)&lt;/script&gt;&lt;b&gt;garbage&lt;/b&gt;</div>\n    <div style=\"margin-top:0.4rem; font-size:0.92rem; color:#374151;\">\n        <strong>Action:</strong> &lt;img src=x onerror=alert(&#x27;audit&#x27;)&gt;\n    </div>\n</div>"
+  ],
+  "raw_script_present": false,
+  "escaped_script_present": true,
+  "raw_img_present": false
+}

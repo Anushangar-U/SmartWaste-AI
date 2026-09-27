@@ -1,0 +1,12 @@
+{
+  "observed_at": "2026-09-27T16:05:49.485340+00:00",
+  "mode": "Static Observation only; no load, brute-force, flood or denial-of-service testing",
+  "reviewed_files": [
+    "backend/main.py",
+    "backend/api/agent_routes.py",
+    "backend/api/auth_routes.py",
+    "backend/services/orchestrator.py"
+  ],
+  "observation": "No application-level rate limit, quota or concurrency limiter found on public complaint/login/register routes in these files. CORS limits browser origins but is not an API request quota.",
+  "limitation": "An external reverse proxy or hosting platform could impose limits; none is specified in this local repository. Exploitable exhaustion or real deployment limits were not tested."
+}

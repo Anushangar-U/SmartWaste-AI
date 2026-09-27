@@ -1,0 +1,37 @@
+{
+  "executed_at": "2026-09-27T16:00:56.057764+00:00",
+  "requests": [
+    {
+      "case": "invalid fake JWT",
+      "route": "/agents/analyze",
+      "status": 401,
+      "body": {
+        "detail": "Invalid or expired token"
+      }
+    },
+    {
+      "case": "wrong authorization scheme",
+      "route": "/agents/analyze",
+      "status": 401,
+      "body": {
+        "detail": "Not authenticated"
+      }
+    },
+    {
+      "case": "empty bearer",
+      "route": "/agents/analyze",
+      "status": 401,
+      "body": {
+        "detail": "Invalid or expired token"
+      }
+    },
+    {
+      "case": "expired project-generated token",
+      "route": "/agents/analyze",
+      "status": 401,
+      "body": {
+        "detail": "Invalid or expired token"
+      }
+    }
+  ]
+}

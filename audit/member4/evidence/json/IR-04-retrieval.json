@@ -1,0 +1,102 @@
+{
+  "test_id": "IR-04",
+  "executed_at": "2026-09-27T15:56:48.330109+00:00",
+  "input": "How should I maintain my laptop battery to maximize its lifespan during everyday use?",
+  "transport_limit": "Audit-only 60 second request timeout, zero SDK retries. Production source and model unchanged.",
+  "agent1_limitation": {
+    "type": "AuthenticationError",
+    "http_status": 401
+  },
+  "agent1_mode": "audit-authored structured fixture; NOT Agent 1 output",
+  "analysis_fixture": {
+    "waste_types": [],
+    "location": "unknown",
+    "duration_days": null,
+    "severity": "medium",
+    "issue_type": "laptop battery maintenance",
+    "summary": "How should I maintain my laptop battery to maximize its lifespan during everyday use?"
+  },
+  "retrieval_query": "laptop battery maintenance near unknown How should I maintain my laptop battery to maximize its lifespan during everyday use?",
+  "before_filter": [
+    {
+      "chunk_id": "who_un_environment_guidance_p88_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 88,
+      "text": "er, 2010; Practice Greenhealth, 2012).\nManaging stores carefully will prevent the accumulation of large quantities of outdated chemicals or pharmaceuticals\nand limit the waste to the packaging (boxes, bottles) plus residues of the products remaining in the containers.\nThese small amounts of chemical or pharmaceutical waste can be disposed of easily and relatively cheaply, whereas\ndisposing of larger amounts requires costly and specialized treatment, which underlines the importance of waste\nminimization.\nLife-cycle management considers benefits, costs and risks over the full life cycle of a product or service – including\nwaste management. Life-cycle management applies approaches to product design and development that minimize\nenvironmental impacts of products throughout all life stages of a product, starting with the extraction of resources\nfor raw material inputs, and continuing through processing and manufacturing of all feed stocks and final products,\ndistribution, use and,",
+      "score": 0.34266340732574463
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p93_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 93,
+      "text": "nitial approach envisages a health-care centre that has attempted some reduction in the waste it produces.\nSeveral opportunities allow health-care centres to go beyond this, including by expanding the effort in reducing\nwaste and extending the activities to more items. Encouraging staff to extend waste minimization requires the\nadoption of more rigorous methods and disciplines. Waste-minimization targets can be established for each area\nof medical or support activities, and people can be made more personally responsible for waste minimization –\npossibly by providing incentives for those people and departments who are successful in achieving their targets. A\nsignificant step in improving waste minimization is to adopt life-cycle management for items used in large quantities\nand for frequently used services. Further techniques can involve working with suppliers to make available products\nfrom materials that degrade more easily or that can be used again for secondary purposes.",
+      "score": 0.3362300395965576
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p259_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 259,
+      "text": "240 Safe management of wastes from health-care activities\nmay become increasingly vulnerable to flooding where average sea and river levels rise or more frequent extreme\nweather events inundate the land. Shorter duration weather changes, such as seasonal floods and heatwaves, may\nbe particularly problematic in rural areas, where resilience in waste-collection systems may be lower. This can be\ncountered by decentralizing waste treatment and increasing storage capacity, as well as undertaking contingency\nor continuity planning at the facility and national levels. Fuel and power costs are predicted to rise, and power\nshortages may become more common, even in developed countries. Planners should promote the adoption of low-\nenergy technologies wherever possible. Installation of renewable energy generation capacity, particularly at remote\ninstallations, would reduce vulnerability.\n15.2.2 Other environmental issues\nBox 15.3 Key points relating to environmental issues\nIssues\n•\nThere is a",
+      "score": 0.31401923298835754
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p176_c04",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 176,
+      "text": "maintenance plans, and a budget allocated to sustain operations.\n9.6.2\nMonitoring of wastewater systems\nThe monitoring of the wastewater system includes two aspects: monitoring the sewerage system and monitoring\neffluent quality.\nAn often underestimated aspect in wastewater management is the loss of wastewater during collection and transport.\nLosses of 10–30% of the wastewater due to broken sewer pipes, non-watertight access holes and leakages at pipe\nconnections are common. Installing a flow meter at the discharge point of the health-care facility is recommended\nfor accurate monitoring. Maintenance and leakage problems can often be identified through regular (daily or\nweekly) comparison of water consumption and discharged wastewater quantities.\nThe most common parameters for monitoring the effluent quality are:\n• temperature;\n• pH;\n• BOD5 (a test to estimate the amount of oxygen consumed by biochemical oxidation of waste contaminants in\na five-day period at 20 °C);",
+      "score": 0.3128158152103424
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p156_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 156,
+      "text": "ventilation are important\nimprovements. The health-care facility should also adopt good preventive maintenance procedures.\nHealth-care facilities that use chemical treatment systems should take extra precautions to ensure the safety and\nhealth of their workers. It may be possible to find less hazardous but equally effective chemical disinfectants.\nMinimizing the environmental impact of air, liquid and solid releases of the chemical residues or by-products is\nalso important. The facility should conduct periodic validation tests and adjust the treatment parameters using the\nminimum effective chemical concentrations. As with all technologies, periodic maintenance is essential.\nHealth-care facilities that use incineration may be able to further minimize air emissions by adding air-pollution\ncontrol devices or upgrading the existing flue gas cleaning system. The health-care facility should also adopt\nthe primary measures outlined in the BAT/BEP guidelines of the Stockholm Convention (see",
+      "score": 0.3048990070819855
+    }
+  ],
+  "qualifying_by_threshold": [],
+  "threshold": 0.35,
+  "direct_complaint_ranking": [
+    {
+      "chunk_id": "who_un_environment_guidance_p88_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 88,
+      "text": "er, 2010; Practice Greenhealth, 2012).\nManaging stores carefully will prevent the accumulation of large quantities of outdated chemicals or pharmaceuticals\nand limit the waste to the packaging (boxes, bottles) plus residues of the products remaining in the containers.\nThese small amounts of chemical or pharmaceutical waste can be disposed of easily and relatively cheaply, whereas\ndisposing of larger amounts requires costly and specialized treatment, which underlines the importance of waste\nminimization.\nLife-cycle management considers benefits, costs and risks over the full life cycle of a product or service – including\nwaste management. Life-cycle management applies approaches to product design and development that minimize\nenvironmental impacts of products throughout all life stages of a product, starting with the extraction of resources\nfor raw material inputs, and continuing through processing and manufacturing of all feed stocks and final products,\ndistribution, use and,",
+      "score": 0.33257758617401123
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p93_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 93,
+      "text": "nitial approach envisages a health-care centre that has attempted some reduction in the waste it produces.\nSeveral opportunities allow health-care centres to go beyond this, including by expanding the effort in reducing\nwaste and extending the activities to more items. Encouraging staff to extend waste minimization requires the\nadoption of more rigorous methods and disciplines. Waste-minimization targets can be established for each area\nof medical or support activities, and people can be made more personally responsible for waste minimization –\npossibly by providing incentives for those people and departments who are successful in achieving their targets. A\nsignificant step in improving waste minimization is to adopt life-cycle management for items used in large quantities\nand for frequently used services. Further techniques can involve working with suppliers to make available products\nfrom materials that degrade more easily or that can be used again for secondary purposes.",
+      "score": 0.28804028034210205
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p113_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 113,
+      "text": "94\nSafe management of wastes from health-care activities\nBox 7.2 Decay storage of radioactive waste – a sample calculation of decay storage time\nDecay storage\nCr-51, Ga-67, I-125, I-131, In-111, P-32, Rb-86, Rd-222, S-35, Tc-99m and so on\nExample\nI-125\nHalf-life: 60.2 days (<90 days)\n60.2 days × 10 = 602 days of decay storage\nSources: IAEA (2005); FIU (2005)\nRadioactive waste with a half-life of more than 90 days must be collected and stored externally in accordance\nwith national regulations. In many countries, this type of waste would be taken to a national disposal site by a\ngovernment agency or its specialist contractor.\nStorage places must be equipped with sufficient shielding material, either in the walls or as movable shielding\nscreens. The storage must be clearly marked with “RADIOACTIVE WASTE”, and the international hazard label\nshould be placed on the door. The storage place should be constructed in a manner that renders it flame-proof\nand should have such surfaces on floors,",
+      "score": 0.2787984013557434
+    },
+    {
+      "chunk_id": "safe_healthcare_waste_p196_c03",
+      "source": "safe_healthcare_waste.pdf",
+      "page": 196,
+      "text": "s, fruits, nuts and grains.\n•\nChoose to cycle, walk and use public transport rather than drive a car or motorbike.\n•\nBuild houses that are good for your health. Such houses have insulation, so that it gets less hot or less\ncold. They have ventilation, so that the air gets changed, and they have heating where necessary. They\nshould also protect against mosquitoes and other dangerous insects and animals.\n•\nUse clean energy, and safe and energy saving devices, to cook and to light and to heat the home. Clean\nenergy comes for example from the sun or wind. It does not come from burning of fossil fuels, such as\ncoal.\n•\nAvoid the use of pesticides and herbicides.\n•\nAvoid using plastics only once. Examples are plastic bags and food packaging.\nResource links\n•\nWHO webpage on climate change including fact sheets on climate change and health, and biodiversity\nand health: https://www.who.int/health-topics/climate-change\n•\n\u0007The WHO Manifesto for a Healthy and Green Recovery from COVID-19 – six",
+      "score": 0.2747286260128021
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p259_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 259,
+      "text": "240 Safe management of wastes from health-care activities\nmay become increasingly vulnerable to flooding where average sea and river levels rise or more frequent extreme\nweather events inundate the land. Shorter duration weather changes, such as seasonal floods and heatwaves, may\nbe particularly problematic in rural areas, where resilience in waste-collection systems may be lower. This can be\ncountered by decentralizing waste treatment and increasing storage capacity, as well as undertaking contingency\nor continuity planning at the facility and national levels. Fuel and power costs are predicted to rise, and power\nshortages may become more common, even in developed countries. Planners should promote the adoption of low-\nenergy technologies wherever possible. Installation of renewable energy generation capacity, particularly at remote\ninstallations, would reduce vulnerability.\n15.2.2 Other environmental issues\nBox 15.3 Key points relating to environmental issues\nIssues\n•\nThere is a",
+      "score": 0.2694754898548126
+    }
+  ],
+  "generation_limitation": {
+    "not_attempted_after_provider_failure": {
+      "type": "AuthenticationError",
+      "http_status": 401
+    }
+  }
+}

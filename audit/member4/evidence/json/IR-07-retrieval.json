@@ -1,0 +1,135 @@
+{
+  "test_id": "IR-07",
+  "executed_at": "2026-09-27T15:56:48.442377+00:00",
+  "input": "Garbage has been dumped beside a school near the river for three days.",
+  "transport_limit": "Audit-only 60 second request timeout, zero SDK retries. Production source and model unchanged.",
+  "agent1_limitation": {
+    "type": "AuthenticationError",
+    "http_status": 401
+  },
+  "agent1_mode": "audit-authored structured fixture; NOT Agent 1 output",
+  "analysis_fixture": {
+    "waste_types": [
+      "mixed"
+    ],
+    "location": "beside a school near the river",
+    "duration_days": 3,
+    "severity": "medium",
+    "issue_type": "dumping",
+    "summary": "Garbage has been dumped beside a school near the river for three days."
+  },
+  "retrieval_query": "mixed dumping near beside a school near the river for 3 days Garbage has been dumped beside a school near the river for three days",
+  "before_filter": [
+    {
+      "chunk_id": "beyond_age_of_waste_p29_c03",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 29,
+      "text": "ls of pollutant\nemissions (Bihałowicz, Rogula-Kozłowska and Krasuski\n2021; Dabrowska, Rykala and Nourani 2023).\nDumpsites also present a risk of landslides, with multiple\nfatal occurrences every year, making their remediation an\neventual necessity. Remediating dumpsites or older landfills\nis a complex and expensive undertaking in any part of the\nworld (Ospanbayeva and Wang 2020; Yin et al. 2020).\nPhoto source: Timothy Bouldry\nPhoto source: Timothy Bouldry\nPhoto source: Natali / Adobe Stock\nDumpsites are prone to fires,\nwhich can smoulder continuously\nbeneath the surface for months\nand can be very difficult and\ndangerous to extinguish.",
+      "score": 0.520046055316925
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p29_c01",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 29,
+      "text": "2\n\n| UNEP | Beyond an Age of Waste - Global Waste Management Outlook 2024\nThe term “dumping of waste” can refer to indiscriminate\ndisposal (littering) and also to the accumulation of waste\nat uncontrolled dumpsites, many of which have existed\nfor decades and have reached immense proportions.\nUncontrolled dumpsites, which until the middle of the last\ncentury were the dominant disposal choice globally, pose\nongoing risks to water quality, public health and the climate\n(Cristóbal et al. 2022; Alao 2023; Alao et al. 2023;\nA significant proportion of dumpsites are on or near\ncoastlines, where they may leak persistent, bioaccumulative\nand toxic chemicals such as polychlorinated bisphenols,\nas well as plastics and other types of waste, into coastal\nand marine environments. The risks associated with these\ndumpsites are exacerbated by climate change (higher\ntemperatures, sea level rise and greater magnitude and\nfrequency of storms) (Brand and Spencer 2019; Nicholls\net al. 2021).\nDumpsites are",
+      "score": 0.4960549473762512
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.49120062589645386
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p11_c09",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 11,
+      "text": ".............................................................................................................................................128\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping..........................................................................................................134\nFigure 8.7\nExample of a low-cost pit cover....................................................................................................................................................................136\nFigure 9.1\nDeaths due to improper water and sanitation systems per 1000 population.................................................................148\nFigure 9.2\nImproper disposal of photochemicals into the sewerage system..........................................................................................152\nFigure 9.3\nActivated sludge wastewater-treatment system in a hospital in Sonla, Vietnam..........................................................154\nFigure",
+      "score": 0.4811357259750366
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p90_c02",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 90,
+      "text": "8.\nhttps://doi.org/10.56506/DYXR6960.\nAccessed 26 January 2024.\nSiddiqua, A., Hahladakis, J.N. and Al-Attiya, W.A.K.A. (2022).\nAn overview of the environmental pollution and health\neffects associated with waste landfilling and open dumping.\nEnvironmental Science and Pollution Research 29, 58514–\n58536. https://doi.org/10.1007/s11356-022-21578-z.\nAccessed 26 January 2024.\nSinghal, A., Gupta, A.K., Dubey, B. and Ghangrekar, M.M.\n(2022). Seasonal characterisation of municipal solid waste\nfor selecting feasible waste treatment technology for\nGuwahati city, India. Journal of the Air and\nWaste Management Association 72(2), 147160.\nhttps://doi.org/10.1080/10962247.2021.1980450.\nAccessed 26 January 2024.\nSmart Cities Dive (\u0016\u0014\u0015\u001b). Four cities’ solutions to\nsustainable garbage processing. https\n\u0013\u0013\nwww.smartcitiesdive.com\u0013e\\\u0013sustainablecitiescollective\u0013\nfriday\u0011fun\u0011how\u0011create\u0011tomorrow\u0011s\u0011Kreen\u0011cities\u0011today\u0011s\u0011\nKarbaKe\u0013\u0015\u0014\u0019\u0014\u001a\u0015\u001a\u0013.\nAccessed \u0016\u001a .anuary \u0016\u0014\u0016\u0018.\nSolarte-Toro, ..C., Arrieta-)scobar, ..A.,",
+      "score": 0.46820271015167236
+    }
+  ],
+  "qualifying_by_threshold": [
+    {
+      "chunk_id": "beyond_age_of_waste_p29_c03",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 29,
+      "text": "ls of pollutant\nemissions (Bihałowicz, Rogula-Kozłowska and Krasuski\n2021; Dabrowska, Rykala and Nourani 2023).\nDumpsites also present a risk of landslides, with multiple\nfatal occurrences every year, making their remediation an\neventual necessity. Remediating dumpsites or older landfills\nis a complex and expensive undertaking in any part of the\nworld (Ospanbayeva and Wang 2020; Yin et al. 2020).\nPhoto source: Timothy Bouldry\nPhoto source: Timothy Bouldry\nPhoto source: Natali / Adobe Stock\nDumpsites are prone to fires,\nwhich can smoulder continuously\nbeneath the surface for months\nand can be very difficult and\ndangerous to extinguish.",
+      "score": 0.520046055316925
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p29_c01",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 29,
+      "text": "2\n\n| UNEP | Beyond an Age of Waste - Global Waste Management Outlook 2024\nThe term “dumping of waste” can refer to indiscriminate\ndisposal (littering) and also to the accumulation of waste\nat uncontrolled dumpsites, many of which have existed\nfor decades and have reached immense proportions.\nUncontrolled dumpsites, which until the middle of the last\ncentury were the dominant disposal choice globally, pose\nongoing risks to water quality, public health and the climate\n(Cristóbal et al. 2022; Alao 2023; Alao et al. 2023;\nA significant proportion of dumpsites are on or near\ncoastlines, where they may leak persistent, bioaccumulative\nand toxic chemicals such as polychlorinated bisphenols,\nas well as plastics and other types of waste, into coastal\nand marine environments. The risks associated with these\ndumpsites are exacerbated by climate change (higher\ntemperatures, sea level rise and greater magnitude and\nfrequency of storms) (Brand and Spencer 2019; Nicholls\net al. 2021).\nDumpsites are",
+      "score": 0.4960549473762512
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.49120062589645386
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p11_c09",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 11,
+      "text": ".............................................................................................................................................128\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping..........................................................................................................134\nFigure 8.7\nExample of a low-cost pit cover....................................................................................................................................................................136\nFigure 9.1\nDeaths due to improper water and sanitation systems per 1000 population.................................................................148\nFigure 9.2\nImproper disposal of photochemicals into the sewerage system..........................................................................................152\nFigure 9.3\nActivated sludge wastewater-treatment system in a hospital in Sonla, Vietnam..........................................................154\nFigure",
+      "score": 0.4811357259750366
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p90_c02",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 90,
+      "text": "8.\nhttps://doi.org/10.56506/DYXR6960.\nAccessed 26 January 2024.\nSiddiqua, A., Hahladakis, J.N. and Al-Attiya, W.A.K.A. (2022).\nAn overview of the environmental pollution and health\neffects associated with waste landfilling and open dumping.\nEnvironmental Science and Pollution Research 29, 58514–\n58536. https://doi.org/10.1007/s11356-022-21578-z.\nAccessed 26 January 2024.\nSinghal, A., Gupta, A.K., Dubey, B. and Ghangrekar, M.M.\n(2022). Seasonal characterisation of municipal solid waste\nfor selecting feasible waste treatment technology for\nGuwahati city, India. Journal of the Air and\nWaste Management Association 72(2), 147160.\nhttps://doi.org/10.1080/10962247.2021.1980450.\nAccessed 26 January 2024.\nSmart Cities Dive (\u0016\u0014\u0015\u001b). Four cities’ solutions to\nsustainable garbage processing. https\n\u0013\u0013\nwww.smartcitiesdive.com\u0013e\\\u0013sustainablecitiescollective\u0013\nfriday\u0011fun\u0011how\u0011create\u0011tomorrow\u0011s\u0011Kreen\u0011cities\u0011today\u0011s\u0011\nKarbaKe\u0013\u0015\u0014\u0019\u0014\u001a\u0015\u001a\u0013.\nAccessed \u0016\u001a .anuary \u0016\u0014\u0016\u0018.\nSolarte-Toro, ..C., Arrieta-)scobar, ..A.,",
+      "score": 0.46820271015167236
+    }
+  ],
+  "threshold": 0.35,
+  "direct_complaint_ranking": [
+    {
+      "chunk_id": "beyond_age_of_waste_p29_c03",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 29,
+      "text": "ls of pollutant\nemissions (Bihałowicz, Rogula-Kozłowska and Krasuski\n2021; Dabrowska, Rykala and Nourani 2023).\nDumpsites also present a risk of landslides, with multiple\nfatal occurrences every year, making their remediation an\neventual necessity. Remediating dumpsites or older landfills\nis a complex and expensive undertaking in any part of the\nworld (Ospanbayeva and Wang 2020; Yin et al. 2020).\nPhoto source: Timothy Bouldry\nPhoto source: Timothy Bouldry\nPhoto source: Natali / Adobe Stock\nDumpsites are prone to fires,\nwhich can smoulder continuously\nbeneath the surface for months\nand can be very difficult and\ndangerous to extinguish.",
+      "score": 0.4975908398628235
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.49672943353652954
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p29_c01",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 29,
+      "text": "2\n\n| UNEP | Beyond an Age of Waste - Global Waste Management Outlook 2024\nThe term “dumping of waste” can refer to indiscriminate\ndisposal (littering) and also to the accumulation of waste\nat uncontrolled dumpsites, many of which have existed\nfor decades and have reached immense proportions.\nUncontrolled dumpsites, which until the middle of the last\ncentury were the dominant disposal choice globally, pose\nongoing risks to water quality, public health and the climate\n(Cristóbal et al. 2022; Alao 2023; Alao et al. 2023;\nA significant proportion of dumpsites are on or near\ncoastlines, where they may leak persistent, bioaccumulative\nand toxic chemicals such as polychlorinated bisphenols,\nas well as plastics and other types of waste, into coastal\nand marine environments. The risks associated with these\ndumpsites are exacerbated by climate change (higher\ntemperatures, sea level rise and greater magnitude and\nfrequency of storms) (Brand and Spencer 2019; Nicholls\net al. 2021).\nDumpsites are",
+      "score": 0.4839288294315338
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p90_c02",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 90,
+      "text": "8.\nhttps://doi.org/10.56506/DYXR6960.\nAccessed 26 January 2024.\nSiddiqua, A., Hahladakis, J.N. and Al-Attiya, W.A.K.A. (2022).\nAn overview of the environmental pollution and health\neffects associated with waste landfilling and open dumping.\nEnvironmental Science and Pollution Research 29, 58514–\n58536. https://doi.org/10.1007/s11356-022-21578-z.\nAccessed 26 January 2024.\nSinghal, A., Gupta, A.K., Dubey, B. and Ghangrekar, M.M.\n(2022). Seasonal characterisation of municipal solid waste\nfor selecting feasible waste treatment technology for\nGuwahati city, India. Journal of the Air and\nWaste Management Association 72(2), 147160.\nhttps://doi.org/10.1080/10962247.2021.1980450.\nAccessed 26 January 2024.\nSmart Cities Dive (\u0016\u0014\u0015\u001b). Four cities’ solutions to\nsustainable garbage processing. https\n\u0013\u0013\nwww.smartcitiesdive.com\u0013e\\\u0013sustainablecitiescollective\u0013\nfriday\u0011fun\u0011how\u0011create\u0011tomorrow\u0011s\u0011Kreen\u0011cities\u0011today\u0011s\u0011\nKarbaKe\u0013\u0015\u0014\u0019\u0014\u001a\u0015\u001a\u0013.\nAccessed \u0016\u001a .anuary \u0016\u0014\u0016\u0018.\nSolarte-Toro, ..C., Arrieta-)scobar, ..A.,",
+      "score": 0.48188334703445435
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "intent is to\nprevent animals and scavengers from re-excavating the waste materials once they have been deposited.\n• In a deeper (1–2 m) pit excavated in a covered area of mature municipal waste (i.e. waste at least three months\nold). The pit is then backfilled with the mature municipal waste removed previously, and an intermediate soil\ncover (approximately 30 cm) or topsoil cover (up to 1 m). Scavenging in this part of the site must be prevented.\nAfter treatment\nIn more developed situations where health-care waste is treated, the residual material is typically disposed of in\nlandfill sites. Upgrading from open dumping directly to more sophisticated sanitary landfills may be technically",
+      "score": 0.4706936478614807
+    }
+  ],
+  "generation_mode": "not requested: ranking/query test"
+}

@@ -1,0 +1,140 @@
+{
+  "test_id": "IR-06",
+  "executed_at": "2026-09-27T15:56:48.403772+00:00",
+  "input": "This is ordinary household garbage. It is not chemical waste, not medical waste, not hazardous waste, and there are no syringes.",
+  "transport_limit": "Audit-only 60 second request timeout, zero SDK retries. Production source and model unchanged.",
+  "agent1_limitation": {
+    "type": "AuthenticationError",
+    "http_status": 401
+  },
+  "agent1_mode": "audit-authored structured fixture; NOT Agent 1 output",
+  "analysis_fixture": {
+    "waste_types": [
+      "household"
+    ],
+    "location": "unknown",
+    "duration_days": null,
+    "severity": "medium",
+    "issue_type": "household garbage",
+    "summary": "This is ordinary household garbage. It is not chemical waste, not medical waste, not hazardous waste, and there are no syringes."
+  },
+  "retrieval_query": "household household garbage near unknown This is ordinary household garbage. It is not chemical waste, not medical waste, not hazardous waste, and there are no syringes",
+  "before_filter": [
+    {
+      "chunk_id": "who_un_environment_guidance_p157_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 157,
+      "text": "y, the\nhealth-care facility should have an annual budget for periodic maintenance and repair.\nHealth-care facilities can work with municipal authorities and other stakeholders to gradually improve the disposal of\nwaste in landfills. Among the desirable features of a landfill are:\n•\nrestricted access to prevent scavenging\n•\ndaily soil cover to prevent odours, and regular compaction\n•\norganized deposit of wastes in small work areas\n•\nisolation of waste to prevent contamination of groundwater and surrounding areas\n•\ntrained staff.\nIn circumstances where sanitary or engineered landfills are not available, various options are possible to minimize the\ntransmission of infections and adverse impacts on the environment from hazardous health-care waste.\n8.15\nReferences and further reading\nReferences\nBatterman S (2004). Assessment of small-scale incinerators for health care waste. Report prepared for the Protection\nof the Human Environment. Geneva, World Health Organization",
+      "score": 0.5905873775482178
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p29_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 29,
+      "text": "establishments and institutions with low waste generation\nConvalescent nursing homes\nPsychiatric hospitals\nDisabled persons’ institutions\nActivities involving intravenous or subcutaneous interventions\nCosmetic ear-piercing and tattoo parlours\nIllicit drug users and needle exchanges\nFuneral services\nAmbulance services\nHome treatment\nThe general composition of wastes is often characteristic of the type of medical facility and its health-care activities\n(see Table 2.3).\nIn the absence of clear laws and guidelines, determining the proper classification of specific waste items should be\nbased on an understanding of the principles of disease transmission and hazardous chemical exposure. The infection-\ncontrol officer at larger health-care facilities plays an important role in this process. An item should be considered\nan infectious waste if there is the likelihood that disease transmission can occur during the handling and disposal of\nthe item in question. For disease transmission to occur,",
+      "score": 0.58660489320755
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.5807228088378906
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p29_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 29,
+      "text": "10\nSafe management of wastes from health-care activities\nMinor and scattered sources produce some health-care waste, but their quantities and composition will vary. These\nsources typically have some common features:\n• They rarely produce radioactive or cytostatic waste.\n• Human body parts are not normally produced.\n• Sharps consist mainly of hypodermic needles.\nBox 2.4 lists some minor sources of health-care waste. However, it should be recognized that the quantities of waste\nfrom the home treatment of medical conditions and long-term home-based care are rising significantly in many\ncountries.\nBox 2.4 Minor sources of health-care waste\nSmall health-care establishments\nFirst-aid posts and sick bays\nPhysicians’ offices\nDental clinics\nAcupuncturists\nChiropractors\nSpecialized health-care establishments and institutions with low waste generation\nConvalescent nursing homes\nPsychiatric hospitals\nDisabled persons’ institutions\nActivities involving intravenous or subcutaneous interventions",
+      "score": 0.5765951871871948
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p45_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 45,
+      "text": "26\nSafe management of wastes from health-care activities\n• workers transporting waste to a treatment or disposal facility\n• workers in waste-management facilities (such as landfills or treatment plants), as well as informal recyclers\n(scavengers).\nThe general public could also be at risk whenever hazardous health-care waste is abandoned or disposed of\nimproperly. The hazards associated with scattered, small sources of health-care waste should not be overlooked.\nThese sources include pharmaceutical and infectious waste generated by home-based health care, and contaminated\ndisposable materials such as from home dialysis and used needles from insulin injection, or even illicit intravenous\ndrug use.\n3.1.3\nHazards from infectious waste and sharps\nInfectious waste should always be assumed to potentially contain a variety of pathogenic microorganisms. This\nis because the presence or absence of pathogens cannot be determined at the time a waste item is produced and\ndiscarded into a container.",
+      "score": 0.5745484232902527
+    }
+  ],
+  "qualifying_by_threshold": [
+    {
+      "chunk_id": "who_un_environment_guidance_p157_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 157,
+      "text": "y, the\nhealth-care facility should have an annual budget for periodic maintenance and repair.\nHealth-care facilities can work with municipal authorities and other stakeholders to gradually improve the disposal of\nwaste in landfills. Among the desirable features of a landfill are:\n•\nrestricted access to prevent scavenging\n•\ndaily soil cover to prevent odours, and regular compaction\n•\norganized deposit of wastes in small work areas\n•\nisolation of waste to prevent contamination of groundwater and surrounding areas\n•\ntrained staff.\nIn circumstances where sanitary or engineered landfills are not available, various options are possible to minimize the\ntransmission of infections and adverse impacts on the environment from hazardous health-care waste.\n8.15\nReferences and further reading\nReferences\nBatterman S (2004). Assessment of small-scale incinerators for health care waste. Report prepared for the Protection\nof the Human Environment. Geneva, World Health Organization",
+      "score": 0.5905873775482178
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p29_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 29,
+      "text": "establishments and institutions with low waste generation\nConvalescent nursing homes\nPsychiatric hospitals\nDisabled persons’ institutions\nActivities involving intravenous or subcutaneous interventions\nCosmetic ear-piercing and tattoo parlours\nIllicit drug users and needle exchanges\nFuneral services\nAmbulance services\nHome treatment\nThe general composition of wastes is often characteristic of the type of medical facility and its health-care activities\n(see Table 2.3).\nIn the absence of clear laws and guidelines, determining the proper classification of specific waste items should be\nbased on an understanding of the principles of disease transmission and hazardous chemical exposure. The infection-\ncontrol officer at larger health-care facilities plays an important role in this process. An item should be considered\nan infectious waste if there is the likelihood that disease transmission can occur during the handling and disposal of\nthe item in question. For disease transmission to occur,",
+      "score": 0.58660489320755
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.5807228088378906
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p29_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 29,
+      "text": "10\nSafe management of wastes from health-care activities\nMinor and scattered sources produce some health-care waste, but their quantities and composition will vary. These\nsources typically have some common features:\n• They rarely produce radioactive or cytostatic waste.\n• Human body parts are not normally produced.\n• Sharps consist mainly of hypodermic needles.\nBox 2.4 lists some minor sources of health-care waste. However, it should be recognized that the quantities of waste\nfrom the home treatment of medical conditions and long-term home-based care are rising significantly in many\ncountries.\nBox 2.4 Minor sources of health-care waste\nSmall health-care establishments\nFirst-aid posts and sick bays\nPhysicians’ offices\nDental clinics\nAcupuncturists\nChiropractors\nSpecialized health-care establishments and institutions with low waste generation\nConvalescent nursing homes\nPsychiatric hospitals\nDisabled persons’ institutions\nActivities involving intravenous or subcutaneous interventions",
+      "score": 0.5765951871871948
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p45_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 45,
+      "text": "26\nSafe management of wastes from health-care activities\n• workers transporting waste to a treatment or disposal facility\n• workers in waste-management facilities (such as landfills or treatment plants), as well as informal recyclers\n(scavengers).\nThe general public could also be at risk whenever hazardous health-care waste is abandoned or disposed of\nimproperly. The hazards associated with scattered, small sources of health-care waste should not be overlooked.\nThese sources include pharmaceutical and infectious waste generated by home-based health care, and contaminated\ndisposable materials such as from home dialysis and used needles from insulin injection, or even illicit intravenous\ndrug use.\n3.1.3\nHazards from infectious waste and sharps\nInfectious waste should always be assumed to potentially contain a variety of pathogenic microorganisms. This\nis because the presence or absence of pathogens cannot be determined at the time a waste item is produced and\ndiscarded into a container.",
+      "score": 0.5745484232902527
+    }
+  ],
+  "threshold": 0.35,
+  "direct_complaint_ranking": [
+    {
+      "chunk_id": "who_un_environment_guidance_p29_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 29,
+      "text": "10\nSafe management of wastes from health-care activities\nMinor and scattered sources produce some health-care waste, but their quantities and composition will vary. These\nsources typically have some common features:\n• They rarely produce radioactive or cytostatic waste.\n• Human body parts are not normally produced.\n• Sharps consist mainly of hypodermic needles.\nBox 2.4 lists some minor sources of health-care waste. However, it should be recognized that the quantities of waste\nfrom the home treatment of medical conditions and long-term home-based care are rising significantly in many\ncountries.\nBox 2.4 Minor sources of health-care waste\nSmall health-care establishments\nFirst-aid posts and sick bays\nPhysicians’ offices\nDental clinics\nAcupuncturists\nChiropractors\nSpecialized health-care establishments and institutions with low waste generation\nConvalescent nursing homes\nPsychiatric hospitals\nDisabled persons’ institutions\nActivities involving intravenous or subcutaneous interventions",
+      "score": 0.6320593357086182
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p159_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 159,
+      "text": "140 Safe management of wastes from health-care activities\nIARC (1985). Laboratory decontamination and destruction of carcinogens in laboratory waste: some antineoplastic\nagents. IARC Scientific Publications, No. 73. Lyon, International Agency for Research on Cancer.\nLaurent E (2005). Injection safety health care waste management pilot project needle removing and plastic recycling.\nCopenhagen, Ukraine Ministry of Health and World Health Organization EURO.\nLemieux P et al. (2006). Destruction of spores on building decontamination residue in a commercial sutoclave.\nApplied and Environmental Microbiology, 72(2):7687–7693.\nMathur UB, Verma LK, Srivastava JN (2006). Effects of vermicomposting on microbiological flora of infected\nbiomedical waste. Journal of Indian Society of Hospital Waste Management, 5(1):21–27.\nOeltzschner H, Mutz D (1996). Guidelines for an appropriate management of domestic sanitary landfills. Eschborn,\nGesellschaft für Technische Zusammenarbeit, Office Fédéral Suisse",
+      "score": 0.6216842532157898
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p29_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 29,
+      "text": "establishments and institutions with low waste generation\nConvalescent nursing homes\nPsychiatric hospitals\nDisabled persons’ institutions\nActivities involving intravenous or subcutaneous interventions\nCosmetic ear-piercing and tattoo parlours\nIllicit drug users and needle exchanges\nFuneral services\nAmbulance services\nHome treatment\nThe general composition of wastes is often characteristic of the type of medical facility and its health-care activities\n(see Table 2.3).\nIn the absence of clear laws and guidelines, determining the proper classification of specific waste items should be\nbased on an understanding of the principles of disease transmission and hazardous chemical exposure. The infection-\ncontrol officer at larger health-care facilities plays an important role in this process. An item should be considered\nan infectious waste if there is the likelihood that disease transmission can occur during the handling and disposal of\nthe item in question. For disease transmission to occur,",
+      "score": 0.6213674545288086
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p101_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 101,
+      "text": "oratory samples and waste from infectious patients in isolation,\nshould be collected separately and autoclaved at the point of generation. Once disinfected, the waste would leave a\nmedical area in the infectious health-care waste container.\nAnatomical waste, particularly recognizable body parts or fetal material, should be handled according to\nprevailing religious and cultural preferences (most commonly, authorized burial or cremation). In low-resource\nareas, placentas and other non-recognizable anatomical waste can be disposed of in a pit where it can biodegrade\nnaturally.\nSharps waste (needle and syringe combination) should be placed directly into a sharps container. In some places,\nit is permitted for syringes to have their needles removed or destroyed before placing the syringe in an infectious\nwaste bin. Any removed needles are placed in a puncture-proof container and dealt with accordingly. This approach\nis not universally accepted as best practice.\nPolicies regarding the use of",
+      "score": 0.6206086277961731
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p45_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 45,
+      "text": "26\nSafe management of wastes from health-care activities\n• workers transporting waste to a treatment or disposal facility\n• workers in waste-management facilities (such as landfills or treatment plants), as well as informal recyclers\n(scavengers).\nThe general public could also be at risk whenever hazardous health-care waste is abandoned or disposed of\nimproperly. The hazards associated with scattered, small sources of health-care waste should not be overlooked.\nThese sources include pharmaceutical and infectious waste generated by home-based health care, and contaminated\ndisposable materials such as from home dialysis and used needles from insulin injection, or even illicit intravenous\ndrug use.\n3.1.3\nHazards from infectious waste and sharps\nInfectious waste should always be assumed to potentially contain a variety of pathogenic microorganisms. This\nis because the presence or absence of pathogens cannot be determined at the time a waste item is produced and\ndiscarded into a container.",
+      "score": 0.6119441986083984
+    }
+  ],
+  "generation_limitation": {
+    "not_attempted_after_provider_failure": {
+      "type": "AuthenticationError",
+      "http_status": 401
+    }
+  }
+}

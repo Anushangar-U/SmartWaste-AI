@@ -1,0 +1,141 @@
+{
+  "test_id": "IR-02",
+  "executed_at": "2026-09-27T15:56:48.259381+00:00",
+  "input": "Several leaking chemical containers and used syringes have been dumped beside a school near the river since yesterday.",
+  "transport_limit": "Audit-only 60 second request timeout, zero SDK retries. Production source and model unchanged.",
+  "agent1_limitation": {
+    "type": "AuthenticationError",
+    "http_status": 401
+  },
+  "agent1_mode": "audit-authored structured fixture; NOT Agent 1 output",
+  "analysis_fixture": {
+    "waste_types": [
+      "chemical",
+      "medical"
+    ],
+    "location": "beside a school near the river",
+    "duration_days": 1,
+    "severity": "medium",
+    "issue_type": "dumping",
+    "summary": "Several leaking chemical containers and used syringes have been dumped beside a school near the river since yesterday."
+  },
+  "retrieval_query": "chemical and medical dumping near beside a school near the river for 1 days Several leaking chemical containers and used syringes have been dumped beside a school near the river since yesterday",
+  "before_filter": [
+    {
+      "chunk_id": "who_un_environment_guidance_p53_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 53,
+      "text": "34\nSafe management of wastes from health-care activities\n3.3.2\nImpacts of chemical and pharmaceutical waste\nThere is no scientifically documented evidence of widespread illnesses among the general public due to chemical\nor pharmaceutical waste from hospitals. Excreted pharmaceuticals from patients do find their way into waterways,\nwhich can contribute to potentially serious environmental effects, including toxicity to wildlife and the generation\nof antibiotic resistance in bacteria (e.g. Guardabassi et al., 1998).\nPharmacists, anaesthetists, and nursing, auxiliary and maintenance personnel may be at risk of respiratory or\ndermal diseases caused by exposure to chemicals and pharmaceuticals. To minimize this type of occupational\nrisk, less hazardous chemicals should be substituted whenever possible and protective equipment provided to all\npersonnel likely to be exposed. Buildings in which hazardous chemicals are used should be properly ventilated,\nand personnel handling hazardous",
+      "score": 0.5045199394226074
+    },
+    {
+      "chunk_id": "sri_lanka_plastic_action_plan_p3_c02",
+      "source": "sri_lanka_plastic_action_plan.pdf",
+      "page": 3,
+      "text": "Leachate\n16\n\nand Vehicle Service station effluent\n\n4.\nContamination of runoff with petroleum\n16\n\nresidues, healthcare waste effluent,\n\nagrochemicals and other emerging\n\ncontaminants\n\n5.\nFood handling establishments and Kitchen\n17\n\nwaste (grey water)\n\n6.\nRadioactive (liquid) waste.\n17\nPage No.",
+      "score": 0.5015859603881836
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p102_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 102,
+      "text": "acuum\ncleaners should never be used for spilled mercury. Mercury can be cleaned up easily from wood, linoleum, tile and\nsimilar smooth surfaces. It cannot be completely removed from carpets, curtains, upholstery or other absorbent\nmaterials. The affected portion should be isolated and disposed of in accordance with official guidelines. For more\ninformation on spill clean-up, see section 11.3.2.\nUnused pharmaceuticals should go back to the pharmacy for return to the manufacturers or dispatched to specialist\nwaste-treatment contractors. Pharmaceuticals should be kept in their original packaging to aid identification and\nprevent reaction between incompatible chemicals. Spilt and contaminated chemicals and pharmaceuticals should\nnot be returned to the pharmacy but should go directly from the point of production to a waste store. Typically,\nthey are stored and transported within a health-care facility in brown cardboard boxes and must be kept dry.\nWhere specialist disposal services exist,",
+      "score": 0.49692636728286743
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p11_c09",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 11,
+      "text": ".............................................................................................................................................128\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping..........................................................................................................134\nFigure 8.7\nExample of a low-cost pit cover....................................................................................................................................................................136\nFigure 9.1\nDeaths due to improper water and sanitation systems per 1000 population.................................................................148\nFigure 9.2\nImproper disposal of photochemicals into the sewerage system..........................................................................................152\nFigure 9.3\nActivated sludge wastewater-treatment system in a hospital in Sonla, Vietnam..........................................................154\nFigure",
+      "score": 0.49385377764701843
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p48_c04",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 48,
+      "text": "ons where\nthe concentration in air may exceed safety limits.\nPesticides\nObsolete pesticides, stored in leaking drums or torn bags, can directly or indirectly affect the health of anyone who\ncomes into contact with them. During heavy rains, leaking pesticides can seep into the ground and contaminate\ngroundwaters. Poisoning can occur through direct contact with a pesticide formulation, inhalation of vapours,\ndrinking contaminated water or eating contaminated food. Other hazards may include the possibility of\nspontaneous combustion if improperly stored, and contamination as a result of inadequate disposal, such as open\nburning or indiscriminate burying.\n3.1.5\nHazards from genotoxic waste\nSpecial care in handling genotoxic waste is essential. The severity of the hazards for health-care workers responsible\nfor the handling or disposal of genotoxic waste is governed by a combination of the substance toxicity itself and\nthe extent and duration of exposure. Exposure to genotoxic substances in",
+      "score": 0.49340832233428955
+    }
+  ],
+  "qualifying_by_threshold": [
+    {
+      "chunk_id": "who_un_environment_guidance_p53_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 53,
+      "text": "34\nSafe management of wastes from health-care activities\n3.3.2\nImpacts of chemical and pharmaceutical waste\nThere is no scientifically documented evidence of widespread illnesses among the general public due to chemical\nor pharmaceutical waste from hospitals. Excreted pharmaceuticals from patients do find their way into waterways,\nwhich can contribute to potentially serious environmental effects, including toxicity to wildlife and the generation\nof antibiotic resistance in bacteria (e.g. Guardabassi et al., 1998).\nPharmacists, anaesthetists, and nursing, auxiliary and maintenance personnel may be at risk of respiratory or\ndermal diseases caused by exposure to chemicals and pharmaceuticals. To minimize this type of occupational\nrisk, less hazardous chemicals should be substituted whenever possible and protective equipment provided to all\npersonnel likely to be exposed. Buildings in which hazardous chemicals are used should be properly ventilated,\nand personnel handling hazardous",
+      "score": 0.5045199394226074
+    },
+    {
+      "chunk_id": "sri_lanka_plastic_action_plan_p3_c02",
+      "source": "sri_lanka_plastic_action_plan.pdf",
+      "page": 3,
+      "text": "Leachate\n16\n\nand Vehicle Service station effluent\n\n4.\nContamination of runoff with petroleum\n16\n\nresidues, healthcare waste effluent,\n\nagrochemicals and other emerging\n\ncontaminants\n\n5.\nFood handling establishments and Kitchen\n17\n\nwaste (grey water)\n\n6.\nRadioactive (liquid) waste.\n17\nPage No.",
+      "score": 0.5015859603881836
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p102_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 102,
+      "text": "acuum\ncleaners should never be used for spilled mercury. Mercury can be cleaned up easily from wood, linoleum, tile and\nsimilar smooth surfaces. It cannot be completely removed from carpets, curtains, upholstery or other absorbent\nmaterials. The affected portion should be isolated and disposed of in accordance with official guidelines. For more\ninformation on spill clean-up, see section 11.3.2.\nUnused pharmaceuticals should go back to the pharmacy for return to the manufacturers or dispatched to specialist\nwaste-treatment contractors. Pharmaceuticals should be kept in their original packaging to aid identification and\nprevent reaction between incompatible chemicals. Spilt and contaminated chemicals and pharmaceuticals should\nnot be returned to the pharmacy but should go directly from the point of production to a waste store. Typically,\nthey are stored and transported within a health-care facility in brown cardboard boxes and must be kept dry.\nWhere specialist disposal services exist,",
+      "score": 0.49692636728286743
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p11_c09",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 11,
+      "text": ".............................................................................................................................................128\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping..........................................................................................................134\nFigure 8.7\nExample of a low-cost pit cover....................................................................................................................................................................136\nFigure 9.1\nDeaths due to improper water and sanitation systems per 1000 population.................................................................148\nFigure 9.2\nImproper disposal of photochemicals into the sewerage system..........................................................................................152\nFigure 9.3\nActivated sludge wastewater-treatment system in a hospital in Sonla, Vietnam..........................................................154\nFigure",
+      "score": 0.49385377764701843
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p48_c04",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 48,
+      "text": "ons where\nthe concentration in air may exceed safety limits.\nPesticides\nObsolete pesticides, stored in leaking drums or torn bags, can directly or indirectly affect the health of anyone who\ncomes into contact with them. During heavy rains, leaking pesticides can seep into the ground and contaminate\ngroundwaters. Poisoning can occur through direct contact with a pesticide formulation, inhalation of vapours,\ndrinking contaminated water or eating contaminated food. Other hazards may include the possibility of\nspontaneous combustion if improperly stored, and contamination as a result of inadequate disposal, such as open\nburning or indiscriminate burying.\n3.1.5\nHazards from genotoxic waste\nSpecial care in handling genotoxic waste is essential. The severity of the hazards for health-care workers responsible\nfor the handling or disposal of genotoxic waste is governed by a combination of the substance toxicity itself and\nthe extent and duration of exposure. Exposure to genotoxic substances in",
+      "score": 0.49340832233428955
+    }
+  ],
+  "threshold": 0.35,
+  "direct_complaint_ranking": [
+    {
+      "chunk_id": "who_un_environment_guidance_p26_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 26,
+      "text": "id blood-\npressure gauges). Whenever possible, spilt drops of mercury should be recovered. Residues from dentistry also\nhave high mercury contents. Cadmium waste comes mainly from discarded batteries. Reinforced wood panels\ncontaining lead are still used in radiation proofing in X-ray and diagnostic departments.\nMany types of gas are used in health care and are often stored in portable pressurized cylinders, cartridges and\naerosol cans. Many of these are reusable, once empty or of no further use (although they may still contain residues).\nHowever, certain types – notably aerosol cans – are single-use containers that require disposal. Whether inert or\npotentially harmful, gases in pressurized containers should always be handled with care; containers may explode\nif incinerated or accidentally punctured.\nTable 2.2 lists the general classes of chemical waste found in health-care facilities.\nTable 2.2\nChemical waste from health-care activities\nChemical waste\nExamples\nHalogenated solvents",
+      "score": 0.5196460485458374
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p31_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 31,
+      "text": "raldehyde\nPackaging, paper\nChemotherapy\nNeedles and syringes\nBulk chemotherapeutic waste;\nvials, gloves and other material\ncontaminated with cytotoxic\nagents; contaminated excreta and\nurine\nPackaging, paper\nVaccination\ncampaigns\nNeedles and syringes\nBulk vaccine waste, vials, gloves\nPackaging\nEnvironmental\nservices\nBroken glass\nDisinfectants (glutaraldehyde,\nphenols, etc.), cleaners, spilt\nmercury, pesticides\nPackaging, flowers, newspapers, magazines,\ncardboard, plastic and glass containers, yard\nand plant waste\nEngineering\nCleaning solvents, oils, lubricants,\nthinners, asbestos, broken mercury\ndevices, batteries\nPackaging, construction or demolition waste,\nwood, metal\nFood services\nFood scraps; plastic, metal and glass\ncontainers; packaging",
+      "score": 0.5035830736160278
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p205_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 205,
+      "text": "osal\nPlastic bag (red, yellow, or brown, as appropriate), sharps\ncontainer\nDecontaminating or disinfecting the area\nFor infectious material: disinfectantsa\nFor hazardous chemicals: suitable solvent or water\nDocumenting the spillage\nReport of incident to the superior\na Such as bleaching powder, which is a mixture of calcium hydroxide, calcium chloride and sodium hypochlorite, used in the powder form or in solution of varying\ndilution (1:1 to 1:100) depending on the nature of the spilled material\nSource: adapted from Reinhardt & Gordon (1991)\nBox 11.2 Example of general procedure for dealing with spillages\n•\nEvacuate the contaminated area.\n•\nDecontaminate the eyes and skin of exposed personnel immediately.\n•\nInform the designated person (usually the waste-management officer or infection-control officer), who should\ncoordinate the necessary actions.\n•\nDetermine the nature of the spill.\n•\nEvacuate all the people not involved in cleaning up if the spillage involves a particularly hazardous",
+      "score": 0.4987868666648865
+    },
+    {
+      "chunk_id": "safe_healthcare_waste_p198_c01",
+      "source": "safe_healthcare_waste.pdf",
+      "page": 198,
+      "text": "Compendium of WHO and other UN guidance on health and environment\n188\n2022 update\nWHO’s health advice on the safe handling of chemicals\nPeople get in contact with many different chemicals every day. Examples are products used to clean, bleach,\nor disinfect, such as in the home or workplace. Many chemicals are harmless or even good for you. Others\nsuch as pesticides are dangerous and can harm your health. There are some actions you can take to handle\nchemicals safely.\n•\nStore chemicals and medicines in a safe way. Safe storage means children cannot reach them or open\nthem.\n•\nAdd clear labels to packages of chemicals. It’s best not to store chemicals in drinking bottles.\n•\nDispose of chemicals and medicines in a safe way. Safe disposal means not on the ground, in rivers, or\ninto sinks, drains or toilets.\n•\nAvoid the use of pesticides. Examples are products for killing plant pests or for killing pests in homes. But\nif using pesticides special clothes must be worn for protection. Gloves",
+      "score": 0.49536263942718506
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p150_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 150,
+      "text": "131\nTreatment and disposal methods\n• Large amounts of chemical waste should not be buried, because they may leak from their containers, overwhelm\nthe natural attenuation process provided by the surrounding waste and soils, and contaminate water sources.\n• Large amounts of chemical disinfectants should not be encapsulated, because they are corrosive to concrete and\nsometimes produce flammable gases.\nAn option for disposing of hazardous chemicals is to return them to the original supplier, who should be equipped\nto deal with them safely. Where such an arrangement is envisaged, appropriate provisions should be included in the\noriginal purchase contract for the chemicals. Preferably, these wastes should be treated by a specialist contractor\nwith the expertise and facilities to dispose safely of hazardous waste. Use of certain products for non-medical\npurposes may also be considered; for example, use of outdated disinfectants to clean toilets is often acceptable.\nPhotochemicals should be",
+      "score": 0.4947223961353302
+    }
+  ],
+  "generation_limitation": {
+    "not_attempted_after_provider_failure": {
+      "type": "AuthenticationError",
+      "http_status": 401
+    }
+  }
+}

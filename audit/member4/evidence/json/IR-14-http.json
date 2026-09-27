@@ -1,0 +1,41 @@
+{
+  "executed_at": "2026-09-27T16:00:56.055580+00:00",
+  "mode": "temporary in-memory account; random credential and token never persisted",
+  "registration": {
+    "status": 201,
+    "body": {
+      "message": "Registered"
+    }
+  },
+  "login": {
+    "status": 200,
+    "body": {
+      "access_token": "[REDACTED]",
+      "token_type": "bearer",
+      "role": "user"
+    }
+  },
+  "requests": [
+    {
+      "route": "/agents/analyze",
+      "status": 403,
+      "body": {
+        "detail": "Insufficient permissions"
+      }
+    },
+    {
+      "route": "/agents/retrieve",
+      "status": 403,
+      "body": {
+        "detail": "Insufficient permissions"
+      }
+    },
+    {
+      "route": "/agents/decide",
+      "status": 403,
+      "body": {
+        "detail": "Insufficient permissions"
+      }
+    }
+  ]
+}

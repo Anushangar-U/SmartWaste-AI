@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-09-27T16:05:49.149887+00:00",
+  "mode": "Static Observation; no packet capture, remote-deployment or TLS interception test",
+  "frontend_backend_url": "http://localhost:8000",
+  "frontend_transport": "requests.post JSON for complaints; form POST for login; configured local HTTP",
+  "agent1_openrouter_url": "https://openrouter.ai/api/v1",
+  "agent2_openrouter_url": "https://openrouter.ai/api/v1/",
+  "groq_url": "https://api.groq.com",
+  "jwt_algorithm": "HS256",
+  "token_lifetime_minutes": 60,
+  "credential_flow": "Agent 1 key goes to Agent 1 OpenRouter client, Agent 2 key to OpenRouter client, Groq key to Groq client. Backend JWT is used for local protected routes, not passed to AI prompts. No packet-level destination attestation performed.",
+  "implication": "HTTP is expected for the documented localhost setup. Exposing the same configuration on an untrusted network would leave login credentials and complaint traffic without transport encryption; deploy with TLS and correct proxy configuration."
+}

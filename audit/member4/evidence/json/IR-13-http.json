@@ -1,0 +1,30 @@
+{
+  "executed_at": "2026-09-27T16:00:55.421596+00:00",
+  "mode": "local ASGI HTTP, real auth dependencies",
+  "requests": [
+    {
+      "route": "/agents/analyze",
+      "auth": "absent",
+      "status": 401,
+      "body": {
+        "detail": "Not authenticated"
+      }
+    },
+    {
+      "route": "/agents/retrieve",
+      "auth": "absent",
+      "status": 401,
+      "body": {
+        "detail": "Not authenticated"
+      }
+    },
+    {
+      "route": "/agents/decide",
+      "auth": "absent",
+      "status": 401,
+      "body": {
+        "detail": "Not authenticated"
+      }
+    }
+  ]
+}

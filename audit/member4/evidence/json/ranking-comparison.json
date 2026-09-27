@@ -1,0 +1,310 @@
+{
+  "IR-01": {
+    "before_filter": [
+      {
+        "rank": 1,
+        "chunk_id": "who_un_environment_guidance_p153_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.5529284477233887
+      },
+      {
+        "rank": 2,
+        "chunk_id": "beyond_age_of_waste_p10_c03",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 10,
+        "score": 0.5353035926818848
+      },
+      {
+        "rank": 3,
+        "chunk_id": "beyond_age_of_waste_p90_c02",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 90,
+        "score": 0.5257139205932617
+      },
+      {
+        "rank": 4,
+        "chunk_id": "sri_lanka_plastic_action_plan_p15_c02",
+        "source": "sri_lanka_plastic_action_plan.pdf",
+        "page": 15,
+        "score": 0.5232354402542114
+      },
+      {
+        "rank": 5,
+        "chunk_id": "beyond_age_of_waste_p7_c04",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 7,
+        "score": 0.5226325392723083
+      }
+    ],
+    "direct_complaint_ranking": [
+      {
+        "rank": 1,
+        "chunk_id": "who_un_environment_guidance_p29_c04",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 29,
+        "score": 0.4500404894351959
+      },
+      {
+        "rank": 2,
+        "chunk_id": "beyond_age_of_waste_p55_c01",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 55,
+        "score": 0.4324513077735901
+      },
+      {
+        "rank": 3,
+        "chunk_id": "who_un_environment_guidance_p153_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.42571431398391724
+      },
+      {
+        "rank": 4,
+        "chunk_id": "beyond_age_of_waste_p90_c02",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 90,
+        "score": 0.4023837149143219
+      },
+      {
+        "rank": 5,
+        "chunk_id": "beyond_age_of_waste_p10_c03",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 10,
+        "score": 0.4005473852157593
+      }
+    ]
+  },
+  "IR-05": {
+    "before_filter": [
+      {
+        "rank": 1,
+        "chunk_id": "who_un_environment_guidance_p153_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.5522010326385498
+      },
+      {
+        "rank": 2,
+        "chunk_id": "who_un_environment_guidance_p50_c02",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 50,
+        "score": 0.5435338020324707
+      },
+      {
+        "rank": 3,
+        "chunk_id": "beyond_age_of_waste_p7_c04",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 7,
+        "score": 0.5376737117767334
+      },
+      {
+        "rank": 4,
+        "chunk_id": "who_un_environment_guidance_p54_c04",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 54,
+        "score": 0.5335636138916016
+      },
+      {
+        "rank": 5,
+        "chunk_id": "who_un_environment_guidance_p157_c03",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 157,
+        "score": 0.5317625999450684
+      }
+    ],
+    "direct_complaint_ranking": [
+      {
+        "rank": 1,
+        "chunk_id": "who_un_environment_guidance_p153_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.5382416248321533
+      },
+      {
+        "rank": 2,
+        "chunk_id": "beyond_age_of_waste_p7_c04",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 7,
+        "score": 0.520190417766571
+      },
+      {
+        "rank": 3,
+        "chunk_id": "who_un_environment_guidance_p157_c03",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 157,
+        "score": 0.51811683177948
+      },
+      {
+        "rank": 4,
+        "chunk_id": "who_un_environment_guidance_p50_c02",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 50,
+        "score": 0.5147939920425415
+      },
+      {
+        "rank": 5,
+        "chunk_id": "who_un_environment_guidance_p159_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 159,
+        "score": 0.5074349641799927
+      }
+    ],
+    "before_filter_overlap_with_IR01": 2,
+    "direct_complaint_ranking_overlap_with_IR01": 1
+  },
+  "IR-06": {
+    "before_filter": [
+      {
+        "rank": 1,
+        "chunk_id": "who_un_environment_guidance_p157_c03",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 157,
+        "score": 0.5905873775482178
+      },
+      {
+        "rank": 2,
+        "chunk_id": "who_un_environment_guidance_p29_c02",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 29,
+        "score": 0.58660489320755
+      },
+      {
+        "rank": 3,
+        "chunk_id": "who_un_environment_guidance_p153_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.5807228088378906
+      },
+      {
+        "rank": 4,
+        "chunk_id": "who_un_environment_guidance_p29_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 29,
+        "score": 0.5765951871871948
+      },
+      {
+        "rank": 5,
+        "chunk_id": "who_un_environment_guidance_p45_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 45,
+        "score": 0.5745484232902527
+      }
+    ],
+    "direct_complaint_ranking": [
+      {
+        "rank": 1,
+        "chunk_id": "who_un_environment_guidance_p29_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 29,
+        "score": 0.6320593357086182
+      },
+      {
+        "rank": 2,
+        "chunk_id": "who_un_environment_guidance_p159_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 159,
+        "score": 0.6216842532157898
+      },
+      {
+        "rank": 3,
+        "chunk_id": "who_un_environment_guidance_p29_c02",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 29,
+        "score": 0.6213674545288086
+      },
+      {
+        "rank": 4,
+        "chunk_id": "who_un_environment_guidance_p101_c02",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 101,
+        "score": 0.6206086277961731
+      },
+      {
+        "rank": 5,
+        "chunk_id": "who_un_environment_guidance_p45_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 45,
+        "score": 0.6119441986083984
+      }
+    ],
+    "before_filter_overlap_with_IR01": 1,
+    "direct_complaint_ranking_overlap_with_IR01": 0
+  },
+  "IR-07": {
+    "before_filter": [
+      {
+        "rank": 1,
+        "chunk_id": "beyond_age_of_waste_p29_c03",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 29,
+        "score": 0.520046055316925
+      },
+      {
+        "rank": 2,
+        "chunk_id": "beyond_age_of_waste_p29_c01",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 29,
+        "score": 0.4960549473762512
+      },
+      {
+        "rank": 3,
+        "chunk_id": "who_un_environment_guidance_p153_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.49120062589645386
+      },
+      {
+        "rank": 4,
+        "chunk_id": "who_un_environment_guidance_p11_c09",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 11,
+        "score": 0.4811357259750366
+      },
+      {
+        "rank": 5,
+        "chunk_id": "beyond_age_of_waste_p90_c02",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 90,
+        "score": 0.46820271015167236
+      }
+    ],
+    "direct_complaint_ranking": [
+      {
+        "rank": 1,
+        "chunk_id": "beyond_age_of_waste_p29_c03",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 29,
+        "score": 0.4975908398628235
+      },
+      {
+        "rank": 2,
+        "chunk_id": "who_un_environment_guidance_p153_c01",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.49672943353652954
+      },
+      {
+        "rank": 3,
+        "chunk_id": "beyond_age_of_waste_p29_c01",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 29,
+        "score": 0.4839288294315338
+      },
+      {
+        "rank": 4,
+        "chunk_id": "beyond_age_of_waste_p90_c02",
+        "source": "beyond_age_of_waste.pdf",
+        "page": 90,
+        "score": 0.48188334703445435
+      },
+      {
+        "rank": 5,
+        "chunk_id": "who_un_environment_guidance_p153_c03",
+        "source": "who_un_environment_guidance.pdf",
+        "page": 153,
+        "score": 0.4706936478614807
+      }
+    ]
+  }
+}

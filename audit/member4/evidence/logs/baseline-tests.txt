@@ -1,0 +1,75 @@
+COMMAND: .venv/Scripts/python.exe -m tests.test_rules_no_api
+EXIT CODE: 0
+
+--- Valid decision, matches evidence ---
+Result: {'priority': 'high', 'recommended_action': 'Dispatch collection crew within 24 hours.', 'explanation': 'Waste has been uncollected for 5 days near a school.', 'supporting_sources': ['Waste Collection Guidelines'], 'requires_human_review': False, 'confidence': 0.85}
+Issues: (none)
+
+--- Invalid priority string ---
+Result: {'priority': 'medium', 'recommended_action': 'Send a team.', 'explanation': "It's bad.", 'supporting_sources': [], 'requires_human_review': True, 'confidence': 0.9}
+Issues: ["Invalid priority 'super-urgent'; defaulting to 'medium'.", 'No evidence was retrieved for this complaint.']
+
+--- Fabricated citation ---
+Result: {'priority': 'medium', 'recommended_action': 'Investigate further.', 'explanation': 'Based on municipal code section 4.2.', 'supporting_sources': [], 'requires_human_review': True, 'confidence': 0.8}
+Issues: ["Removed cited sources that weren't part of the retrieved evidence."]
+
+--- Low confidence forces human review ---
+Result: {'priority': 'low', 'recommended_action': 'Monitor the situation.', 'explanation': 'Unclear complaint details.', 'supporting_sources': [], 'requires_human_review': True, 'confidence': 0.3}
+Issues: ['No evidence was retrieved for this complaint.']
+
+--- Hazardous keyword triggers human review ---
+Result: {'priority': 'high', 'recommended_action': 'Contact hazmat team.', 'explanation': 'Complaint mentions a possible chemical spill near the site.', 'supporting_sources': [], 'requires_human_review': True, 'confidence': 0.9}
+Issues: ['No evidence was retrieved for this complaint.', 'High-risk keyword detected; forced human review.']
+
+--- Missing evidence forces human review ---
+Result: {'priority': 'medium', 'recommended_action': 'Send inspector.', 'explanation': 'No supporting documents were found.', 'supporting_sources': [], 'requires_human_review': True, 'confidence': 0.75}
+Issues: ['No evidence was retrieved for this complaint.']
+
+--- Missing required fields ---
+Result: {'priority': 'high', 'requires_human_review': True, 'explanation': '', 'recommended_action': 'Manual review required.', 'confidence': 0.0, 'supporting_sources': []}
+Issues: ["Missing required fields: ['confidence', 'explanation', 'recommended_action', 'requires_human_review', 'supporting_sources']", 'No evidence was retrieved for this complaint.']
+
+All checks ran. Review the 'Issues' lines above against what you'd expect.
+
+
+COMMAND: .venv/Scripts/python.exe -m unittest tests.test_integration -v
+EXIT CODE: 0
+test_adapters_preserve_metadata_and_normalize_decision (tests.test_integration.PipelineIntegrationTests.test_adapters_preserve_metadata_and_normalize_decision) ... ok
+test_agent_api_failure_is_wrapped (tests.test_integration.PipelineIntegrationTests.test_agent_api_failure_is_wrapped) ... stage=analyst status=failed error=RuntimeError
+ok
+test_critical_or_low_confidence_decision_requires_review (tests.test_integration.PipelineIntegrationTests.test_critical_or_low_confidence_decision_requires_review) ... ok
+test_high_severity_complaint_requires_review (tests.test_integration.PipelineIntegrationTests.test_high_severity_complaint_requires_review) ... ok
+test_missing_rag_evidence_requires_review (tests.test_integration.PipelineIntegrationTests.test_missing_rag_evidence_requires_review) ... ok
+test_normal_medium_complaint (tests.test_integration.PipelineIntegrationTests.test_normal_medium_complaint) ... ok
+test_selected_location_reaches_analyst_and_retrieval (tests.test_integration.PipelineIntegrationTests.test_selected_location_reaches_analyst_and_retrieval) ... ok
+test_text_only_and_already_mentioned_location_are_not_duplicated (tests.test_integration.PipelineIntegrationTests.test_text_only_and_already_mentioned_location_are_not_duplicated) ... ok
+test_weak_rag_answer_requires_review_even_with_chunks (tests.test_integration.PipelineIntegrationTests.test_weak_rag_answer_requires_review_even_with_chunks) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.004s
+
+OK
+
+
+COMMAND: .venv/Scripts/python.exe -m unittest tests.test_rag_evidence tests.test_decision_safety tests.test_faiss_build -v
+EXIT CODE: 0
+test_all_chunks_above_threshold (tests.test_rag_evidence.EvidenceFilteringTests.test_all_chunks_above_threshold) ... ok
+test_exact_threshold_is_included (tests.test_rag_evidence.EvidenceFilteringTests.test_exact_threshold_is_included) ... ok
+test_mixed_scores_exclude_weak_chunk_from_prompt_and_result (tests.test_rag_evidence.EvidenceFilteringTests.test_mixed_scores_exclude_weak_chunk_from_prompt_and_result) ... ok
+test_no_chunks_above_threshold (tests.test_rag_evidence.EvidenceFilteringTests.test_no_chunks_above_threshold) ... ok
+test_agent_failure_is_not_repeated_in_pipeline_warnings (tests.test_decision_safety.DecisionSafetyTests.test_agent_failure_is_not_repeated_in_pipeline_warnings) ... ok
+test_analysis_risk_is_used_when_original_text_unavailable (tests.test_decision_safety.DecisionSafetyTests.test_analysis_risk_is_used_when_original_text_unavailable) ... ok
+test_empty_model_response_uses_parse_fallback (tests.test_decision_safety.DecisionSafetyTests.test_empty_model_response_uses_parse_fallback) ... ok
+test_generated_hazard_words_do_not_flag_routine_complaint (tests.test_decision_safety.DecisionSafetyTests.test_generated_hazard_words_do_not_flag_routine_complaint) ... ok
+test_malformed_decision_still_produces_safe_schema (tests.test_decision_safety.DecisionSafetyTests.test_malformed_decision_still_produces_safe_schema) ... ok
+test_missing_evidence_has_one_visible_issue (tests.test_decision_safety.DecisionSafetyTests.test_missing_evidence_has_one_visible_issue) ... ok
+test_original_hazardous_complaint_requires_review (tests.test_decision_safety.DecisionSafetyTests.test_original_hazardous_complaint_requires_review) ... ok
+test_unsupported_citation_forces_review (tests.test_decision_safety.DecisionSafetyTests.test_unsupported_citation_forces_review) ... ok
+test_build_info_is_saved_without_changing_index_format (tests.test_faiss_build.FaissBuildValidationTests.test_build_info_is_saved_without_changing_index_format) ... ok
+test_count_comes_from_current_corpus (tests.test_faiss_build.FaissBuildValidationTests.test_count_comes_from_current_corpus) ... ok
+test_vector_metadata_and_dimension_mismatches_are_rejected (tests.test_faiss_build.FaissBuildValidationTests.test_vector_metadata_and_dimension_mismatches_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.144s
+
+OK

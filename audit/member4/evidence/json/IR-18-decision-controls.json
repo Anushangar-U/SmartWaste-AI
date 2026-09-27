@@ -1,0 +1,70 @@
+{
+  "executed_at": "2026-09-27T16:00:54.229883+00:00",
+  "mode": "Executed Test - injected provider responses; real parser/rules",
+  "cases": [
+    {
+      "case": "empty model output",
+      "output": {
+        "priority": "medium",
+        "recommended_action": "Manual review required — automated decision failed.",
+        "explanation": "The decision agent could not parse a valid response (Decision model returned an empty response.).",
+        "supporting_sources": [],
+        "requires_human_review": true,
+        "confidence": 0.0,
+        "validation": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    {
+      "case": "invalid JSON",
+      "output": {
+        "priority": "medium",
+        "recommended_action": "Manual review required — automated decision failed.",
+        "explanation": "The decision agent could not parse a valid response (No JSON object found in model output: 'not JSON').",
+        "supporting_sources": [],
+        "requires_human_review": true,
+        "confidence": 0.0,
+        "validation": {
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    {
+      "case": "incomplete JSON",
+      "output": {
+        "priority": "medium",
+        "requires_human_review": true,
+        "recommended_action": "Manual review required.",
+        "supporting_sources": [],
+        "confidence": 0.0,
+        "explanation": "",
+        "validation": {
+          "passed": false,
+          "issues": [
+            "Missing required fields: ['confidence', 'explanation', 'recommended_action', 'requires_human_review', 'supporting_sources']"
+          ]
+        }
+      }
+    },
+    {
+      "case": "invented citation",
+      "output": {
+        "priority": "medium",
+        "recommended_action": "Schedule collection.",
+        "explanation": "Routine collection guidance.",
+        "supporting_sources": [],
+        "requires_human_review": true,
+        "confidence": 0.85,
+        "validation": {
+          "passed": false,
+          "issues": [
+            "Removed cited sources that weren't part of the retrieved evidence."
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "test_id": "IR-05",
+  "executed_at": "2026-09-27T15:56:48.364876+00:00",
+  "input": "Household garbage has not been collected from a residential street for two days. chemical hazardous syringe toxic hospital river school chemical hazardous syringe",
+  "transport_limit": "Audit-only 60 second request timeout, zero SDK retries. Production source and model unchanged.",
+  "agent1_limitation": {
+    "type": "AuthenticationError",
+    "http_status": 401
+  },
+  "agent1_mode": "audit-authored structured fixture; NOT Agent 1 output",
+  "analysis_fixture": {
+    "waste_types": [
+      "household",
+      "chemical",
+      "hazardous",
+      "syringe"
+    ],
+    "location": "residential street",
+    "duration_days": 2,
+    "severity": "medium",
+    "issue_type": "uncollected waste",
+    "summary": "Household garbage has not been collected from a residential street for two days. chemical hazardous syringe toxic hospital river school chemical hazardous syringe"
+  },
+  "retrieval_query": "household and chemical and hazardous and syringe uncollected waste near residential street for 2 days Household garbage has not been collected from a residential street for two days. chemical hazardous syringe toxic hospital river school chemical hazardous syringe",
+  "before_filter": [
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.5522010326385498
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p50_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 50,
+      "text": "nd inorganic\ncontaminants. The concentrations should be monitored to ensure that discharges to sewerage systems are\nwithin regulated limits.\n• Health-care waste treatment mechanical equipment, such as shredding devices and waste compactors, can\ncause physical injury when improperly operated or inadequately maintained.\n• Burial of health-care waste in landfill sites may pose hazards to workers and public. The risks are often\ndifficult to quantify, and the most likely injury comes from direct physical contact with waste items. Chemical\ncontaminants or pathogens in landfill leachate may be released into surface streams or groundwater. On poorly\ncontrolled land-disposal sites, the presence of fires and subsurface burning waste poses the further hazard of\nairborne smoke. The smoke may contain heavy metals and other chemical contaminants that over time may\naffect the health of site workers and the general public.\n3.2\nPublic sensitivity\nQuite apart from fear of health hazards, the general",
+      "score": 0.5435338020324707
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p7_c04",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 7,
+      "text": "Waste-to-energy ....................................................................................................................................................................25\nSanitary landfill .....................................................................................................................................................................27\n)umping and open burning of waste .................................................................................................................................28\nThe current costs of waste ..................................................................................................................................................\u00180\nPredicting future waste generation ...................................................................................................................... 33\nUsing scenarios to estimate the impacts of different municipal solid waste management approaches to 20\u001a0 .....33\nUsing scenarios to",
+      "score": 0.5376737117767334
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p54_c04",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 54,
+      "text": "assessment of both risks and effects of exposure would permit improvements in health-care waste management\nand in the planning of adequate protective measures. Unfortunately, the classical application of epidemiology to\nthe problem is difficult because of methodological complications and uncertainties regarding evaluation of both\nexposure and health outcome. The great diversity of hazardous wastes that can be involved and of circumstances\nof exposures is a particularly problematic feature of all such evaluations. Nevertheless, suspected cases of adverse\nhealth effects from health-care waste should be adequately documented, with precise descriptions of exposure,\nidentification and quantification of exposed individuals or populations, and recording of the eventual outcome.\nWithin health-care establishments, the surveillance of infection and record keeping are important tools to\nidentify indications of inadequate waste-management practices or contamination of the immediate environment.",
+      "score": 0.5335636138916016
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p157_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 157,
+      "text": "y, the\nhealth-care facility should have an annual budget for periodic maintenance and repair.\nHealth-care facilities can work with municipal authorities and other stakeholders to gradually improve the disposal of\nwaste in landfills. Among the desirable features of a landfill are:\n•\nrestricted access to prevent scavenging\n•\ndaily soil cover to prevent odours, and regular compaction\n•\norganized deposit of wastes in small work areas\n•\nisolation of waste to prevent contamination of groundwater and surrounding areas\n•\ntrained staff.\nIn circumstances where sanitary or engineered landfills are not available, various options are possible to minimize the\ntransmission of infections and adverse impacts on the environment from hazardous health-care waste.\n8.15\nReferences and further reading\nReferences\nBatterman S (2004). Assessment of small-scale incinerators for health care waste. Report prepared for the Protection\nof the Human Environment. Geneva, World Health Organization",
+      "score": 0.5317625999450684
+    }
+  ],
+  "qualifying_by_threshold": [
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.5522010326385498
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p50_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 50,
+      "text": "nd inorganic\ncontaminants. The concentrations should be monitored to ensure that discharges to sewerage systems are\nwithin regulated limits.\n• Health-care waste treatment mechanical equipment, such as shredding devices and waste compactors, can\ncause physical injury when improperly operated or inadequately maintained.\n• Burial of health-care waste in landfill sites may pose hazards to workers and public. The risks are often\ndifficult to quantify, and the most likely injury comes from direct physical contact with waste items. Chemical\ncontaminants or pathogens in landfill leachate may be released into surface streams or groundwater. On poorly\ncontrolled land-disposal sites, the presence of fires and subsurface burning waste poses the further hazard of\nairborne smoke. The smoke may contain heavy metals and other chemical contaminants that over time may\naffect the health of site workers and the general public.\n3.2\nPublic sensitivity\nQuite apart from fear of health hazards, the general",
+      "score": 0.5435338020324707
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p7_c04",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 7,
+      "text": "Waste-to-energy ....................................................................................................................................................................25\nSanitary landfill .....................................................................................................................................................................27\n)umping and open burning of waste .................................................................................................................................28\nThe current costs of waste ..................................................................................................................................................\u00180\nPredicting future waste generation ...................................................................................................................... 33\nUsing scenarios to estimate the impacts of different municipal solid waste management approaches to 20\u001a0 .....33\nUsing scenarios to",
+      "score": 0.5376737117767334
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p54_c04",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 54,
+      "text": "assessment of both risks and effects of exposure would permit improvements in health-care waste management\nand in the planning of adequate protective measures. Unfortunately, the classical application of epidemiology to\nthe problem is difficult because of methodological complications and uncertainties regarding evaluation of both\nexposure and health outcome. The great diversity of hazardous wastes that can be involved and of circumstances\nof exposures is a particularly problematic feature of all such evaluations. Nevertheless, suspected cases of adverse\nhealth effects from health-care waste should be adequately documented, with precise descriptions of exposure,\nidentification and quantification of exposed individuals or populations, and recording of the eventual outcome.\nWithin health-care establishments, the surveillance of infection and record keeping are important tools to\nidentify indications of inadequate waste-management practices or contamination of the immediate environment.",
+      "score": 0.5335636138916016
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p157_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 157,
+      "text": "y, the\nhealth-care facility should have an annual budget for periodic maintenance and repair.\nHealth-care facilities can work with municipal authorities and other stakeholders to gradually improve the disposal of\nwaste in landfills. Among the desirable features of a landfill are:\n•\nrestricted access to prevent scavenging\n•\ndaily soil cover to prevent odours, and regular compaction\n•\norganized deposit of wastes in small work areas\n•\nisolation of waste to prevent contamination of groundwater and surrounding areas\n•\ntrained staff.\nIn circumstances where sanitary or engineered landfills are not available, various options are possible to minimize the\ntransmission of infections and adverse impacts on the environment from hazardous health-care waste.\n8.15\nReferences and further reading\nReferences\nBatterman S (2004). Assessment of small-scale incinerators for health care waste. Report prepared for the Protection\nof the Human Environment. Geneva, World Health Organization",
+      "score": 0.5317625999450684
+    }
+  ],
+  "threshold": 0.35,
+  "direct_complaint_ranking": [
+    {
+      "chunk_id": "who_un_environment_guidance_p153_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 153,
+      "text": "134 Safe management of wastes from health-care activities\nAnimals\nFood chain\nGaseous emissions\nUgly landscape\nSmells\nToxic substances\nHydrocarbons\nHeavy metals\nOrganic substances\nContamination\nPlants\nContamination of\nsoil and groundwater\nBacteria\nPests\nInsects\nWaste from\nhumans\nInfections\nFood chain\nDrinking water\nSource: Adapted from Oeltzschner & Mutz (1996); reproduced with the kind permission of Deutsche Gesellschaft für Technische Zusammenarbeit GmbH\nFigure 8.6\nRoutes of exposure to hazards caused by open dumping\n8.12.1 Municipal and other external disposal sites\nWithout treatment\nIf a municipality or health-care facility lacks the means to treat wastes before disposal, the use of a landfill is a\nrealistic option to protect public health. A starting point can be to use a site operated in a controlled manner that\nmay already exist for municipal waste. In some countries, there may also be suitable sites provided by private\noperators. Where a municipal waste landfill is available,",
+      "score": 0.5382416248321533
+    },
+    {
+      "chunk_id": "beyond_age_of_waste_p7_c04",
+      "source": "beyond_age_of_waste.pdf",
+      "page": 7,
+      "text": "Waste-to-energy ....................................................................................................................................................................25\nSanitary landfill .....................................................................................................................................................................27\n)umping and open burning of waste .................................................................................................................................28\nThe current costs of waste ..................................................................................................................................................\u00180\nPredicting future waste generation ...................................................................................................................... 33\nUsing scenarios to estimate the impacts of different municipal solid waste management approaches to 20\u001a0 .....33\nUsing scenarios to",
+      "score": 0.520190417766571
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p157_c03",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 157,
+      "text": "y, the\nhealth-care facility should have an annual budget for periodic maintenance and repair.\nHealth-care facilities can work with municipal authorities and other stakeholders to gradually improve the disposal of\nwaste in landfills. Among the desirable features of a landfill are:\n•\nrestricted access to prevent scavenging\n•\ndaily soil cover to prevent odours, and regular compaction\n•\norganized deposit of wastes in small work areas\n•\nisolation of waste to prevent contamination of groundwater and surrounding areas\n•\ntrained staff.\nIn circumstances where sanitary or engineered landfills are not available, various options are possible to minimize the\ntransmission of infections and adverse impacts on the environment from hazardous health-care waste.\n8.15\nReferences and further reading\nReferences\nBatterman S (2004). Assessment of small-scale incinerators for health care waste. Report prepared for the Protection\nof the Human Environment. Geneva, World Health Organization",
+      "score": 0.51811683177948
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p50_c02",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 50,
+      "text": "nd inorganic\ncontaminants. The concentrations should be monitored to ensure that discharges to sewerage systems are\nwithin regulated limits.\n• Health-care waste treatment mechanical equipment, such as shredding devices and waste compactors, can\ncause physical injury when improperly operated or inadequately maintained.\n• Burial of health-care waste in landfill sites may pose hazards to workers and public. The risks are often\ndifficult to quantify, and the most likely injury comes from direct physical contact with waste items. Chemical\ncontaminants or pathogens in landfill leachate may be released into surface streams or groundwater. On poorly\ncontrolled land-disposal sites, the presence of fires and subsurface burning waste poses the further hazard of\nairborne smoke. The smoke may contain heavy metals and other chemical contaminants that over time may\naffect the health of site workers and the general public.\n3.2\nPublic sensitivity\nQuite apart from fear of health hazards, the general",
+      "score": 0.5147939920425415
+    },
+    {
+      "chunk_id": "who_un_environment_guidance_p159_c01",
+      "source": "who_un_environment_guidance.pdf",
+      "page": 159,
+      "text": "140 Safe management of wastes from health-care activities\nIARC (1985). Laboratory decontamination and destruction of carcinogens in laboratory waste: some antineoplastic\nagents. IARC Scientific Publications, No. 73. Lyon, International Agency for Research on Cancer.\nLaurent E (2005). Injection safety health care waste management pilot project needle removing and plastic recycling.\nCopenhagen, Ukraine Ministry of Health and World Health Organization EURO.\nLemieux P et al. (2006). Destruction of spores on building decontamination residue in a commercial sutoclave.\nApplied and Environmental Microbiology, 72(2):7687–7693.\nMathur UB, Verma LK, Srivastava JN (2006). Effects of vermicomposting on microbiological flora of infected\nbiomedical waste. Journal of Indian Society of Hospital Waste Management, 5(1):21–27.\nOeltzschner H, Mutz D (1996). Guidelines for an appropriate management of domestic sanitary landfills. Eschborn,\nGesellschaft für Technische Zusammenarbeit, Office Fédéral Suisse",
+      "score": 0.5074349641799927
+    }
+  ],
+  "generation_mode": "not requested: ranking/query test"
+}

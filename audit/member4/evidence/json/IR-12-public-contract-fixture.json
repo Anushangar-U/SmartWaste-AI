@@ -1,0 +1,46 @@
+{
+  "executed_at": "2026-09-27T16:05:49.035304+00:00",
+  "mode": "controlled agent-result fixtures; real route, orchestrator, validation and HTTP response; not a live AI result",
+  "status": 200,
+  "body": {
+    "request_id": "bdd3b46d",
+    "analysis": {
+      "waste_types": [
+        "household"
+      ],
+      "location": "near a school",
+      "duration_days": null,
+      "severity": "medium",
+      "issue_type": "unknown",
+      "summary": "Audit fixture; not a live Agent 1 result."
+    },
+    "retrieval": {
+      "query": "audit fixture",
+      "answer": "Audit fixture response, not live generation.",
+      "grounded": false,
+      "sources": [],
+      "evidence": []
+    },
+    "decision": {
+      "priority": "medium",
+      "recommended_action": "Manual review required.",
+      "explanation": "",
+      "supporting_sources": [],
+      "requires_human_review": true,
+      "confidence": 0.0,
+      "validation": {
+        "passed": true,
+        "issues": []
+      }
+    },
+    "validation": {
+      "passed": false,
+      "warnings": [
+        "No supporting evidence retrieved; recommendation is unsupported.",
+        "Agent 2 could not produce a sufficiently grounded knowledge answer.",
+        "Low-confidence recommendation requires human review."
+      ]
+    },
+    "disclaimer": "AI-generated recommendation. Final decisions must be made by authorized staff."
+  }
+}

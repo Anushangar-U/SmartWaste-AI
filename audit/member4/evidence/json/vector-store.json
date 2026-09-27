@@ -1,0 +1,15 @@
+{
+  "captured_at": "2026-09-27T15:56:45.803423+00:00",
+  "index_type": "IndexFlatIP",
+  "dimension": 384,
+  "vectors": 2716,
+  "metadata_records": 2716,
+  "source_chunk_counts": {
+    "beyond_age_of_waste.pdf": 467,
+    "safe_healthcare_waste.pdf": 707,
+    "sri_lanka_plastic_action_plan.pdf": 149,
+    "sri_lanka_waste_policy.pdf": 167,
+    "who_un_environment_guidance.pdf": 1226
+  },
+  "build_info_present": false
+}

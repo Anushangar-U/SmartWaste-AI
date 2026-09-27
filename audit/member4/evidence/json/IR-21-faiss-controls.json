@@ -1,0 +1,16 @@
+{
+  "executed_at": "2026-09-27T16:00:54.234346+00:00",
+  "mode": "Executed Test - three-vector temporary corpus, no real index edits",
+  "valid_corpus": {
+    "vectors": 3,
+    "dimension": 384,
+    "index_type": "IndexFlatIP",
+    "validated": true
+  },
+  "missing_store": {
+    "type": "FileNotFoundError"
+  },
+  "mismatched_store": {
+    "type": "RuntimeError"
+  }
+}

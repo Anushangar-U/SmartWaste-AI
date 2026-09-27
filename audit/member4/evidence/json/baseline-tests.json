@@ -1,0 +1,17 @@
+{
+  "executed_at": "2026-09-27T15:54:22.770418+00:00",
+  "runs": [
+    {
+      "command": ".venv/Scripts/python.exe -m tests.test_rules_no_api",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/Scripts/python.exe -m unittest tests.test_integration -v",
+      "exit_code": 0
+    },
+    {
+      "command": ".venv/Scripts/python.exe -m unittest tests.test_rag_evidence tests.test_decision_safety tests.test_faiss_build -v",
+      "exit_code": 0
+    }
+  ]
+}

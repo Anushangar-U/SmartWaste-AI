@@ -1,0 +1,55 @@
+{
+  "executed_at": "2026-09-27T16:00:54.226856+00:00",
+  "mode": "Executed Test - real deterministic validator with labelled model-prose fixture",
+  "cases": [
+    {
+      "case": "routine",
+      "complaint": "Household garbage has not been collected from a residential street for two days.",
+      "decision": {
+        "priority": "medium",
+        "recommended_action": "Routine collection; no chemical team required.",
+        "explanation": "No hazardous or medical waste is reported.",
+        "supporting_sources": [
+          "guide.pdf"
+        ],
+        "requires_human_review": false,
+        "confidence": 0.85
+      },
+      "issues": []
+    },
+    {
+      "case": "hazardous",
+      "complaint": "Several leaking chemical containers and used syringes have been dumped beside a school near the river since yesterday.",
+      "decision": {
+        "priority": "medium",
+        "recommended_action": "Routine collection; no chemical team required.",
+        "explanation": "No hazardous or medical waste is reported.",
+        "supporting_sources": [
+          "guide.pdf"
+        ],
+        "requires_human_review": true,
+        "confidence": 0.85
+      },
+      "issues": [
+        "High-risk keyword detected; forced human review."
+      ]
+    },
+    {
+      "case": "explicit negation",
+      "complaint": "This is ordinary household garbage. It is not chemical waste, not medical waste, not hazardous waste, and there are no syringes.",
+      "decision": {
+        "priority": "medium",
+        "recommended_action": "Routine collection; no chemical team required.",
+        "explanation": "No hazardous or medical waste is reported.",
+        "supporting_sources": [
+          "guide.pdf"
+        ],
+        "requires_human_review": true,
+        "confidence": 0.85
+      },
+      "issues": [
+        "High-risk keyword detected; forced human review."
+      ]
+    }
+  ]
+}

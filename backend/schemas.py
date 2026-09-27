@@ -34,9 +34,14 @@ class AnalysisResult(BaseModel):
 class SourceReference(BaseModel):
     source: str
     page: int
+    source_id: str | None = None
+    title: str | None = None
+    issuer: str | None = None
+    year: int | None = None
+    jurisdiction: str | None = None
 
 
-class EvidenceItem(BaseModel):
+class EvidenceItem(SourceReference):
     chunk_id: str
     source: str
     page: int

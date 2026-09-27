@@ -8,6 +8,8 @@ from openai import OpenAI
 
 from agents.waste_analyzer.schemas import WasteAnalysis
 from backend.config import settings
+from retrieval.processing.quality import deduplicate
+from retrieval.sources import display_metadata
 from retrieval.vector_store.retriever import RetrievalResult, retrieve
 
 
@@ -59,75 +61,22 @@ SYSTEM_PROMPT = (
 
 
 def build_retrieval_query(analysis: WasteAnalysis) -> str:
-    def add_unique_part(parts: list[str], value: str) -> None:
-        cleaned = " ".join(value.split()).strip()
-
-        if not cleaned:
-            return
-
-        if any(part.lower() == cleaned.lower() for part in parts):
-            return
-
-        parts.append(cleaned)
-
-    query_parts: list[str] = []
-
-    waste_types = [
-        item.strip()
-        for item in analysis.waste_types
-        if str(item).strip()
-    ]
-
-    if waste_types:
-        add_unique_part(
-            query_parts,
-            " and ".join(waste_types),
-        )
-
-    if analysis.issue_type:
-        add_unique_part(
-            query_parts,
-            analysis.issue_type.strip(),
-        )
-
-    if analysis.location:
-        location_text = analysis.location.strip()
-
-        if location_text.lower().startswith("near "):
-            add_unique_part(
-                query_parts,
-                location_text,
-            )
-        else:
-            add_unique_part(
-                query_parts,
-                f"near {location_text}",
-            )
-
-    if analysis.duration_days is not None:
-        add_unique_part(
-            query_parts,
-            f"for {analysis.duration_days} days",
-        )
-
-    summary = (
-        analysis.summary.strip().rstrip(".")
-        if analysis.summary
-        else ""
-    )
-
-    if summary:
-        normalized_summary = " ".join(summary.split())
-
-        if normalized_summary.lower() not in " ".join(
-            part.lower() for part in query_parts
-        ):
-            add_unique_part(
-                query_parts,
-                normalized_summary,
-            )
-
-    return " ".join(query_parts).strip() or "waste dumping problem"
+    """Use the summary once; append only context not already represented."""
+    import re
+    parts = [analysis.summary.strip().rstrip(".")] if analysis.summary.strip() else []
+    def add(value):
+        value = " ".join(value.split()).strip()
+        existing = " ".join(parts).lower()
+        words = set(re.findall(r"\w+", value.lower())) - {"near", "beside", "a", "the"}
+        if value and value.lower() != "unknown" and not words <= set(re.findall(r"\w+", existing)):
+            parts.append(value)
+    for waste in analysis.waste_types:
+        add(waste)
+    add(analysis.issue_type)
+    add(analysis.location)
+    if analysis.duration_days is not None and not re.search(r"\b(day|days|week|weeks|month|months|yesterday|today)\b", " ".join(parts), re.I):
+        add(f"for {analysis.duration_days} days")
+    return " ".join(parts).strip() or "waste dumping problem"
 
 
 def retrieve_for_analysis(
@@ -136,10 +85,10 @@ def retrieve_for_analysis(
 ) -> KnowledgeAgentResult:
     query = build_retrieval_query(analysis)
 
-    evidence = retrieve(
+    evidence = deduplicate(retrieve(
         query,
-        top_k=top_k,
-    )
+        top_k=top_k * 3,
+    ), top_k)
 
     sources: list[SourceSummary] = [
         {
@@ -210,7 +159,7 @@ def generate_answer(
         if item["score"] >= min_evidence_score
     ]
     sources: list[SourceSummary] = [
-        {"source": item["source"], "page": int(item["page"])}
+        {"source": item["source"], "page": int(item["page"]), **display_metadata(item["source"])}
         for item in evidence
     ]
 

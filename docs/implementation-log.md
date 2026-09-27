@@ -39,3 +39,14 @@ be recovered after an interrupted process. Total attempts are capped. Readiness 
 safe configuration/file/database checks, not a false guarantee of valid credentials.
 Verification: 13 resilience/integration/frontend tests passed. Provider failure messages
 are sanitized; no live provider requests were used for this phase.
+
+## Phase 5
+Verified five-document title/issuer/year/jurisdiction/hash manifest preserves historical
+filenames. Runtime evidence gains official metadata. Queries avoid repeated summary fields;
+candidate retrieval remains MiniLM/FAISS with five deduplicated results and threshold 0.35.
+Conservative page exclusion is recorded in future build metadata. The existing development
+index is not rebuilt by tests. No reranker or unmeasured quality gain is claimed.
+Verification: 10 retrieval/build tests passed. Read-only inspection of 741 extractable
+pages identified three excluded pages (two contents, one manually inspected reference-only
+page), corresponding to 28 chunks. Other uncertain pages remain included. These exclusions
+take effect on an explicit rebuild; current generated artifacts were left intact.

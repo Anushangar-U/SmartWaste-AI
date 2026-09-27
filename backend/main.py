@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
+from pathlib import Path
+import os
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -47,3 +49,23 @@ async def agent_error_handler(request: Request, exc: AgentError):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/ready")
+def ready():
+    from backend.database import connection
+    database_ok = False
+    try:
+        with connection() as db:
+            db.execute("SELECT 1 FROM complaints LIMIT 1")
+        database_ok = True
+    except Exception:
+        pass
+    root = Path(__file__).resolve().parents[1]
+    vector_ok = all((root / "retrieval/vector_store/data" / name).is_file() for name in ["smartwaste.faiss", "metadata.json"])
+    providers = {"analyst": bool(os.getenv("AGENT1_OPENROUTER_API_KEY") or settings.gemini_api_key),
+                 "retrieval": bool(settings.openrouter_api_key), "decision": bool(settings.groq_api_key)}
+    available = database_ok and (settings.use_mock_agents or (vector_ok and all(providers.values())))
+    return JSONResponse(status_code=200 if available else 503, content={"ready": available,
+        "database_reachable": database_ok, "vector_files_available": vector_ok,
+        "providers_configured": providers, "mode": "mock_demo" if settings.use_mock_agents else "live",
+        "note": "Configuration checks only; provider credentials and responses are not verified."})

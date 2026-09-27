@@ -31,3 +31,11 @@ tracking history and reads the shared staff queue. Filters, pagination, details,
 approve/override, assignment, resolution and retry are connected. Citizen responses omit
 private details; dynamic complaint/evidence text uses plain rendering.
 Verification: 6 frontend/auth tests passed. AppTest path resolution was corrected before committing.
+
+## Phase 4
+Explicit SDK timeouts and bounded retries; stage checkpoints survive failure and retries
+resume saved outputs. Active processing cannot be concurrently retried; expired leases can
+be recovered after an interrupted process. Total attempts are capped. Readiness reports
+safe configuration/file/database checks, not a false guarantee of valid credentials.
+Verification: 13 resilience/integration/frontend tests passed. Provider failure messages
+are sanitized; no live provider requests were used for this phase.

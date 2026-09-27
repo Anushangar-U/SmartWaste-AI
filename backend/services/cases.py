@@ -1,4 +1,6 @@
 from enum import Enum
+from datetime import datetime, timezone
+from backend.config import settings
 from backend.repositories import complaints as repo
 from backend.services.orchestrator import process_complaint, AgentError
 
@@ -14,12 +16,23 @@ class Status(str, Enum):
 
 
 def process(case):
+    if case["status"] == Status.processing.value:
+        started = datetime.fromisoformat(case["processing_started_at"])
+        if (datetime.now(timezone.utc) - started).total_seconds() <= settings.processing_lease_seconds:
+            raise repo.Conflict("Processing is still active.")
+        case = repo.update(case["id"], {"status": Status.processing_failed.value, "error_stage": "interrupted"},
+                           version=case["version"], event="interrupted")
+    if case["processing_attempts"] >= settings.processing_max_attempts:
+        raise repo.Conflict("Processing retry limit reached; use manual review.")
     case = repo.update(case["id"], {"status": Status.processing.value,
         "processing_started_at": repo.now(), "error_stage": None,
         "processing_attempts": case["processing_attempts"] + 1}, version=case["version"],
         allowed={Status.submitted.value, Status.processing_failed.value}, event="processing")
     try:
-        result = process_complaint(case["text"], case["location_context"]).model_dump(mode="json")
+        def checkpoint(field, result):
+            repo.update(case["id"], {field: result}, allowed={Status.processing.value})
+        result = process_complaint(case["text"], case["location_context"], resume=case,
+            on_stage=checkpoint, request_id=case["id"]).model_dump(mode="json")
         return repo.update(case["id"], {**{k: result[k] for k in repo.JSON_FIELDS},
             "status": Status.awaiting_review.value,
             "requires_human_review": result["decision"]["requires_human_review"]}, event="analysis_completed")

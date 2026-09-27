@@ -19,5 +19,9 @@ class Settings(BaseSettings):
     admin_username: str = "admin"
     admin_password: str = ""
     database_path: str = "data/smartwaste.sqlite3"
+    provider_timeout_seconds: float = 20
+    provider_max_retries: int = 1
+    processing_max_attempts: int = 3
+    processing_lease_seconds: int = 600
 
 settings = Settings()

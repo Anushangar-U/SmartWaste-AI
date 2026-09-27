@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from agents.waste_analyzer.schemas import WasteAnalysis
+from backend.config import settings
 from retrieval.vector_store.retriever import RetrievalResult, retrieve
 
 
@@ -167,6 +168,8 @@ def _get_client() -> OpenAI:
     return OpenAI(
         api_key=api_key,
         base_url="https://openrouter.ai/api/v1",
+        timeout=settings.provider_timeout_seconds,
+        max_retries=settings.provider_max_retries,
     )
 
 

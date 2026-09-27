@@ -34,7 +34,7 @@ class FrontendTests(unittest.TestCase):
             app.sidebar.radio[0].set_value("Staff").run()
             self.assertFalse(app.exception)
             self.assertTrue(any(t.value == case["text"] for t in app.text))
-            self.assertTrue(all(c.kwargs["headers"].get("Authorization") for c in calls.call_args_list))
+            self.assertTrue(all(c.kwargs["headers"].get("Authorization") for c in calls.call_args_list if "/staff/" in c.args[1]))
 
 
 if __name__ == "__main__":

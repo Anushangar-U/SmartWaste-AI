@@ -1,5 +1,5 @@
 import logging, time, uuid
-from backend.schemas import FinalResponse
+from backend.schemas import FinalResponse, AnalysisResult, RetrievalResult, DecisionResult
 from backend.services import agent_client
 from backend.services.validator import validate
 
@@ -42,15 +42,23 @@ def _run(stage: str, fn, *args):
         log.error("stage=%s status=failed error=%s", stage, type(e).__name__)
         raise AgentError(stage) from e
 
-def process_complaint(text: str, location_context: str | None = None) -> FinalResponse:
-    request_id = str(uuid.uuid4())[:8]
+def process_complaint(text: str, location_context: str | None = None, *, resume=None, on_stage=None, request_id=None) -> FinalResponse:
+    request_id = request_id or str(uuid.uuid4())
     log.info("request_id=%s pipeline=start", request_id)
 
     analyst_input = with_location_context(text, location_context)
-    analysis  = _run("analyst",   agent_client.call_analyst, analyst_input)
-    retrieval = _run("retrieval", agent_client.call_retrieval, analysis)
-    decision  = _run("decision",  agent_client.call_decision, analysis, retrieval, analyst_input)
-    report    = validate(analysis, retrieval, decision)
+    saved = resume or {}
+    def stage(name, field, schema, fn, *args):
+        if saved.get(field):
+            return schema.model_validate(saved[field])
+        result = _run(name, fn, *args)
+        if on_stage:
+            on_stage(field, result.model_dump(mode="json"))
+        return result
+    analysis = stage("analyst", "analysis", AnalysisResult, agent_client.call_analyst, analyst_input)
+    retrieval = stage("retrieval", "retrieval", RetrievalResult, agent_client.call_retrieval, analysis)
+    decision = stage("decision", "decision", DecisionResult, agent_client.call_decision, analysis, retrieval, analyst_input)
+    report = _run("validation", validate, analysis, retrieval, decision)
 
     log.info("request_id=%s pipeline=done validation_passed=%s", request_id, report.passed)
     return FinalResponse(request_id=request_id, analysis=analysis,

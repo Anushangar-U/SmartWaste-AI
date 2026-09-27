@@ -7,6 +7,7 @@ from openai import OpenAI
 
 from .prompts import SYSTEM_PROMPT
 from .schemas import WasteAnalysis
+from backend.config import settings
 
 
 load_dotenv()
@@ -32,6 +33,8 @@ def _get_openrouter_client() -> OpenAI:
         _openrouter_client = OpenAI(
             api_key=AGENT1_OPENROUTER_API_KEY,
             base_url="https://openrouter.ai/api/v1",
+            timeout=settings.provider_timeout_seconds,
+            max_retries=settings.provider_max_retries,
         )
 
     return _openrouter_client
@@ -47,7 +50,9 @@ def _get_gemini_client() -> genai.Client:
         )
 
     if _gemini_client is None:
-        _gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        _gemini_client = genai.Client(api_key=GEMINI_API_KEY,
+            http_options=types.HttpOptions(timeout=int(settings.provider_timeout_seconds * 1000),
+                retry_options=types.HttpRetryOptions(attempts=settings.provider_max_retries + 1)))
 
     return _gemini_client
 

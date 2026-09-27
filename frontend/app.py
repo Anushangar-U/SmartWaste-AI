@@ -56,6 +56,11 @@ def status_panel(record):
 
 def citizen():
     st.header("Report a waste problem")
+    try:
+        if api("GET", "/ready").get("mode") == "mock_demo":
+            st.warning("Demonstration mode: AI analysis and evidence are synthetic examples.")
+    except ApiError:
+        st.info("Some processing dependencies may be unavailable. Submissions are still saved when the backend is reachable.")
     st.caption("Complaint text may be processed by configured external AI providers. Avoid unnecessary personal or sensitive information.")
     with st.form("complaint"):
         text = st.text_area("Describe the waste issue", max_chars=2000, height=130)
@@ -157,7 +162,7 @@ def case_detail(case):
             send = st.form_submit_button("Mark resolved")
         if send:
             change_case(case, "resolve", {"note": note})
-    if case["status"] == "processing_failed" and st.button("Retry automated processing"):
+    if case["status"] in {"processing_failed", "processing"} and st.button("Retry failed or interrupted processing"):
         change_case(case, "retry", {})
     with st.expander("Case history"):
         st.dataframe(case.get("history", []), hide_index=True)

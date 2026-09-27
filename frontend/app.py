@@ -45,6 +45,8 @@ def show_error(error):
 
 def status_panel(record):
     st.success("Complaint saved. Keep your tracking ID private.")
+    if record.get("mode") == "mock_demo":
+        st.warning("This record was processed in demonstration mode with synthetic AI outputs.")
     st.code(record["tracking_id"], language=None)
     st.metric("Status", record["status"].replace("_", " ").title())
     if record["status"] == "processing_failed":
@@ -120,6 +122,7 @@ def case_detail(case):
     st.text("Location: " + (case.get("location_context") or "Not supplied"))
     st.text("Reported area: " + (case.get("area") or "Not supplied"))
     st.caption("Submitted: " + case["submitted_at"])
+    st.caption("Processing mode: " + case.get("processing_mode", "unknown"))
     st.subheader("AI analysis")
     st.json(case.get("analysis") or {"status": "Not available"})
     retrieval = case.get("retrieval") or {}
@@ -224,6 +227,25 @@ def staff():
         st.session_state.pop("auth_token", None)
         st.rerun()
     st.caption("This queue is shared through the backend database.")
+    try:
+        stats = api("GET", "/staff/dashboard", protected=True)
+        with st.expander("Operational dashboard", expanded=True):
+            counters = st.columns(4)
+            counters[0].metric("Submitted records", stats["total"])
+            counters[1].metric("Review backlog", stats["review_backlog"])
+            counters[2].metric("Assigned", stats["by_status"].get("assigned", 0))
+            counters[3].metric("Resolved", stats["by_status"].get("resolved", 0))
+            st.caption("Record modes (demo/live/unknown): " + str(stats["record_modes"]))
+            if stats["average_resolution_hours"] is not None:
+                st.caption(f"Resolution hours: average {stats['average_resolution_hours']:.2f}; median {stats['median_resolution_hours']:.2f} ({stats['resolution_samples']} cases)")
+            else:
+                st.caption("Resolution time: not enough completed cases (minimum two).")
+            st.dataframe([{"status": key, "count": value} for key,value in stats["by_status"].items()], hide_index=True)
+            st.dataframe([{"priority": key, "count": value} for key,value in stats["by_priority"].items()], hide_index=True)
+            st.dataframe([{"reported_area": key, "count": value} for key,value in stats["by_area"].items()], hide_index=True)
+    except ApiError as exc:
+        show_error(exc)
+        return
     cols = st.columns(3)
     status = cols[0].selectbox("Status filter", ["All", *STATUSES])
     priority = cols[1].selectbox("Priority filter", ["All", *PRIORITIES])

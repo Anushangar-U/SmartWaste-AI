@@ -27,6 +27,9 @@ class FrontendTests(unittest.TestCase):
             "status": "resolved", "submitted_at": "2026-01-01", "requires_human_review": False,
             "history": [], "version": 1}
         def request(method, url, **kwargs):
+            if url.endswith("/staff/dashboard"):
+                return response({"total":1,"review_backlog":0,"by_status":{"resolved":1},"record_modes":{"mock_demo":1},
+                    "by_priority":{},"by_area":{},"average_resolution_hours":None})
             return response([case] if url.endswith("/staff/complaints") else case)
         with patch("requests.request", side_effect=request) as calls:
             app = AppTest.from_file(APP).run()

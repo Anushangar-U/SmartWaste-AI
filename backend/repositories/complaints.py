@@ -6,6 +6,7 @@ import sqlite3
 import uuid
 from datetime import datetime, timezone
 from backend.database import connection
+from backend.config import settings
 
 JSON_FIELDS = {"analysis", "retrieval", "decision", "validation"}
 STORED_JSON_FIELDS = JSON_FIELDS | {"clarification_answers"}
@@ -60,6 +61,7 @@ def create(text, location, idempotency_key=None, answers=None, area=None):
             db.execute("UPDATE complaints SET clarification_answers=? WHERE id=?", (json.dumps(answers), identity))
         if area:
             db.execute("UPDATE complaints SET area=? WHERE id=?", (" ".join(area.split()), identity))
+        db.execute("UPDATE complaints SET processing_mode=? WHERE id=?", ("mock_demo" if settings.use_mock_agents else "live", identity))
         return decode(db.execute("SELECT * FROM complaints WHERE id=?", (identity,)).fetchone()), True
 
 

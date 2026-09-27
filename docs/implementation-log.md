@@ -81,3 +81,10 @@ MiniLM similarity suggest duplicates. Generic location types never imply a share
 location. Staff confirmation creates a link, not a merge; original cases and statuses remain.
 If the local model is absent, suggestions report unavailable without downloading a model.
 Verification: 7 duplicate/workflow/frontend tests passed using synthetic similarity fixtures.
+
+## Phase 10
+Dashboard aggregates persisted cases by status, priority, area and recorded processing mode,
+with backlog and mean/median resolution hours only when at least two completions exist.
+No seeded statistics. Historical records without mode metadata are explicitly unknown;
+new demo records are labelled separately from live records in public/staff views.
+Verification: 7 dashboard/frontend/auth tests passed; statistics tests use temporary fixtures.

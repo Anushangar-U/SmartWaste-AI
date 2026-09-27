@@ -60,6 +60,7 @@ def submit(text, location=None, idempotency_key=None, answers=None, area=None):
 def public_status(case):
     # Explicit allowlist: never expose complaint text, provider errors or staff notes.
     return {"tracking_id": case["tracking_id"], "status": case["status"],
+        "mode": case.get("processing_mode", "unknown"),
         "submitted_at": case["submitted_at"], "updated_at": case["updated_at"],
         "clarification_questions": (case.get("decision") or {}).get("clarification_questions", []),
         "message": "Your complaint is saved. Staff can review it even when automated processing is unavailable.",

@@ -10,6 +10,12 @@ router = APIRouter(tags=["complaints"])
 staff = require_role("admin", "staff")
 
 
+@router.get("/staff/dashboard")
+def dashboard(user=Depends(staff)):
+    from backend.services.dashboard import summary
+    return summary()
+
+
 class ReviewRequest(BaseModel):
     version: int = Field(ge=0)
     decision: Literal["approve", "override"]

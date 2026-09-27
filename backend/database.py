@@ -25,7 +25,7 @@ def connection():
 def initialize():
     with connection() as db:
         version = db.execute("PRAGMA user_version").fetchone()[0]
-        if version > 4:
+        if version > 5:
             raise RuntimeError("Database schema is newer than this application.")
         db.executescript("""
         CREATE TABLE IF NOT EXISTS complaints (
@@ -56,7 +56,7 @@ def initialize():
         );
         """)
         columns = {r[1] for r in db.execute("PRAGMA table_info(complaints)")}
-        for name, declaration in {"clarification_answers": "TEXT", "review_urgency": "TEXT NOT NULL DEFAULT 'normal'", "area": "TEXT"}.items():
+        for name, declaration in {"clarification_answers": "TEXT", "review_urgency": "TEXT NOT NULL DEFAULT 'normal'", "area": "TEXT", "processing_mode": "TEXT NOT NULL DEFAULT 'unknown'"}.items():
             if name not in columns:
                 db.execute(f"ALTER TABLE complaints ADD COLUMN {name} {declaration}")
         db.execute("""CREATE TABLE IF NOT EXISTS duplicate_links (
@@ -64,7 +64,7 @@ def initialize():
           second_id TEXT REFERENCES complaints(id) ON DELETE CASCADE,
           confirmed_by TEXT NOT NULL, reason TEXT NOT NULL, created_at TEXT NOT NULL,
           PRIMARY KEY(first_id,second_id), CHECK(first_id != second_id))""")
-        db.execute("PRAGMA user_version=4")
+        db.execute("PRAGMA user_version=5")
 
 
 if __name__ == "__main__":

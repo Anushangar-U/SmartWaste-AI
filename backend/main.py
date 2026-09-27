@@ -13,6 +13,7 @@ from backend.services.orchestrator import AgentError
 from backend.database import initialize
 from backend.repositories.complaints import Conflict
 from backend.api import complaint_routes
+from backend.middleware.resources import resource_limits, BodySizeLimit
 
 @asynccontextmanager
 async def lifespan(app):
@@ -31,6 +32,8 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 app.middleware("http")(log_requests)
+app.middleware("http")(resource_limits)
+app.add_middleware(BodySizeLimit)
 
 app.include_router(auth_routes.router)
 app.include_router(agent_routes.router)

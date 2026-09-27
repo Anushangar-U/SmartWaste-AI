@@ -88,3 +88,11 @@ with backlog and mean/median resolution hours only when at least two completions
 No seeded statistics. Historical records without mode metadata are explicitly unknown;
 new demo records are labelled separately from live records in public/staff views.
 Verification: 7 dashboard/frontend/auth tests passed; statistics tests use temporary fixtures.
+
+## Phase 11
+Privacy notice and operator documentation, configurable retention (dry-run by default),
+bounded per-address public/auth request windows, bounded pipeline concurrency and body size,
+trimmed input validation, and shared correlation IDs. Tracking capabilities are excluded
+from application route-template logs. Controls document their single-process/proxy limits.
+Verification: 9 resource/auth/resilience tests passed. Retention tests deleted only synthetic
+expired resolved cases in temporary databases; no development data was deleted.

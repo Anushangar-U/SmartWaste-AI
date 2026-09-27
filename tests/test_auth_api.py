@@ -12,6 +12,8 @@ from backend.auth import users, security
 
 class AuthApiTests(unittest.TestCase):
     def setUp(self):
+        from backend.middleware import resources
+        resources._requests.clear()
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         for target, value in [("database_path", str(Path(self.tmp.name) / "db.sqlite3")), ("admin_password", ""), ("use_mock_agents", True)]:

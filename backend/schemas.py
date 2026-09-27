@@ -28,6 +28,11 @@ class ComplaintRequest(BaseModel):
     clarification_answers: ClarificationAnswers | None = None
     area: str | None = Field(default=None, min_length=3, max_length=120)
 
+    @field_validator("text", "location_context", "area", mode="before")
+    @classmethod
+    def normalize_input(cls, value):
+        return value.strip() if isinstance(value, str) else value
+
 
 class AnalysisResult(BaseModel):
     waste_types: List[str]

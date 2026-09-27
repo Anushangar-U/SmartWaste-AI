@@ -2,6 +2,7 @@ import logging, time, uuid
 from backend.schemas import FinalResponse, AnalysisResult, RetrievalResult, DecisionResult
 from backend.services import agent_client
 from backend.services.validator import validate
+from backend.middleware.logging_mw import correlation_id
 
 log = logging.getLogger("smartwaste.orchestrator")
 
@@ -35,16 +36,16 @@ def _run(stage: str, fn, *args):
     start = time.perf_counter()
     try:
         result = fn(*args)
-        log.info("stage=%s status=ok ms=%d", stage, (time.perf_counter() - start) * 1000)
+        log.info("rid=%s stage=%s status=ok ms=%d", correlation_id.get(), stage, (time.perf_counter() - start) * 1000)
         return result
     except Exception as e:
         # log the error type only; never log prompts, keys or user text
-        log.error("stage=%s status=failed error=%s", stage, type(e).__name__)
+        log.error("rid=%s stage=%s status=failed error=%s", correlation_id.get(), stage, type(e).__name__)
         raise AgentError(stage) from e
 
 def process_complaint(text: str, location_context: str | None = None, *, resume=None, on_stage=None, request_id=None) -> FinalResponse:
     request_id = request_id or str(uuid.uuid4())
-    log.info("request_id=%s pipeline=start", request_id)
+    log.info("rid=%s case_id=%s pipeline=start", correlation_id.get(), request_id)
 
     analyst_input = with_location_context(text, location_context)
     saved = resume or {}
@@ -60,6 +61,6 @@ def process_complaint(text: str, location_context: str | None = None, *, resume=
     decision = stage("decision", "decision", DecisionResult, agent_client.call_decision, analysis, retrieval, analyst_input)
     report = _run("validation", validate, analysis, retrieval, decision)
 
-    log.info("request_id=%s pipeline=done validation_passed=%s", request_id, report.passed)
+    log.info("rid=%s case_id=%s pipeline=done validation_passed=%s", correlation_id.get(), request_id, report.passed)
     return FinalResponse(request_id=request_id, analysis=analysis,
                          retrieval=retrieval, decision=decision, validation=report)

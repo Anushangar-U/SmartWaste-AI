@@ -25,5 +25,9 @@ class Settings(BaseSettings):
     processing_lease_seconds: int = 600
     duplicate_window_days: int = 7
     duplicate_similarity_threshold: float = 0.82
+    public_requests_per_minute: int = 30
+    auth_requests_per_minute: int = 20
+    max_concurrent_processing: int = 2
+    retention_days: int = 90
 
 settings = Settings()

@@ -16,6 +16,16 @@ class Status(str, Enum):
 
 
 def process(case):
+    from backend.middleware.resources import processing_slot
+    with processing_slot() as admitted:
+        if not admitted:
+            return repo.update(case["id"], {"status": Status.processing_failed.value,
+                "error_stage": "capacity", "requires_human_review": True}, version=case["version"],
+                allowed={Status.submitted.value, Status.processing_failed.value}, event="capacity_unavailable")
+        return _process(case)
+
+
+def _process(case):
     if case["status"] == Status.processing.value:
         started = datetime.fromisoformat(case["processing_started_at"])
         if (datetime.now(timezone.utc) - started).total_seconds() <= settings.processing_lease_seconds:

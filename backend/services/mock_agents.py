@@ -1,4 +1,5 @@
 def analyze(text: str) -> dict:
+    from agents.decision.triage import hazard_mentions
     normalized = text.lower()
     high_risk_terms = (
         "school",
@@ -9,7 +10,8 @@ def analyze(text: str) -> dict:
         "syringe",
         "river",
     )
-    high_risk = any(term in normalized for term in high_risk_terms)
+    affirmative, uncertain = hazard_mentions(text)
+    high_risk = affirmative or uncertain or any(term in normalized for term in ["school", "hospital", "river"])
 
     return {
         "waste_types": ["plastic", "organic"],
@@ -45,6 +47,8 @@ def retrieve(analysis: dict) -> dict:
             "waste near schools."
         ),
         "grounded": True,
+        "evidence_available": True,
+        "claim_verification": "synthetic_demo_not_verified",
         "sources": [
             {"source": item["source"], "page": item["page"]}
             for item in evidence

@@ -10,6 +10,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 from retrieval.processing.embedder import DEFAULT_MODEL_NAME
+from retrieval.sources import display_metadata
 from retrieval.vector_store.faiss_store import (
     DEFAULT_INDEX_FILENAME,
     DEFAULT_METADATA_FILENAME,
@@ -101,6 +102,7 @@ def retrieve(
                 "page": chunk_metadata["page"],
                 "text": chunk_metadata["text"],
                 "score": float(score),
+                **display_metadata(chunk_metadata["source"]),
             }
         )
 

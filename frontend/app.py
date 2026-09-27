@@ -1,435 +1,300 @@
-"""
-SmartWaste AI - Streamlit frontend (v5).
-
-Single page that switches between two modes:
-  - "citizen" (default) — the public complaint form. This is what anyone
-    landing on the site sees first.
-  - "staff"   — reached only by clicking the small 🔒 icon in the top-right
-    corner. Shows a login form, then (once "logged in") the priority-sorted
-    complaints queue.
-
-This keeps the staff area out of the way visually — it's not a tab
-competing for attention next to the citizen form, it's a deliberate,
-secondary action tucked in the corner, closer to how real products hide
-admin/staff entry points (e.g. a small "Staff login" link in a footer).
-
-=====================================================================
-CONTRACT FOR MEMBER 3 (backend/auth) — unchanged from before
-=====================================================================
-    POST {BACKEND_URL}/auth/login
-    form body: username=...&password=...
-    success (200): {"access_token": "...", "role": "admin"}
-    failure: any non-2xx status.
-=====================================================================
-
-Run with:  streamlit run frontend/app.py   (or: python -m streamlit run frontend/app.py)
-Configure the backend URL via the BACKEND_URL env var (see .env.example).
-"""
-
-import html
+"""Public reporting and authenticated staff presentation over the existing API."""
+import hashlib
+import json
 import os
-import random
-import string
-from datetime import datetime
-
+import uuid
+from urllib.parse import quote
 import requests
 import streamlit as st
 from dotenv import load_dotenv
-
-load_dotenv()
-BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
-
-PRIORITY_STYLE = {
-    "critical": {"color": "#7f1d1d", "bg": "#fee2e2", "emoji": "🔴", "rank": 0},
-    "high": {"color": "#9a3412", "bg": "#ffedd5", "emoji": "🟠", "rank": 1},
-    "medium": {"color": "#854d0e", "bg": "#fef9c3", "emoji": "🟡", "rank": 2},
-    "low": {"color": "#166534", "bg": "#dcfce7", "emoji": "🟢", "rank": 3},
-}
-UNKNOWN_STYLE = {"color": "#374151", "bg": "#f3f4f6", "emoji": "⚪", "rank": 4}
-
-EXAMPLE_COMPLAINTS = {
-    "🏫 Near a school": "There has been a pile of mixed organic and plastic waste behind the school for about 5 days now. It's starting to smell.",
-    "🏭 Suspected hazardous": "Someone dumped what looks like chemical containers near the riverbank behind the factory.",
-    "🏘️ Routine residential": "Our street's bins haven't been collected in 2 days, nothing urgent but it's piling up.",
-}
-
-LOCATION_OPTIONS = [
-    "Residential street",
-    "Near a school",
-    "Near a hospital / clinic",
-    "Commercial area",
-    "Industrial area",
-    "Near a water source (river/canal/lake)",
-    "Public park",
-    "Other",
-]
-
-
-def new_tracking_id() -> str:
-    year = datetime.now().year
-    suffix = "".join(random.choices(string.digits, k=4))
-    return f"WM-{year}-{suffix}"
-
-
-st.set_page_config(page_title="SmartWaste AI", page_icon="🗑️", layout="wide")
-
-if "complaints" not in st.session_state:
-    st.session_state["complaints"] = []
-if "auth_token" not in st.session_state:
-    st.session_state["auth_token"] = None
-if "auth_username" not in st.session_state:
-    st.session_state["auth_username"] = None
-if "view_mode" not in st.session_state:
-    st.session_state["view_mode"] = "citizen"  # or "staff"
-if "complaint_text" not in st.session_state:
-    st.session_state["complaint_text"] = ""
-
-# ---------- Styling ----------
-st.markdown(
-    """
-    <style>
-    .main > div { padding-top: 1.5rem; }
-    .swa-hero {
-        background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
-        padding: 1.8rem 2.2rem;
-        border-radius: 16px;
-        color: white;
-        margin-bottom: 1.2rem;
-    }
-    .swa-hero h1 { margin: 0; font-size: 2.1rem; }
-    .swa-hero p { margin: 0.4rem 0 0 0; opacity: 0.9; font-size: 1.02rem; }
-    .swa-card {
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 1.4rem 1.6rem;
-        background: white;
-    }
-    .swa-badge {
-        display: inline-block;
-        padding: 0.35rem 1rem;
-        border-radius: 999px;
-        font-weight: 700;
-        font-size: 1.05rem;
-        letter-spacing: 0.02em;
-    }
-    .swa-tid {
-        font-family: monospace;
-        background: #f3f4f6;
-        padding: 0.15rem 0.5rem;
-        border-radius: 6px;
-    }
-    .swa-row {
-        border: 1px solid #e5e7eb;
-        border-left-width: 6px;
-        border-radius: 10px;
-        padding: 0.8rem 1rem;
-        margin-bottom: 0.6rem;
-        background: white;
-    }
-    /* Make the corner toggle look like a quiet icon, not a normal button */
-    div[data-testid="column"]:has(button[kind="secondary"]) button {
-        border: none;
-        background: transparent;
-        color: #9ca3af;
-        font-size: 1.1rem;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
+from frontend.styles import apply_styles
+from frontend.components import (
+    timestamp, status_badge, timeline, demo_notice, field,
 )
 
-# ---------- Top row: title area + small corner toggle ----------
-title_col, corner_col = st.columns([12, 1])
-with corner_col:
-    if st.session_state["view_mode"] == "citizen":
-        if st.button("🔒", help="Staff login", key="to_staff"):
-            st.session_state["view_mode"] = "staff"
-            st.rerun()
+load_dotenv()
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000").rstrip("/")
+LOCATIONS = ["Other", "Residential street", "Near a school", "Near a hospital / clinic",
+             "Commercial area", "Industrial area", "Near a water source (river/canal/lake)", "Public park"]
+
+
+class ApiError(Exception):
+    def __init__(self, status):
+        self.status = status
+
+
+def api(method, path, *, protected=False, **kwargs):
+    headers = kwargs.pop("headers", {})
+    if protected:
+        headers["Authorization"] = "Bearer " + st.session_state.get("auth_token", "")
+    try:
+        response = requests.request(method, BACKEND_URL + path, headers=headers, timeout=180, **kwargs)
+        if response.status_code >= 400:
+            raise ApiError(response.status_code)
+        return response.json()
+    except (requests.RequestException, ValueError):
+        raise ApiError(503) from None
+
+
+def clear_staff_session():
+    for key in list(st.session_state):
+        if key.startswith(("auth_", "staff_", "duplicates_", "duplicate_", "case_", "queue_")):
+            del st.session_state[key]
+
+
+def show_error(error):
+    messages = {
+        401: "Your session has expired. Please sign in again.",
+        403: "Your account is not authorized for this staff action.",
+        404: "No matching complaint was found. Please check the tracking ID.",
+        409: "This case has changed or the action is unavailable. Refresh the case and review its current status.",
+        422: "Please check the required fields and their lengths.",
+        429: "Too many requests. Please wait briefly before trying again.",
+    }
+    message = messages.get(error.status, "We could not reach the service. Please try again. For submissions, retry the same details to avoid duplicates.")
+    if error.status in {401, 403}:
+        clear_staff_session()
+        st.session_state["page"] = "login"
+        st.session_state["login_notice"] = message
+        st.rerun()
+    st.error(message)
+
+
+def navigate(page):
+    st.session_state["page"] = page
+
+
+def logout():
+    clear_staff_session()
+    navigate("home")
+
+
+def render_header():
+    with st.container(key="public_header"):
+        header_navigation()
+    st.divider()
+
+
+def header_navigation():
+    brand, report, track, access = st.columns([3, 1.35, 1.45, 1.4], vertical_alignment="center")
+    with brand:
+        st.markdown('<div class="sw-brand"><span aria-hidden="true">♻</span>SmartWaste AI</div>', unsafe_allow_html=True)
+        st.caption("Report waste. Track action.")
+    report.button("Report Issue", key="nav_report", type="primary", on_click=navigate, args=("report",), width="stretch")
+    track.button("Track Complaint", key="nav_track", on_click=navigate, args=("track",), width="stretch")
+    if st.session_state.get("auth_token"):
+        access.button("Staff Portal", key="nav_staff", on_click=navigate, args=("staff",), width="stretch")
+        person, back, exit_col = st.columns([4, 1.5, 1])
+        person.text("Signed in as " + st.session_state.get("auth_username", "staff"))
+        back.button("Citizen Portal", on_click=navigate, args=("home",), width="stretch")
+        exit_col.button("Logout", on_click=logout, width="stretch")
     else:
-        if st.button("👤", help="Back to public site", key="to_citizen"):
-            st.session_state["view_mode"] = "citizen"
-            st.rerun()
+        access.button("Staff Login", key="nav_login", on_click=navigate, args=("login",), width="stretch")
 
-# ============================================================
-# CITIZEN VIEW
-# ============================================================
-if st.session_state["view_mode"] == "citizen":
-    st.markdown(
-        """
-        <div class="swa-hero">
-            <h1>🗑️ SmartWaste AI</h1>
-            <p>Submit a waste-related complaint and get an explainable, evidence-backed priority recommendation.</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
 
-    with st.expander("ℹ️ How this works (AI pipeline)"):
-        st.markdown(
-            """
-            Your complaint is processed by three specialized AI agents, each with a defined job:
-            1. **Analysis** — extracts waste type, location, duration, and severity from your text.
-            2. **Knowledge retrieval** — searches internal waste-management guidelines for relevant evidence.
-            3. **Decision** — combines the analysis and evidence into a priority and recommendation, explaining its reasoning.
+def public_mode_notice():
+    try:
+        demo_notice(api("GET", "/ready").get("mode"))
+    except ApiError:
+        st.info("Service availability could not be checked. If a request fails, please try again.")
 
-            A final **validation layer** checks the recommendation before you see it — for example,
-            flagging cases for human review if evidence is thin or the situation looks high-risk.
-            Priority is based only on objective factors (duration, severity, waste type, location risk) —
-            never on who is reporting.
-            """
-        )
 
-    left, right = st.columns([2, 1])
+def home():
+    public_mode_notice()
+    st.markdown("""<section class="sw-hero">
+      <div class="sw-eyebrow">Waste reporting &amp; tracking</div>
+      <h1>Report waste.<br>Track action.</h1>
+      <p>Report waste problems quickly. AI-assisted triage with human-reviewed decisions.</p>
+      <strong>No account required</strong>
+    </section>""", unsafe_allow_html=True)
+    with st.container(key="hero_actions"):
+        left, right = st.columns(2)
+        left.button("Report an Issue", type="primary", width="stretch", on_click=navigate, args=("report",))
+        right.button("Track Complaint", key="hero_track", width="stretch", on_click=navigate, args=("track",))
+    st.caption("AI assists staff. Final decisions are made by authorized personnel.")
+    st.subheader("How it works")
+    st.markdown("""<section class="sw-steps" aria-label="How SmartWaste works">
+      <article class="sw-step"><span class="sw-step-number">1</span><h3>Report</h3>
+      <p>Describe the waste problem and its general location.</p></article>
+      <article class="sw-step"><span class="sw-step-number">2</span><h3>AI Triage</h3>
+      <p>Your report is analyzed and supporting guidance is found.</p></article>
+      <article class="sw-step"><span class="sw-step-number">3</span><h3>Staff Review</h3>
+      <p>Authorized staff review the recommendation and evidence.</p></article>
+      <article class="sw-step"><span class="sw-step-number">4</span><h3>Track</h3>
+      <p>Check progress using your private tracking ID.</p></article>
+    </section>""", unsafe_allow_html=True)
 
-    with right:
-        st.markdown("#### Try an example")
-        st.caption("Click one to fill the form, then submit.")
-        for label, text in EXAMPLE_COMPLAINTS.items():
-            if st.button(label, use_container_width=True, key=f"ex_{label}"):
-                st.session_state["complaint_text"] = text
-                st.rerun()
 
-    with left:
-        with st.form("complaint_form"):
-            location = st.selectbox(
-                "Location type", LOCATION_OPTIONS, index=LOCATION_OPTIONS.index("Other")
-            )
-            complaint_text = st.text_area(
-                "Describe the waste issue",
-                key="complaint_text",
-                placeholder=(
-                    "e.g. There has been a pile of mixed organic and plastic "
-                    "waste behind the school for about 5 days now."
-                ),
-                height=140,
-            )
-            submitted = st.form_submit_button("🚀 Submit complaint", use_container_width=True)
-
+def receipt_panel(record, *, submitted=False):
+    with st.container(border=True):
+        st.subheader("Complaint submitted" if submitted else "Complaint status")
         if submitted:
-            submitted_complaint = complaint_text.strip()
-            if not submitted_complaint:
-                st.warning("Please describe the issue before submitting.")
-            else:
-                request_payload = {"text": submitted_complaint}
-                if location != "Other":
-                    request_payload["location_context"] = location
-                with st.spinner("Analyzing complaint, retrieving evidence, and generating a recommendation..."):
-                    try:
-                        resp = requests.post(
-                            f"{BACKEND_URL}/complaints/process",
-                            json=request_payload,
-                            timeout=180,
-                        )
-                        resp.raise_for_status()
-                        payload = resp.json()
-                        decision = payload.get("decision") or {}
-                        result = {
-                            **decision,
-                            "analysis": payload.get("analysis") or {},
-                            "retrieval": payload.get("retrieval") or {},
-                            "pipeline_validation": payload.get("validation") or {},
-                            "disclaimer": payload.get("disclaimer", ""),
-                        }
-                    except requests.exceptions.RequestException as exc:
-                        st.error(f"Could not reach the backend: {exc}")
-                        result = None
+            st.success("Your complaint has been saved.")
+        demo_notice(record.get("mode"))
+        st.caption("Tracking ID")
+        st.code(record["tracking_id"], language=None)
+        st.caption("Use the copy control on the tracking ID, or select the text to copy it.")
+        st.info("Keep this tracking ID private. You will need it to check the complaint status.")
+        status_badge(record["status"])
+        cols = st.columns(2)
+        with cols[0]:
+            field("Submitted", timestamp(record.get("submitted_at")))
+        with cols[1]:
+            field("Last updated", timestamp(record.get("updated_at")))
+        if record["status"] == "processing_failed":
+            st.warning("Automated processing could not be completed. Your complaint is still saved and can be reviewed by staff.")
+        elif record["status"] == "awaiting_review":
+            st.info("Your report is waiting for a staff decision.")
+        elif record["status"] == "resolved":
+            st.success("Staff have marked this complaint as resolved.")
+        st.subheader("Progress updates")
+        st.caption("Only recorded status changes are shown.")
+        timeline(record.get("history", []), current=record["status"])
+        for question in record.get("clarification_questions", []):
+            st.text("For staff follow-up: " + question)
 
-                if result:
-                    tracking_id = new_tracking_id()
-                    priority = (result.get("priority") or "unknown").lower()
-                    style = PRIORITY_STYLE.get(priority, UNKNOWN_STYLE)
 
-                    st.session_state["complaints"].append(
-                        {
-                            "id": tracking_id,
-                            "text": submitted_complaint,
-                            "location": location,
-                            "submitted_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                            **result,
-                        }
-                    )
+def report_issue():
+    st.button("Back to Home", on_click=navigate, args=("home",))
+    st.title("Report a Waste Issue")
+    st.write("Tell us what happened and where. No citizen account is required.")
+    public_mode_notice()
+    if st.session_state.get("receipt"):
+        receipt_panel(st.session_state["receipt"], submitted=True)
+        cols = st.columns(2)
+        cols[0].button("Track this complaint", type="primary", on_click=navigate, args=("track",))
+        if cols[1].button("Report another issue"):
+            st.session_state.pop("receipt", None)
+            st.session_state.pop("submission_fingerprint", None)
+            st.session_state.pop("idempotency_key", None)
+            st.rerun()
+        return
+    st.markdown("""<aside class="sw-trust"><strong>Your report, handled with care</strong><br>
+      Avoid unnecessary personal information. Keep your tracking ID private.<br>
+      AI assists staff; humans make final decisions. External AI providers may process
+      complaint text when live mode is enabled.</aside>""", unsafe_allow_html=True)
+    with st.form("complaint"):
+        st.subheader("1 · Issue details")
+        text = st.text_area("Describe what happened", max_chars=2000, height=160,
+            placeholder="Example: Several garbage bags have been left beside the market for three days.")
+        st.subheader("2 · Location")
+        location = st.selectbox("Location type", LOCATIONS)
+        area = st.text_input("Public area / landmark (optional)", max_chars=120, placeholder="Example: Outside the public library")
+        st.caption("Avoid entering a private home address unless necessary.")
+        st.subheader("3 · Additional details")
+        st.caption("Optional: answer only what you know. Missing details will not prevent submission.")
+        duration = st.text_input("How long has it been there? (optional)", max_chars=80, placeholder="Example: Three days")
+        hazards = st.selectbox("Hazards visible?", ["Unknown", "Yes", "None observed"],
+            help="Chemicals, medical waste or sharp objects. Do not touch or approach the waste to check.")
+        submitted = st.form_submit_button("Submit Complaint", type="primary", width="stretch")
+    if not submitted:
+        return
+    if len(text.strip()) < 10:
+        st.warning("Please describe the issue in at least 10 characters.")
+        return
+    if area.strip() and len(area.strip()) < 3:
+        st.warning("Please use at least three characters for the public area, or leave it blank.")
+        return
+    payload = {"text": text.strip(), "location_context": None if location == "Other" else location}
+    if area.strip():
+        payload["area"] = area.strip()
+    hazard_value = {"Unknown": "unknown", "Yes": "visible", "None observed": "none observed"}[hazards]
+    if duration.strip() or hazard_value != "unknown":
+        payload["clarification_answers"] = {"duration": duration.strip() or None, "hazards": hazard_value}
+    fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    if st.session_state.get("submission_fingerprint") != fingerprint:
+        st.session_state["submission_fingerprint"] = fingerprint
+        st.session_state["idempotency_key"] = str(uuid.uuid4())
+    try:
+        with st.spinner("Saving and processing your complaint..."):
+            receipt = api("POST", "/complaints", json=payload,
+                headers={"Idempotency-Key": st.session_state["idempotency_key"]})
+        st.session_state["last_tracking"] = receipt["tracking_id"]
+        st.session_state["receipt"] = receipt
+        st.rerun()
+    except ApiError as exc:
+        show_error(exc)
 
-                    st.success(
-                        f"✅ Complaint logged as **{tracking_id}**. "
-                        "Save this ID to track its status."
-                    )
 
-                    st.markdown("<br>", unsafe_allow_html=True)
-                    st.markdown('<div class="swa-card">', unsafe_allow_html=True)
-
-                    badge_col, review_col = st.columns([1, 2])
-                    with badge_col:
-                        st.markdown(
-                            f"""<span class="swa-badge" style="background:{style['bg']}; color:{style['color']};">
-                            {style['emoji']} {priority.upper()}</span>""",
-                            unsafe_allow_html=True,
-                        )
-                    with review_col:
-                        if result.get("requires_human_review"):
-                            st.warning("⚠️ Flagged for human review before any action is taken.")
-
-                    st.markdown("&nbsp;", unsafe_allow_html=True)
-                    st.markdown("**Recommended action**")
-                    st.write(result.get("recommended_action", "—"))
-
-                    st.markdown("**Explanation**")
-                    st.write(result.get("explanation", "—"))
-
-                    analysis = result.get("analysis") or {}
-                    retrieval = result.get("retrieval") or {}
-                    with st.expander("🔎 Analysis and retrieved knowledge"):
-                        st.markdown("**Waste analysis**")
-                        st.write(
-                            "Waste types: "
-                            + ", ".join(analysis.get("waste_types") or ["unknown"])
-                        )
-                        st.write(f"Location: {analysis.get('location', 'unknown')}")
-                        st.write(
-                            f"Duration: {analysis.get('duration_days', 'unknown')} days"
-                        )
-                        st.write(f"Severity: {analysis.get('severity', 'unknown')}")
-                        st.write(f"Issue type: {analysis.get('issue_type', 'unknown')}")
-                        st.write(f"Summary: {analysis.get('summary', '—')}")
-
-                        st.markdown("**Knowledge retrieval**")
-                        st.write(f"Query: {retrieval.get('query', '—')}")
-                        st.write(retrieval.get("answer", "—"))
-                        st.caption(
-                            "Grounded answer: "
-                            + ("yes" if retrieval.get("grounded") else "no")
-                        )
-
-                    sources = result.get("supporting_sources") or []
-                    if sources:
-                        st.markdown("**Supporting sources**")
-                        retrieved_sources = (
-                            result.get("retrieval", {}).get("sources", [])
-                        )
-                        cited_references = [
-                            item
-                            for item in retrieved_sources
-                            if item.get("source") in sources
-                        ]
-                        if cited_references:
-                            for item in cited_references:
-                                st.markdown(
-                                    f"- {item.get('source')} "
-                                    f"(page {item.get('page', 'unknown')})"
-                                )
-                        else:
-                            for source in sources:
-                                st.markdown(f"- {source}")
-
-                    confidence = result.get("confidence")
-                    if confidence is not None:
-                        st.markdown("**Model confidence**")
-                        st.progress(min(max(confidence, 0.0), 1.0))
-                        st.caption(f"{confidence:.0%}")
-
-                    st.markdown("</div>", unsafe_allow_html=True)
-
-                    agent_validation = result.get("validation") or {}
-                    pipeline_validation = result.get("pipeline_validation") or {}
-                    validation_notes = list(dict.fromkeys([
-                        *agent_validation.get("issues", []),
-                        *pipeline_validation.get("warnings", []),
-                    ]))
-                    if validation_notes:
-                        with st.expander("🔧 Validation notes (for reviewers)"):
-                            for issue in validation_notes:
-                                st.markdown(f"- {issue}")
-
-                    st.caption(
-                        "This recommendation was generated by an AI system and is "
-                        "intended as decision support only. Final action requires "
-                        "authorized human sign-off."
-                    )
-
-# ============================================================
-# STAFF VIEW (reached only via the corner 🔒 button)
-# ============================================================
-else:
-    if not st.session_state["auth_token"]:
-        st.markdown("### 🔒 Staff login")
-        st.caption("This area is restricted to authorized waste-management staff.")
-        with st.form("staff_login_form"):
-            username = st.text_input("Username")
-            password = st.text_input("Password", type="password")
-            login_submitted = st.form_submit_button("Log in")
-
-        if login_submitted:
-            if not username or not password:
-                st.warning("Enter both a username and password.")
-            else:
-                try:
-                    resp = requests.post(
-                        f"{BACKEND_URL}/auth/login",
-                        data={"username": username, "password": password},
-                        timeout=15,
-                    )
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        token = data.get("access_token") or data.get("token")
-                        role = data.get("role")
-                        if token and role in {"admin", "staff"}:
-                            st.session_state["auth_token"] = token
-                            st.session_state["auth_username"] = username
-                            st.rerun()
-                        elif token:
-                            st.error("This account is not authorized for the staff area.")
-                        else:
-                            st.error(
-                                "Login endpoint returned 200 but no "
-                                "access_token/token field — check the backend contract."
-                            )
-                    else:
-                        st.error("Invalid username or password.")
-                except requests.exceptions.RequestException as exc:
-                    st.error(f"Could not reach the backend: {exc}")
-    else:
-        top_col, logout_col = st.columns([4, 1])
-        with top_col:
-            st.markdown(f"### 📋 Complaints queue — logged in as `{st.session_state['auth_username']}`")
-            st.caption(
-                "Sorted by priority. In a full deployment this would read from "
-                "the shared database instead of browser session memory."
-            )
-        with logout_col:
-            if st.button("Log out", use_container_width=True):
-                st.session_state["auth_token"] = None
-                st.session_state["auth_username"] = None
-                st.rerun()
-
-        complaints = st.session_state["complaints"]
-        if not complaints:
-            st.info("No complaints submitted yet in this session.")
+def track_complaint():
+    st.button("Back to Home", on_click=navigate, args=("home",))
+    st.title("Track a Complaint")
+    st.write("Follow your report from submission to resolution. No sign-in needed.")
+    with st.form("tracking"):
+        tracking = st.text_input("Tracking ID", value=st.session_state.get("last_tracking", ""), max_chars=80,
+            placeholder="Paste the private ID from your receipt")
+        lookup = st.form_submit_button("Check Status", type="primary")
+    if lookup:
+        st.session_state.pop("tracking_result", None)
+        if not tracking.strip():
+            st.warning("Enter the tracking ID from your complaint receipt.")
         else:
-            sorted_complaints = sorted(
-                complaints,
-                key=lambda c: PRIORITY_STYLE.get((c.get("priority") or "").lower(), UNKNOWN_STYLE)["rank"],
-            )
-            for c in sorted_complaints:
-                priority = (c.get("priority") or "unknown").lower()
-                style = PRIORITY_STYLE.get(priority, UNKNOWN_STYLE)
-                review_tag = " · 🚩 needs human review" if c.get("requires_human_review") else ""
-                safe_id = html.escape(str(c["id"]))
-                safe_time = html.escape(str(c["submitted_at"]))
-                safe_location = html.escape(str(c["location"]))
-                safe_text = html.escape(str(c["text"]))
-                safe_action = html.escape(str(c.get("recommended_action", "—")))
-                st.markdown(
-                    f"""
-                    <div class="swa-row" style="border-left-color:{style['color']};">
-                        <span class="swa-badge" style="background:{style['bg']}; color:{style['color']}; font-size:0.85rem;">
-                            {style['emoji']} {priority.upper()}
-                        </span>
-                        &nbsp; <span class="swa-tid">{safe_id}</span>
-                        &nbsp; <span style="color:#6b7280; font-size:0.85rem;">{safe_time} · {safe_location}{review_tag}</span>
-                        <div style="margin-top:0.4rem;">{safe_text}</div>
-                        <div style="margin-top:0.4rem; font-size:0.92rem; color:#374151;">
-                            <strong>Action:</strong> {safe_action}
-                        </div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
+            try:
+                st.session_state["tracking_result"] = api("GET", "/complaints/track/" + quote(tracking.strip(), safe=""))
+            except ApiError as exc:
+                show_error(exc)
+    if st.session_state.get("tracking_result"):
+        receipt_panel(st.session_state["tracking_result"])
+    else:
+        st.caption("Your tracking ID is private. Staff notes and personal complaint details are not shown here.")
+
+
+def sign_in():
+    # Password exists only as transient widget input; clear it on every outcome.
+    try:
+        response = api("POST", "/auth/login", data={
+            "username": st.session_state.get("login_username", ""),
+            "password": st.session_state.get("login_password", "")})
+        if response.get("role") not in {"admin", "staff"}:
+            st.session_state["login_notice"] = "This account is not authorized for staff access."
+        else:
+            st.session_state["auth_token"] = response["access_token"]
+            st.session_state["auth_username"] = st.session_state.get("login_username", "")
+            st.session_state["staff_view"] = "Dashboard"
+            navigate("staff")
+    except ApiError:
+        st.session_state["login_notice"] = "Sign-in was unsuccessful. Check your credentials or try again shortly."
+    finally:
+        st.session_state["login_password"] = ""
+
+
+def login():
+    st.button("Back to Citizen Portal", on_click=navigate, args=("home",))
+    with st.container(key="login_panel"):
+        st.title("Staff Portal")
+        st.write("Authorized personnel only")
+        if notice := st.session_state.pop("login_notice", None):
+            st.error(notice)
+        with st.form("login"):
+            st.text_input("Username", key="login_username", max_chars=30)
+            st.text_input("Password", type="password", key="login_password")
+            st.form_submit_button("Sign In", type="primary", width="stretch", on_click=sign_in)
+
+
+def staff():
+    from frontend.staff import staff_portal
+    try:
+        staff_portal(api)
+    except ApiError as exc:
+        show_error(exc)
+
+
+st.set_page_config(page_title="SmartWaste AI · Report waste. Track action.", page_icon="♻", layout="wide")
+apply_styles()
+render_header()
+page = st.session_state.get("page", "home")
+if page == "report":
+    report_issue()
+elif page == "track":
+    track_complaint()
+elif page == "login":
+    login()
+elif page == "staff":
+    if st.session_state.get("auth_token"):
+        staff()
+    else:
+        login()
+else:
+    home()
+st.divider()
+st.caption("SmartWaste AI · University demonstration · AI-assisted reporting with human-reviewed action.")

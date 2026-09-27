@@ -3,10 +3,15 @@ import bcrypt, jwt
 from backend.config import settings
 
 def hash_password(password: str) -> str:
+    if len(password.encode("utf-8")) > 72:
+        raise ValueError("Password exceeds bcrypt's byte limit.")
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 def verify_password(password: str, hashed: str) -> bool:
-    return bcrypt.checkpw(password.encode(), hashed.encode())
+    try:
+        return bcrypt.checkpw(password.encode(), hashed.encode())
+    except (ValueError, TypeError):
+        return False
 
 def create_access_token(username: str, role: str) -> str:
     exp = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_minutes)

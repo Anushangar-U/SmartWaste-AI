@@ -158,9 +158,15 @@ def main() -> None:
         DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, chunk_page_records,
     )
     from retrieval.processing.embedder import DEFAULT_MODEL_NAME, embed_chunks
+    from retrieval.processing.quality import select_guidance_pages
+    from retrieval.sources import verify_manifest, manifest
 
     page_records = load_all_pdfs()
-    chunks = chunk_page_records(page_records)
+    if verify_manifest():
+        raise RuntimeError("Source manifest hashes differ; review source metadata before rebuilding.")
+    selected, quality = select_guidance_pages(page_records)
+    chunks = chunk_page_records(selected)
+    quality["excluded_chunk_count"] = len(chunk_page_records(page_records)) - len(chunks)
     embedding_records = embed_chunks(chunks)
 
     index, metadata = build_index(embedding_records)
@@ -171,6 +177,8 @@ def main() -> None:
         "chunk_size": DEFAULT_CHUNK_SIZE,
         "chunk_overlap": DEFAULT_CHUNK_OVERLAP,
         "vector_count": index.ntotal,
+        "source_hashes": {name: item["sha256"] for name, item in manifest().items()},
+        "quality": quality,
     }
     save_index(index, metadata, build_info=build_info)
     loaded_store = load_index()

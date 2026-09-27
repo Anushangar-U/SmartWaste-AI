@@ -1,4 +1,3 @@
-groq>=0.11.0
-streamlit>=1.38.0
-requests>=2.32.0
-python-dotenv>=1.0.1
+# Compatibility entry point for the original member-specific setup.
+# The integrated application uses one tested dependency set.
+-r requirements.txt

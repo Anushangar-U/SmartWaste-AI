@@ -17,6 +17,15 @@ def validate(
     decision: DecisionResult,
 ) -> ValidationReport:
     warnings: list[str] = []
+    if retrieval.citation_validation and not retrieval.citation_validation.get("passed", False):
+        warnings.extend(retrieval.citation_validation.get("issues", ["Evidence citations require review."]))
+        decision.requires_human_review = True
+    from retrieval.citations import sensitive_claim_issues
+    sensitive = sensitive_claim_issues(decision.recommended_action + " " + decision.explanation,
+                                       [item.model_dump() for item in retrieval.evidence])
+    if sensitive:
+        warnings.extend(sensitive)
+        decision.requires_human_review = True
 
     if not retrieval.evidence:
         if not any(
@@ -58,6 +67,14 @@ def validate(
 
     if analysis.severity == Severity.high or decision.priority == Priority.critical:
         decision.requires_human_review = True
+        decision.review_urgency = "urgent"
+    from agents.decision.triage import clarification_questions
+    questions = clarification_questions(analysis.model_dump(mode="json"))
+    decision.clarification_questions = questions
+    if questions:
+        decision.requires_human_review = True
+        if decision.review_urgency != "urgent":
+            decision.review_urgency = "elevated"
 
     return ValidationReport(
         passed=not warnings and decision.validation.passed,

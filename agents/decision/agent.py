@@ -13,18 +13,15 @@ difference from some other provider APIs.
 """
 
 import json
-import os
 
-from dotenv import load_dotenv
 from groq import Groq
 
 from .prompts import SYSTEM_PROMPT, build_user_prompt
 from .rules import validate_decision
-
-load_dotenv()
+from backend.config import settings
 
 # The model can be overridden through the environment.
-GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+GROQ_MODEL = settings.groq_model
 
 _client = None
 
@@ -32,13 +29,14 @@ _client = None
 def _get_client() -> Groq:
     global _client
     if _client is None:
-        api_key = os.getenv("GROQ_API_KEY")
+        api_key = settings.groq_api_key
         if not api_key:
             raise RuntimeError(
                 "GROQ_API_KEY is not set. Add it to your .env file. "
                 "Get a free key at https://console.groq.com/keys"
             )
-        _client = Groq(api_key=api_key)
+        _client = Groq(api_key=api_key, timeout=settings.provider_timeout_seconds,
+                       max_retries=settings.provider_max_retries)
     return _client
 
 
@@ -104,7 +102,7 @@ def decide(
         decision = {
             "priority": "medium",
             "recommended_action": "Manual review required — automated decision failed.",
-            "explanation": f"The decision agent could not parse a valid response ({exc}).",
+            "explanation": "The decision agent could not parse a valid response. Staff review is required.",
             "supporting_sources": [],
             "requires_human_review": True,
             "confidence": 0.0,

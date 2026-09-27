@@ -1,0 +1,1322 @@
+[
+  {
+    "id": "SW-001",
+    "text": "Household garbage has not been collected from our residential street for two days.",
+    "category": "routine",
+    "family_id": "family-1",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-002",
+    "text": "Please inspect this report: Household garbage has not been collected from our residential street for two days.",
+    "category": "routine",
+    "family_id": "family-1",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-003",
+    "text": "Household garbage has not been collected from our residential street for two days. I cannot safely get closer to check further details.",
+    "category": "routine",
+    "family_id": "family-1",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-004",
+    "text": "Plastic bottles and bags are piled beside the public market.",
+    "category": "plastic",
+    "family_id": "family-2",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-005",
+    "text": "Please inspect this report: Plastic bottles and bags are piled beside the public market.",
+    "category": "plastic",
+    "family_id": "family-2",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-006",
+    "text": "Plastic bottles and bags are piled beside the public market. I cannot safely get closer to check further details.",
+    "category": "plastic",
+    "family_id": "family-2",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-007",
+    "text": "Food waste outside a restaurant has smelled strongly for one week.",
+    "category": "organic",
+    "family_id": "family-3",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-008",
+    "text": "Please inspect this report: Food waste outside a restaurant has smelled strongly for one week.",
+    "category": "organic",
+    "family_id": "family-3",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-009",
+    "text": "Food waste outside a restaurant has smelled strongly for one week. I cannot safely get closer to check further details.",
+    "category": "organic",
+    "family_id": "family-3",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-010",
+    "text": "Our communal bins have not been emptied for six days.",
+    "category": "uncollected",
+    "family_id": "family-4",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-011",
+    "text": "Please inspect this report: Our communal bins have not been emptied for six days.",
+    "category": "uncollected",
+    "family_id": "family-4",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-012",
+    "text": "Our communal bins have not been emptied for six days. I cannot safely get closer to check further details.",
+    "category": "uncollected",
+    "family_id": "family-4",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-013",
+    "text": "Someone dumped mixed rubbish beside the playground yesterday.",
+    "category": "dumping",
+    "family_id": "family-5",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-014",
+    "text": "Please inspect this report: Someone dumped mixed rubbish beside the playground yesterday.",
+    "category": "dumping",
+    "family_id": "family-5",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-015",
+    "text": "Someone dumped mixed rubbish beside the playground yesterday. I cannot safely get closer to check further details.",
+    "category": "dumping",
+    "family_id": "family-5",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-016",
+    "text": "Leaking chemical containers have been left beside a school.",
+    "category": "chemical",
+    "family_id": "family-6",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-017",
+    "text": "Please inspect this report: Leaking chemical containers have been left beside a school.",
+    "category": "chemical",
+    "family_id": "family-6",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-018",
+    "text": "Leaking chemical containers have been left beside a school. I cannot safely get closer to check further details.",
+    "category": "chemical",
+    "family_id": "family-6",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-019",
+    "text": "Discarded medical waste is visible outside a clinic.",
+    "category": "healthcare",
+    "family_id": "family-7",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-020",
+    "text": "Please inspect this report: Discarded medical waste is visible outside a clinic.",
+    "category": "healthcare",
+    "family_id": "family-7",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-021",
+    "text": "Discarded medical waste is visible outside a clinic. I cannot safely get closer to check further details.",
+    "category": "healthcare",
+    "family_id": "family-7",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-022",
+    "text": "Used syringes are scattered near a public footpath.",
+    "category": "sharps",
+    "family_id": "family-8",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-023",
+    "text": "Please inspect this report: Used syringes are scattered near a public footpath.",
+    "category": "sharps",
+    "family_id": "family-8",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-024",
+    "text": "Used syringes are scattered near a public footpath. I cannot safely get closer to check further details.",
+    "category": "sharps",
+    "family_id": "family-8",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-025",
+    "text": "Waste has blocked a canal and water is backing up after rain.",
+    "category": "waterway",
+    "family_id": "family-9",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-026",
+    "text": "Please inspect this report: Waste has blocked a canal and water is backing up after rain.",
+    "category": "waterway",
+    "family_id": "family-9",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-027",
+    "text": "Waste has blocked a canal and water is backing up after rain. I cannot safely get closer to check further details.",
+    "category": "waterway",
+    "family_id": "family-9",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-028",
+    "text": "Mixed rubbish has remained behind the school for three days.",
+    "category": "school",
+    "family_id": "family-10",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-029",
+    "text": "Please inspect this report: Mixed rubbish has remained behind the school for three days.",
+    "category": "school",
+    "family_id": "family-10",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-030",
+    "text": "Mixed rubbish has remained behind the school for three days. I cannot safely get closer to check further details.",
+    "category": "school",
+    "family_id": "family-10",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-031",
+    "text": "Full garbage bags are outside the hospital entrance.",
+    "category": "hospital",
+    "family_id": "family-11",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-032",
+    "text": "Please inspect this report: Full garbage bags are outside the hospital entrance.",
+    "category": "hospital",
+    "family_id": "family-11",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-033",
+    "text": "Full garbage bags are outside the hospital entrance. I cannot safely get closer to check further details.",
+    "category": "hospital",
+    "family_id": "family-11",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-034",
+    "text": "There is some waste in my area and it has been there for a while.",
+    "category": "vague",
+    "family_id": "family-12",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-035",
+    "text": "Please inspect this report: There is some waste in my area and it has been there for a while.",
+    "category": "vague",
+    "family_id": "family-12",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-036",
+    "text": "There is some waste in my area and it has been there for a while. I cannot safely get closer to check further details.",
+    "category": "vague",
+    "family_id": "family-12",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-037",
+    "text": "There are no sharp objects, but I can see used syringes in the pile.",
+    "category": "contradiction",
+    "family_id": "family-13",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-038",
+    "text": "Please inspect this report: There are no sharp objects, but I can see used syringes in the pile.",
+    "category": "contradiction",
+    "family_id": "family-13",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-039",
+    "text": "There are no sharp objects, but I can see used syringes in the pile. I cannot safely get closer to check further details.",
+    "category": "contradiction",
+    "family_id": "family-13",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-040",
+    "text": "This is household garbage, not chemical or medical waste. There are no syringes.",
+    "category": "negation",
+    "family_id": "family-14",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-041",
+    "text": "Please inspect this report: This is household garbage, not chemical or medical waste. There are no syringes.",
+    "category": "negation",
+    "family_id": "family-14",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-042",
+    "text": "This is household garbage, not chemical or medical waste. There are no syringes. I cannot safely get closer to check further details.",
+    "category": "negation",
+    "family_id": "family-14",
+    "split": "development",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-043",
+    "text": "How should I maintain a laptop battery for a longer working life?",
+    "category": "out_of_domain",
+    "family_id": "family-15",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-044",
+    "text": "Please inspect this report: How should I maintain a laptop battery for a longer working life?",
+    "category": "out_of_domain",
+    "family_id": "family-15",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-045",
+    "text": "How should I maintain a laptop battery for a longer working life? I cannot safely get closer to check further details.",
+    "category": "out_of_domain",
+    "family_id": "family-15",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-046",
+    "text": "Uncollected plastic and food waste has been present for four days.",
+    "category": "missing_location",
+    "family_id": "family-16",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-047",
+    "text": "Please inspect this report: Uncollected plastic and food waste has been present for four days.",
+    "category": "missing_location",
+    "family_id": "family-16",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-048",
+    "text": "Uncollected plastic and food waste has been present for four days. I cannot safely get closer to check further details.",
+    "category": "missing_location",
+    "family_id": "family-16",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-049",
+    "text": "A pile of broken furniture is beside the bus stop.",
+    "category": "missing_duration",
+    "family_id": "family-17",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-050",
+    "text": "Please inspect this report: A pile of broken furniture is beside the bus stop.",
+    "category": "missing_duration",
+    "family_id": "family-17",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-051",
+    "text": "A pile of broken furniture is beside the bus stop. I cannot safely get closer to check further details.",
+    "category": "missing_duration",
+    "family_id": "family-17",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-052",
+    "text": "Glass, food scraps and plastic packaging are mixed together beside the market.",
+    "category": "mixed",
+    "family_id": "family-18",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-053",
+    "text": "Please inspect this report: Glass, food scraps and plastic packaging are mixed together beside the market.",
+    "category": "mixed",
+    "family_id": "family-18",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-054",
+    "text": "Glass, food scraps and plastic packaging are mixed together beside the market. I cannot safely get closer to check further details.",
+    "category": "mixed",
+    "family_id": "family-18",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-055",
+    "text": "The same overflowing bin at Central Market's north gate is still there today.",
+    "category": "duplicate_style",
+    "family_id": "family-19",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-056",
+    "text": "Please inspect this report: The same overflowing bin at Central Market's north gate is still there today.",
+    "category": "duplicate_style",
+    "family_id": "family-19",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-057",
+    "text": "The same overflowing bin at Central Market's north gate is still there today. I cannot safely get closer to check further details.",
+    "category": "duplicate_style",
+    "family_id": "family-19",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-058",
+    "text": "I am not sure whether the abandoned containers hold hazardous chemicals.",
+    "category": "uncertain_hazard",
+    "family_id": "family-20",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-059",
+    "text": "Please inspect this report: I am not sure whether the abandoned containers hold hazardous chemicals.",
+    "category": "uncertain_hazard",
+    "family_id": "family-20",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  },
+  {
+    "id": "SW-060",
+    "text": "I am not sure whether the abandoned containers hold hazardous chemicals. I cannot safely get closer to check further details.",
+    "category": "uncertain_hazard",
+    "family_id": "family-20",
+    "split": "holdout",
+    "review_status": "UNREVIEWED",
+    "reviewer": null,
+    "reviewed_at": null,
+    "reference": {
+      "agent1": {},
+      "retrieval": {
+        "relevance": {},
+        "relevant_ids_complete": false
+      },
+      "decision": {},
+      "system": {}
+    },
+    "input_analysis": null,
+    "input_retrieval": null,
+    "notes": "Generated candidate; references must be independently reviewed. Keep all variants of this family in the same split."
+  }
+]

@@ -1,7 +1,8 @@
 import logging, time, uuid
-from backend.schemas import FinalResponse
+from backend.schemas import FinalResponse, AnalysisResult, RetrievalResult, DecisionResult
 from backend.services import agent_client
 from backend.services.validator import validate
+from backend.middleware.logging_mw import correlation_id
 
 log = logging.getLogger("smartwaste.orchestrator")
 
@@ -35,23 +36,31 @@ def _run(stage: str, fn, *args):
     start = time.perf_counter()
     try:
         result = fn(*args)
-        log.info("stage=%s status=ok ms=%d", stage, (time.perf_counter() - start) * 1000)
+        log.info("rid=%s stage=%s status=ok ms=%d", correlation_id.get(), stage, (time.perf_counter() - start) * 1000)
         return result
     except Exception as e:
         # log the error type only; never log prompts, keys or user text
-        log.error("stage=%s status=failed error=%s", stage, type(e).__name__)
+        log.error("rid=%s stage=%s status=failed error=%s", correlation_id.get(), stage, type(e).__name__)
         raise AgentError(stage) from e
 
-def process_complaint(text: str, location_context: str | None = None) -> FinalResponse:
-    request_id = str(uuid.uuid4())[:8]
-    log.info("request_id=%s pipeline=start", request_id)
+def process_complaint(text: str, location_context: str | None = None, *, resume=None, on_stage=None, request_id=None) -> FinalResponse:
+    request_id = request_id or str(uuid.uuid4())
+    log.info("rid=%s case_id=%s pipeline=start", correlation_id.get(), request_id)
 
     analyst_input = with_location_context(text, location_context)
-    analysis  = _run("analyst",   agent_client.call_analyst, analyst_input)
-    retrieval = _run("retrieval", agent_client.call_retrieval, analysis)
-    decision  = _run("decision",  agent_client.call_decision, analysis, retrieval, analyst_input)
-    report    = validate(analysis, retrieval, decision)
+    saved = resume or {}
+    def stage(name, field, schema, fn, *args):
+        if saved.get(field):
+            return schema.model_validate(saved[field])
+        result = _run(name, fn, *args)
+        if on_stage:
+            on_stage(field, result.model_dump(mode="json"))
+        return result
+    analysis = stage("analyst", "analysis", AnalysisResult, agent_client.call_analyst, analyst_input)
+    retrieval = stage("retrieval", "retrieval", RetrievalResult, agent_client.call_retrieval, analysis)
+    decision = stage("decision", "decision", DecisionResult, agent_client.call_decision, analysis, retrieval, analyst_input)
+    report = _run("validation", validate, analysis, retrieval, decision)
 
-    log.info("request_id=%s pipeline=done validation_passed=%s", request_id, report.passed)
+    log.info("rid=%s case_id=%s pipeline=done validation_passed=%s", correlation_id.get(), request_id, report.passed)
     return FinalResponse(request_id=request_id, analysis=analysis,
                          retrieval=retrieval, decision=decision, validation=report)

@@ -8,6 +8,7 @@ and easy to explain in the viva.
 """
 
 import math
+from .triage import hazard_mentions, clarification_questions
 
 ALLOWED_PRIORITIES = {"low", "medium", "high", "critical"}
 REQUIRED_FIELDS = {
@@ -136,9 +137,20 @@ def validate_decision(
             str(analysis.get("summary", "")),
         ]
     ).lower()
-    if any(keyword in text_to_scan for keyword in HIGH_RISK_KEYWORDS):
+    affirmative, uncertain = hazard_mentions(text_to_scan)
+    if affirmative:
         decision["requires_human_review"] = True
         issues.append("High-risk keyword detected; forced human review.")
+    if uncertain:
+        decision["requires_human_review"] = True
+        issues.append("Possible hazard is uncertain; staff review required.")
+    # Legacy direct callers may supply only risk fields. The backend checks its complete schema.
+    missing = clarification_questions(analysis) if {"location", "duration_days"} <= analysis.keys() else []
+    if missing:
+        decision["requires_human_review"] = True
+    decision["clarification_questions"] = missing
+    decision["review_urgency"] = "urgent" if affirmative or analysis.get("severity") == "high" or decision["priority"] == "critical" else (
+        "elevated" if uncertain or missing else "normal")
 
     # 6. requires_human_review must be a real bool.
     decision["requires_human_review"] = bool(decision.get("requires_human_review", False))

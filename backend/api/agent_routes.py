@@ -1,15 +1,25 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
+from fastapi.responses import JSONResponse
 from backend.schemas import (ComplaintRequest, AnalysisResult, RetrievalRequest,
                              RetrievalResult, DecisionRequest, DecisionResult, FinalResponse)
 from backend.auth.dependencies import require_role
-from backend.services import agent_client, orchestrator
+from backend.services import agent_client
+from backend.services import cases
 
 router = APIRouter(tags=["agents"])
 
 # Full pipeline: this is what the frontend calls
 @router.post("/complaints/process", response_model=FinalResponse)
-def process(body: ComplaintRequest):
-    return orchestrator.process_complaint(body.text, body.location_context)
+def process(body: ComplaintRequest, idempotency_key: str | None = Header(default=None, min_length=16, max_length=128)):
+    case, _ = cases.submit(body.text, body.location_context, idempotency_key,
+        body.clarification_answers.model_dump() if body.clarification_answers else None, body.area)
+    if case["status"] in {"processing_failed", "processing", "submitted"}:
+        return JSONResponse(status_code=502, content={"detail": "Complaint saved; automated processing is unavailable.",
+            "tracking_id": case["tracking_id"]})
+    if not all(case.get(field) for field in ["analysis", "retrieval", "decision", "validation"]):
+        return JSONResponse(status_code=202, content=cases.public_status(case))
+    return FinalResponse(request_id=case["id"], analysis=case["analysis"], retrieval=case["retrieval"],
+        decision=case["decision"], validation=case["validation"])
 
 # Individual agent endpoints: for debugging, testing, and showing the JSON in the demo
 @router.post("/agents/analyze", response_model=AnalysisResult)

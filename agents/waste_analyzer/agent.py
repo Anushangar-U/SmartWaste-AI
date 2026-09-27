@@ -1,22 +1,13 @@
-import os
-
-from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from openai import OpenAI
 
 from .prompts import SYSTEM_PROMPT
 from .schemas import WasteAnalysis
+from backend.config import settings
 
 
-load_dotenv()
-
-AGENT1_OPENROUTER_API_KEY = os.getenv("AGENT1_OPENROUTER_API_KEY")
-AGENT1_OPENROUTER_MODEL = os.getenv(
-    "AGENT1_OPENROUTER_MODEL",
-    "nex-agi/nex-n2.5-mini:free",
-)
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+AGENT1_OPENROUTER_MODEL = settings.agent1_openrouter_model
 
 _openrouter_client: OpenAI | None = None
 _gemini_client: genai.Client | None = None
@@ -25,13 +16,15 @@ _gemini_client: genai.Client | None = None
 def _get_openrouter_client() -> OpenAI:
     global _openrouter_client
 
-    if not AGENT1_OPENROUTER_API_KEY:
+    if not settings.agent1_openrouter_api_key:
         raise RuntimeError("AGENT1_OPENROUTER_API_KEY is not configured.")
 
     if _openrouter_client is None:
         _openrouter_client = OpenAI(
-            api_key=AGENT1_OPENROUTER_API_KEY,
+            api_key=settings.agent1_openrouter_api_key,
             base_url="https://openrouter.ai/api/v1",
+            timeout=settings.provider_timeout_seconds,
+            max_retries=settings.provider_max_retries,
         )
 
     return _openrouter_client
@@ -40,14 +33,16 @@ def _get_openrouter_client() -> OpenAI:
 def _get_gemini_client() -> genai.Client:
     global _gemini_client
 
-    if not GEMINI_API_KEY:
+    if not settings.gemini_api_key:
         raise RuntimeError(
             "No Agent 1 provider is configured. Set "
             "AGENT1_OPENROUTER_API_KEY or GEMINI_API_KEY."
         )
 
     if _gemini_client is None:
-        _gemini_client = genai.Client(api_key=GEMINI_API_KEY)
+        _gemini_client = genai.Client(api_key=settings.gemini_api_key,
+            http_options=types.HttpOptions(timeout=int(settings.provider_timeout_seconds * 1000),
+                retry_options=types.HttpRetryOptions(attempts=settings.provider_max_retries + 1)))
 
     return _gemini_client
 
@@ -85,7 +80,7 @@ def _analyze_with_openrouter(complaint: str) -> WasteAnalysis:
 
 def _analyze_with_gemini(complaint: str) -> WasteAnalysis:
     response = _get_gemini_client().models.generate_content(
-        model="gemini-3.6-flash",
+        model=settings.gemini_model,
         contents=f"""
 {SYSTEM_PROMPT}
 
@@ -118,7 +113,7 @@ def analyze_complaint(complaint: str) -> WasteAnalysis:
     if not complaint or not complaint.strip():
         raise ValueError("Complaint cannot be empty.")
 
-    if AGENT1_OPENROUTER_API_KEY:
+    if settings.agent1_openrouter_api_key:
         return _analyze_with_openrouter(complaint)
 
     return _analyze_with_gemini(complaint)

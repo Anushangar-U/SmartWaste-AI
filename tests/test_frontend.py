@@ -16,11 +16,13 @@ class FrontendTests(unittest.TestCase):
         receipt = {"tracking_id": "WM-synthetic", "status": "awaiting_review", "history": []}
         with patch("requests.request", return_value=response(receipt)) as request:
             app = AppTest.from_file(APP).run()
+            next(b for b in app.button if b.label == "Report an Issue").click().run()
             app.text_area[0].set_value("Household garbage has been left for two days.")
-            app.button[0].click().run()
+            next(b for b in app.button if b.label == "Submit Complaint").click().run()
             self.assertFalse(app.exception)
             self.assertEqual(app.code[0].value, "WM-synthetic")
-            self.assertTrue(request.call_args.kwargs["headers"]["Idempotency-Key"])
+            submission = next(c for c in request.call_args_list if c.args[0] == "POST")
+            self.assertTrue(submission.kwargs["headers"]["Idempotency-Key"])
 
     def test_staff_reads_shared_backend_and_safe_plain_text(self):
         case = {"id": "test", "tracking_id": "WM-test", "text": "<script>alert(1)</script>",
@@ -34,7 +36,8 @@ class FrontendTests(unittest.TestCase):
         with patch("requests.request", side_effect=request) as calls:
             app = AppTest.from_file(APP).run()
             app.session_state["auth_token"] = "synthetic-test-token"
-            app.sidebar.radio[0].set_value("Staff").run()
+            app.session_state["page"] = "staff"
+            app.run()
             self.assertFalse(app.exception)
             self.assertTrue(any(t.value == case["text"] for t in app.text))
             self.assertTrue(all(c.kwargs["headers"].get("Authorization") for c in calls.call_args_list if "/staff/" in c.args[1]))

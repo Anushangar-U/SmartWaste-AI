@@ -108,3 +108,25 @@ checks after adding a legacy-schema migration regression. pip check reported no 
 requirements. All four evaluation entry points reported no reviewed cases without live calls.
 Final acceptance review also removed validation-error input echoes, preserved urgent review
 on analyst failure, and prevented mixing saved mock/live outputs during retry.
+
+## Phase 13 (design only)
+Added multilingual preparation covering preserved original text, translation versus a
+separately versioned multilingual index, native-speaker review and per-language acceptance.
+No unsupported multilingual feature or model replacement was introduced.
+
+## Final verification
+
+- Full deterministic suite: **58 tests passed** in 10.149 seconds. The baseline had 24.
+- Seven printed rule examples completed; they are not counted as assertion tests.
+- Dependency check: no broken requirements. All four evaluation entry points completed
+  the empty-reviewed-data smoke check without external calls.
+- Automated API clients, Streamlit AppTest and independent Python processes cover the
+  shared workflow and restart persistence. A manual two-browser walkthrough was not run.
+- No live provider smoke test was performed. Remote GitHub Actions has not yet been observed.
+- Local Markdown targets resolve. No audit paths, database files or generated FAISS artifacts
+  occur in the outgoing change set. The audit branch and main remain at their recorded SHAs.
+- The outgoing-file secret scan matched only the JWT/admin placeholders already present in
+  the baseline example configuration. No new private value or serialized JWT was found.
+  Local `.env` was not modified; deployment requires replacing its example credentials.
+- No reviewed accuracy, reranking benefit or multilingual capability is claimed. The existing
+  local index was not rebuilt; page exclusions apply after an explicit rebuild.

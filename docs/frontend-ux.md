@@ -2,6 +2,8 @@
 
 Base: `500e08029a3c20cd289680e5ca2987217340c9bc` on
 `improvement/assignment-completion`. UI branch: `improvement/frontend-ui-ux`.
+The latest refinement started from the clean existing UI branch at
+`bf0db7f9aa32b46e0abf1b9e00faf33dbbdc9b83`; its original redesign commits were retained.
 
 ## Before and after
 
@@ -23,15 +25,23 @@ are unchanged. No maps, photos, citizen accounts or notifications were added.
 
 ## Design decisions
 
-- Light neutral surfaces, deep green accent, readable dark text and consistent spacing.
+- Emerald accent `#059669`, neutral background `#fafaf9`, white surfaces, text `#1c1917`,
+  muted token `#78716c` and borders `#e7e5e4`. Action green `#047857` and metadata
+  `#57534e` provide stronger contrast. Cards use 12–16px radii and a compact hero.
+- A native Streamlit light theme keeps inputs, menus, alerts and form-submit buttons
+  consistent with the civic palette. Start Streamlit from the repository root so it
+  reads `.streamlit/config.toml`.
 - The public experience says what residents can do before describing the AI assistance.
 - Status labels and urgency text accompany color; color is never the only signal.
-- Native labelled widgets retain keyboard behavior. Buttons are at least 46 pixels high,
+- Native labelled widgets retain keyboard behavior. Main action buttons are at least 46 pixels high,
   focus outlines remain visible, and no motion is needed to use the application.
 - Form and case cards stack at narrow widths. Queue cards avoid a wide operational table.
 - Official source titles, issuer/year, page, exact passage and semantic similarity appear
   together. Raw filenames live in source-detail expanders.
 - Model confidence is explicitly uncalibrated. Human decisions have their own tab.
+- Evidence availability, grounding and claim verification display separate backend values;
+  absent flags say "Not recorded". Recommendation review requirements and cited document
+  titles are explicit. Grounding is not presented as independent claim verification.
 - Review and resolution require explicit confirmation; assignment is a deliberate form action.
 - Case updates use the version the staff form was originally shown with. A conflict is
   shown in plain language; Refresh Case clears old action inputs before adopting a new version.
@@ -51,6 +61,8 @@ it does not claim to reproduce those services' identity or publication policies.
 - `frontend/staff.py`: staff presentation and actions over the injected API adapter.
 - `frontend/components.py`: reusable badges, timelines, evidence cards and field display.
 - `frontend/styles.py`: static CSS only; no external font or JavaScript dependency.
+- `frontend/theme.py`: presentation color tokens.
+- `.streamlit/config.toml`: native widget theme only; contains no credentials.
 - Dynamic HTML in presentation helpers is escaped. Complaint text, evidence, names,
   notes and recommendations use native plain text. Technical JSON is opt-in.
 - Passwords are transient input to the sign-in callback and cleared on success or failure;
@@ -119,8 +131,16 @@ Use synthetic data and mask tracking capabilities when sharing screenshots.
 
 ## Verification and limits
 
-Final results: **12 frontend tests passed**; **68 complete deterministic tests passed**
-in 24.851 seconds. The complete baseline had 58 tests. No external provider calls were used.
+Latest results: **14 frontend tests passed** in 24.731 seconds; **70 complete deterministic
+tests passed** in 33.566 seconds. The original complete baseline had 58 tests; the prior
+UI branch had 68. No external provider calls were used.
+
+Commands (from the repository root, in the existing virtual environment):
+
+```powershell
+python -B -m unittest tests.test_frontend -v
+python -B -m unittest discover -s tests -v
+```
 
 The frontend baseline had 2 passing tests. Expanded AppTest coverage exercises public entry,
 opt-in login, rejected roles, expired sessions, secret-free error messages, idempotent retries,
@@ -128,13 +148,23 @@ tracking and safe complaint rendering. Two independent Streamlit sessions connec
 FastAPI application using a temporary database and process-local mock agents. The complete
 journey covers submission, dashboard, queue, case tabs, human review, assignment, resolution,
 citizen lookup and logout; additional checks cover retry/override, duplicate confirmation,
-empty states, filters and stale-version conflicts.
+empty states, filters and stale-version conflicts. New checks cover invalid credentials,
+unknown tracking IDs, independent evidence flags, missing metadata and cited source titles.
 
-AppTest verifies interactions, not rendered CSS. No browser automation package/browser cache
-was available for a visual screenshot pass. Narrow-screen CSS was reviewed, but actual
-mobile, dark browser preference and screen-reader behavior need browser verification before
-claiming full accessibility compliance. Streamlit's internal DOM styling may need adjustment
-after a future Streamlit version upgrade.
+Actual headless Chrome checks used the real local FastAPI and Streamlit servers with an
+isolated temporary database, no complaint records and no seeded staff credentials. Screenshots
+were inspected for desktop Home and narrow Home, Report, Track and Login. At 390px the page
+and app widths stayed at 390px, with no page exceptions. Main action buttons were 46px high;
+select arrows, help and password controls measured at least 44x44px. Native theme configuration
+fixed dark default widget styles; mobile top spacing prevents the brand being obscured by
+Streamlit's toolbar. The browser helper and temporary servers were stopped after checking.
+
+Local screenshots are ignored Git artifacts in `data/ui-review/`: `home-desktop.png`,
+`home-narrow.png`, `report-narrow.png`, `report-fields-narrow.png`, `track-narrow.png` and
+`login-narrow.png`. These contain no complaints or entered credentials. Authenticated staff
+workflows were checked through AppTest rather than visually in Chrome. Physical mobile,
+screen-reader behavior and full accessibility compliance remain unverified. Streamlit's
+internal DOM styling may need adjustment after a future Streamlit version upgrade.
 
 Navigation stays in the Streamlit session rather than shareable page URLs. Tracking refresh
 is explicit; there is no live stage streaming. The code block's native copy control/selectable

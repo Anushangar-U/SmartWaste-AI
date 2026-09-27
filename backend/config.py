@@ -18,5 +18,6 @@ class Settings(BaseSettings):
 
     admin_username: str = "admin"
     admin_password: str = ""
+    database_path: str = "data/smartwaste.sqlite3"
 
 settings = Settings()

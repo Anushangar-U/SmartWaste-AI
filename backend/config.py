@@ -23,5 +23,7 @@ class Settings(BaseSettings):
     provider_max_retries: int = 1
     processing_max_attempts: int = 3
     processing_lease_seconds: int = 600
+    duplicate_window_days: int = 7
+    duplicate_similarity_threshold: float = 0.82
 
 settings = Settings()

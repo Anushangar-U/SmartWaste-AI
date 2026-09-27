@@ -38,7 +38,7 @@ def find_case(identity):
 @router.post("/complaints", status_code=201)
 def submit(body: ComplaintRequest, idempotency_key: str | None = Header(default=None, min_length=16, max_length=128)):
     case, _ = cases.submit(body.text, body.location_context, idempotency_key,
-        body.clarification_answers.model_dump() if body.clarification_answers else None)
+        body.clarification_answers.model_dump() if body.clarification_answers else None, body.area)
     return cases.public_status(case)
 
 
@@ -87,3 +87,22 @@ def resolve(identity: str, body: ResolutionRequest, user=Depends(staff)):
 @router.post("/staff/complaints/{identity}/retry")
 def retry(identity: str, user=Depends(staff)):
     return cases.process(find_case(identity))
+
+
+class DuplicateConfirmation(BaseModel):
+    other_id: str = Field(min_length=1, max_length=80)
+    reason: str = Field(min_length=3, max_length=1000)
+
+
+@router.get("/staff/complaints/{identity}/duplicates")
+def duplicates(identity: str, user=Depends(staff)):
+    from backend.services.duplicates import suggestions
+    return suggestions(find_case(identity))
+
+
+@router.post("/staff/complaints/{identity}/duplicate")
+def confirm_duplicate(identity: str, body: DuplicateConfirmation, user=Depends(staff)):
+    from backend.services.duplicates import confirm
+    find_case(identity)
+    find_case(body.other_id)
+    return confirm(identity, body.other_id, user["username"], body.reason)

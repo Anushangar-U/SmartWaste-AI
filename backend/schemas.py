@@ -26,6 +26,7 @@ class ComplaintRequest(BaseModel):
     text: str = Field(min_length=10, max_length=2000)
     location_context: Optional[str] = Field(default=None, max_length=120)
     clarification_answers: ClarificationAnswers | None = None
+    area: str | None = Field(default=None, min_length=3, max_length=120)
 
 
 class AnalysisResult(BaseModel):

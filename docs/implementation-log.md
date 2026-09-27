@@ -74,3 +74,10 @@ saved predictions, bounded opt-in provider runs and simple retrieval/rules basel
 Claim judgments bind to output hashes. Null metrics and denominators prevent invented scores.
 Verification: 3 metric tests passed. Running the system evaluator on all 60 candidates
 produced NO_REVIEWED_CASES (0 evaluated) with JSON/CSV/Markdown summaries, not accuracy claims.
+
+## Phase 9
+Optional explicit public-area input, bounded recent-area candidate search and cached local
+MiniLM similarity suggest duplicates. Generic location types never imply a shared precise
+location. Staff confirmation creates a link, not a merge; original cases and statuses remain.
+If the local model is absent, suggestions report unavailable without downloading a model.
+Verification: 7 duplicate/workflow/frontend tests passed using synthetic similarity fixtures.

@@ -12,7 +12,7 @@ router = APIRouter(tags=["agents"])
 @router.post("/complaints/process", response_model=FinalResponse)
 def process(body: ComplaintRequest, idempotency_key: str | None = Header(default=None, min_length=16, max_length=128)):
     case, _ = cases.submit(body.text, body.location_context, idempotency_key,
-        body.clarification_answers.model_dump() if body.clarification_answers else None)
+        body.clarification_answers.model_dump() if body.clarification_answers else None, body.area)
     if case["status"] in {"processing_failed", "processing", "submitted"}:
         return JSONResponse(status_code=502, content={"detail": "Complaint saved; automated processing is unavailable.",
             "tracking_id": case["tracking_id"]})

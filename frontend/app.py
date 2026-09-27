@@ -67,6 +67,7 @@ def citizen():
     with st.form("complaint"):
         text = st.text_area("Describe the waste issue", max_chars=2000, height=130)
         location = st.selectbox("Location type", LOCATIONS)
+        area = st.text_input("Public area or landmark (optional; avoid personal addresses)", max_chars=120)
         st.caption("Optional clarification: answer only what you know. You can submit without these details.")
         duration = st.text_input("How long has it been present? (optional)", max_chars=80)
         hazards = st.selectbox("Visible chemicals, medical waste or sharp objects? Do not approach to check.", ["unknown", "visible", "none observed"])
@@ -76,6 +77,8 @@ def citizen():
             st.warning("Please provide at least 10 nonblank characters.")
         else:
             payload = {"text": text.strip(), "location_context": None if location == "Other" else location}
+            if area.strip():
+                payload["area"] = area.strip()
             if duration.strip() or hazards != "unknown":
                 payload["clarification_answers"] = {"duration": duration.strip() or None, "hazards": hazards}
             fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
@@ -115,6 +118,7 @@ def case_detail(case):
     st.subheader("Original complaint")
     st.text(case["text"])
     st.text("Location: " + (case.get("location_context") or "Not supplied"))
+    st.text("Reported area: " + (case.get("area") or "Not supplied"))
     st.caption("Submitted: " + case["submitted_at"])
     st.subheader("AI analysis")
     st.json(case.get("analysis") or {"status": "Not available"})
@@ -178,6 +182,24 @@ def case_detail(case):
         change_case(case, "retry", {})
     with st.expander("Case history"):
         st.dataframe(case.get("history", []), hide_index=True)
+    with st.expander("Possible duplicate incidents"):
+        if st.button("Find possible duplicates"):
+            try:
+                st.session_state["duplicates_" + case["id"]] = api("GET", f"/staff/complaints/{case['id']}/duplicates", protected=True)
+            except ApiError as exc:
+                show_error(exc)
+        data = st.session_state.get("duplicates_" + case["id"], {})
+        if data.get("reason"):
+            st.info(data["reason"])
+        for candidate in data.get("suggestions", []):
+            st.text(candidate["tracking_id"])
+            st.caption(candidate["reason"] + f" Similarity: {candidate['similarity']:.3f}")
+            reason = st.text_input("Why are these the same incident?", key="duplicate_reason_" + candidate["id"], max_chars=1000)
+            if st.button("Confirm link (retain both complaints)", key="duplicate_" + candidate["id"]):
+                change_case(case, "duplicate", {"other_id": candidate["id"], "reason": reason})
+        if data.get("confirmed_links"):
+            st.caption("Previously confirmed links")
+            st.dataframe(data["confirmed_links"], hide_index=True)
 
 
 def staff():

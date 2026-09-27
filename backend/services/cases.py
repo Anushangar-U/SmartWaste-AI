@@ -32,6 +32,8 @@ def process(case):
         def checkpoint(field, result):
             repo.update(case["id"], {field: result}, allowed={Status.processing.value})
         text = case["text"]
+        if case.get("area"):
+            text += "\nReporter supplied public area: " + case["area"]
         answers = case.get("clarification_answers") or {}
         if answers.get("duration"):
             text += "\nReporter supplied duration: " + answers["duration"]
@@ -50,8 +52,8 @@ def process(case):
             "error_stage": exc.stage, "requires_human_review": True}, event="processing_failed")
 
 
-def submit(text, location=None, idempotency_key=None, answers=None):
-    case, created = repo.create(text, location, idempotency_key, answers)
+def submit(text, location=None, idempotency_key=None, answers=None, area=None):
+    case, created = repo.create(text, location, idempotency_key, answers, area)
     return (process(case) if created else case), created
 
 

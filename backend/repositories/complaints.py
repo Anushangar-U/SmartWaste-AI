@@ -32,8 +32,8 @@ def decode(row):
     return result
 
 
-def create(text, location, idempotency_key=None, answers=None):
-    fingerprint = hashlib.sha256(json.dumps([text, location, answers], sort_keys=True).encode()).hexdigest()
+def create(text, location, idempotency_key=None, answers=None, area=None):
+    fingerprint = hashlib.sha256(json.dumps([text, location, answers, area], sort_keys=True).encode()).hexdigest()
     with connection() as db:
         db.execute("BEGIN IMMEDIATE")
         if idempotency_key:
@@ -58,6 +58,8 @@ def create(text, location, idempotency_key=None, answers=None):
                    (identity, "submitted", "submitted", timestamp))
         if answers:
             db.execute("UPDATE complaints SET clarification_answers=? WHERE id=?", (json.dumps(answers), identity))
+        if area:
+            db.execute("UPDATE complaints SET area=? WHERE id=?", (" ".join(area.split()), identity))
         return decode(db.execute("SELECT * FROM complaints WHERE id=?", (identity,)).fetchone()), True
 
 

@@ -12,9 +12,9 @@ class Settings(BaseSettings):
 
     gemini_api_key: str = ""
     openrouter_api_key: str = ""
-    openrouter_model: str = "openai/gpt-oss-20b:free"
+    openrouter_model: str = "openrouter/free"
     groq_api_key: str = ""
-    groq_model: str = "llama-3.3-70b-versatile"
+    groq_model: str = "openai/gpt-oss-120b"
 
     admin_username: str = "admin"
     admin_password: str = ""

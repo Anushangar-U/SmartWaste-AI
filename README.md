@@ -2,7 +2,7 @@
 
 SmartWaste-AI is a three-agent decision-support system for waste complaints:
 
-1. Agent 1 uses Gemini to convert a complaint into structured waste analysis.
+1. Agent 1 uses OpenRouter when `AGENT1_OPENROUTER_API_KEY` is set, with Gemini as an optional fallback, to convert a complaint into structured waste analysis.
 2. Agent 2 retrieves evidence from the local FAISS knowledge base and uses OpenRouter to produce a grounded summary.
 3. Agent 3 uses Groq to recommend a priority and action, followed by deterministic safety validation.
 
@@ -18,7 +18,7 @@ Install dependencies:
 python -m pip install -r requirements.txt
 ```
 
-For a no-API demo, set `USE_MOCK_AGENTS=true`. For the real three-agent pipeline, set it to `false` and configure the Gemini, OpenRouter, and Groq keys.
+For a no-API demo, set `USE_MOCK_AGENTS=true`. For the real three-agent pipeline, set it to `false` and configure Agent 1 with `AGENT1_OPENROUTER_API_KEY` (or `GEMINI_API_KEY` as a fallback), Agent 2 with `OPENROUTER_API_KEY`, and Agent 3 with `GROQ_API_KEY`. Agent 1 prefers OpenRouter when both Agent 1 provider keys are present. Model names are configurable: the example uses `nex-agi/nex-n2.5-mini:free`, `openrouter/free`, and `openai/gpt-oss-120b`; available OpenRouter routing and models can vary.
 
 ## Rebuild the FAISS knowledge base
 
@@ -28,7 +28,7 @@ Generated FAISS files are intentionally ignored by Git. Build `retrieval/vector_
 python -m retrieval.vector_store.faiss_store
 ```
 
-The command runs PDF ingestion, chunking, MiniLM embedding, FAISS indexing, persistence, and validation.
+The command runs PDF ingestion, chunking, MiniLM embedding, FAISS indexing, persistence, and validation. It also writes `retrieval/vector_store/data/build_info.json` with the model, chunk settings, dimension, and vector count.
 
 ## Run
 
@@ -44,7 +44,7 @@ Start the frontend in another terminal:
 python -m streamlit run frontend/app.py
 ```
 
-Public complaints are submitted to `POST /complaints/process` without authentication. Authentication is required for staff access and for the individual `/agents/*` debugging endpoints.
+Public complaints are submitted to `POST /complaints/process` without authentication. Its JSON body requires `text` and optionally accepts `location_context` from the location selector. Text-only clients remain supported. Authentication is required for staff access and for the individual `/agents/*` debugging endpoints.
 
 ## Response contract
 
@@ -70,8 +70,9 @@ disclaimer
 Run deterministic tests without external API calls:
 
 ```bash
-python tests/test_rules_no_api.py
+python -m tests.test_rules_no_api
 python -m unittest tests.test_integration -v
+python -m unittest tests.test_rag_evidence tests.test_decision_safety tests.test_faiss_build -v
 ```
 
-`tests/test_waste_analyzer.py` is a manual Gemini smoke test and requires a configured Gemini key.
+`tests/test_waste_analyzer.py` is a manual Agent 1 provider smoke test and requires a configured Agent 1 API key.

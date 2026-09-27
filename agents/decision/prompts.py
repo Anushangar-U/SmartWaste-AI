@@ -1,9 +1,9 @@
 """
-Prompts for Agent 3 - Decision & Recommendation Agent (Claude).
+Prompts for Agent 3 - Decision & Recommendation Agent (Groq).
 
 Input to this agent (from the backend orchestrator) is a dict shaped like:
 {
-    "analysis": {                      # output of Agent 1 (Gemini)
+    "analysis": {                      # output of Agent 1 (OpenRouter or Gemini)
         "waste_types": ["organic", "plastic"],
         "location": "behind school",
         "duration_days": 5,
@@ -11,7 +11,7 @@ Input to this agent (from the backend orchestrator) is a dict shaped like:
         "issue_type": "uncollected waste",
         "summary": "Mixed organic and plastic waste has remained near a school for five days."
     },
-    "evidence": [                      # output of Agent 2 (GPT + RAG)
+    "evidence": [                      # output of Agent 2 (OpenRouter + RAG)
         {
             "source": "Waste Collection Guidelines v1",
             "snippet": "Uncollected organic waste near schools should be treated as high priority...",

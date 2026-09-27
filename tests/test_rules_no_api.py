@@ -1,15 +1,14 @@
 """
-Quick manual tests for agents/decision/rules.py — no Anthropic API key needed.
+Quick manual checks for agents/decision/rules.py — no Groq API key needed.
 
-Run with:  python test_rules_no_api.py
-(from the repo root, after copying agents/decision/rules.py into place)
+Run with: python -m tests.test_rules_no_api
 """
 
 from agents.decision.rules import validate_decision
 
 
-def show(title, decision, evidence):
-    result, issues = validate_decision(decision, evidence)
+def show(title, decision, evidence, analysis=None):
+    result, issues = validate_decision(decision, evidence, analysis=analysis)
     print(f"\n--- {title} ---")
     print("Result:", result)
     print("Issues:", issues if issues else "(none)")
@@ -75,7 +74,7 @@ show(
     evidence=[],
 )
 
-# 5. Hazardous keyword in explanation — should force human review.
+# 5. Hazardous keyword in complaint analysis should force human review.
 show(
     "Hazardous keyword triggers human review",
     decision={
@@ -87,6 +86,7 @@ show(
         "confidence": 0.9,
     },
     evidence=[],
+    analysis={"waste_types": ["chemical"]},
 )
 
 # 6. No evidence at all — should force human review.

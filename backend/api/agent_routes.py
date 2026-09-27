@@ -9,7 +9,7 @@ router = APIRouter(tags=["agents"])
 # Full pipeline: this is what the frontend calls
 @router.post("/complaints/process", response_model=FinalResponse)
 def process(body: ComplaintRequest):
-    return orchestrator.process_complaint(body.text)
+    return orchestrator.process_complaint(body.text, body.location_context)
 
 # Individual agent endpoints: for debugging, testing, and showing the JSON in the demo
 @router.post("/agents/analyze", response_model=AnalysisResult)

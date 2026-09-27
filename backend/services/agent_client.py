@@ -45,6 +45,7 @@ def call_retrieval(analysis: AnalysisResult) -> RetrievalResult:
 def call_decision(
     analysis: AnalysisResult,
     retrieval: RetrievalResult,
+    complaint_text: str | None = None,
 ) -> DecisionResult:
     if settings.use_mock_agents:
         from backend.services.mock_agents import decide
@@ -62,10 +63,11 @@ def call_decision(
             evidence_item["snippet"] = evidence_item["text"]
             agent_evidence.append(evidence_item)
 
+        decision_kwargs = {"grounded_knowledge": retrieval.answer}
+        if complaint_text is not None:
+            decision_kwargs["complaint_text"] = complaint_text
         raw_decision = decide(
-            analysis.model_dump(mode="json"),
-            agent_evidence,
-            grounded_knowledge=retrieval.answer,
+            analysis.model_dump(mode="json"), agent_evidence, **decision_kwargs
         )
 
     decision = _as_dict(raw_decision)

@@ -26,6 +26,7 @@ Run with:  streamlit run frontend/app.py   (or: python -m streamlit run frontend
 Configure the backend URL via the BACKEND_URL env var (see .env.example).
 """
 
+import html
 import os
 import random
 import string
@@ -33,7 +34,9 @@ from datetime import datetime
 
 import requests
 import streamlit as st
+from dotenv import load_dotenv
 
+load_dotenv()
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 PRIORITY_STYLE = {
@@ -188,7 +191,9 @@ if st.session_state["view_mode"] == "citizen":
 
     with left:
         with st.form("complaint_form"):
-            location = st.selectbox("Location type", LOCATION_OPTIONS)
+            location = st.selectbox(
+                "Location type", LOCATION_OPTIONS, index=LOCATION_OPTIONS.index("Other")
+            )
             complaint_text = st.text_area(
                 "Describe the waste issue",
                 key="complaint_text",
@@ -206,6 +211,8 @@ if st.session_state["view_mode"] == "citizen":
                 st.warning("Please describe the issue before submitting.")
             else:
                 request_payload = {"text": submitted_complaint}
+                if location != "Other":
+                    request_payload["location_context"] = location
                 with st.spinner("Analyzing complaint, retrieving evidence, and generating a recommendation..."):
                     try:
                         resp = requests.post(
@@ -323,10 +330,10 @@ if st.session_state["view_mode"] == "citizen":
 
                     agent_validation = result.get("validation") or {}
                     pipeline_validation = result.get("pipeline_validation") or {}
-                    validation_notes = [
+                    validation_notes = list(dict.fromkeys([
                         *agent_validation.get("issues", []),
                         *pipeline_validation.get("warnings", []),
-                    ]
+                    ]))
                     if validation_notes:
                         with st.expander("🔧 Validation notes (for reviewers)"):
                             for issue in validation_notes:
@@ -405,17 +412,22 @@ else:
                 priority = (c.get("priority") or "unknown").lower()
                 style = PRIORITY_STYLE.get(priority, UNKNOWN_STYLE)
                 review_tag = " · 🚩 needs human review" if c.get("requires_human_review") else ""
+                safe_id = html.escape(str(c["id"]))
+                safe_time = html.escape(str(c["submitted_at"]))
+                safe_location = html.escape(str(c["location"]))
+                safe_text = html.escape(str(c["text"]))
+                safe_action = html.escape(str(c.get("recommended_action", "—")))
                 st.markdown(
                     f"""
                     <div class="swa-row" style="border-left-color:{style['color']};">
                         <span class="swa-badge" style="background:{style['bg']}; color:{style['color']}; font-size:0.85rem;">
                             {style['emoji']} {priority.upper()}
                         </span>
-                        &nbsp; <span class="swa-tid">{c['id']}</span>
-                        &nbsp; <span style="color:#6b7280; font-size:0.85rem;">{c['submitted_at']} · {c['location']}{review_tag}</span>
-                        <div style="margin-top:0.4rem;">{c['text']}</div>
+                        &nbsp; <span class="swa-tid">{safe_id}</span>
+                        &nbsp; <span style="color:#6b7280; font-size:0.85rem;">{safe_time} · {safe_location}{review_tag}</span>
+                        <div style="margin-top:0.4rem;">{safe_text}</div>
                         <div style="margin-top:0.4rem; font-size:0.92rem; color:#374151;">
-                            <strong>Action:</strong> {c.get('recommended_action', '—')}
+                            <strong>Action:</strong> {safe_action}
                         </div>
                     </div>
                     """,

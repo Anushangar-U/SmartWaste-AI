@@ -9,9 +9,9 @@ os.environ.setdefault("JWT_SECRET", "integration-test-secret")
 os.environ.setdefault("USE_MOCK_AGENTS", "true")
 
 from agents.waste_analyzer.schemas import WasteAnalysis
-from backend.schemas import AnalysisResult, DecisionResult, RetrievalResult
+from backend.schemas import AnalysisResult, ComplaintRequest, DecisionResult, RetrievalResult
 from backend.services import agent_client
-from backend.services.orchestrator import AgentError, process_complaint
+from backend.services.orchestrator import AgentError, process_complaint, with_location_context
 
 
 def make_analysis(severity: str = "medium") -> AnalysisResult:
@@ -159,6 +159,28 @@ class PipelineIntegrationTests(unittest.TestCase):
                 )
 
         self.assertEqual(error.exception.stage, "analyst")
+
+    def test_selected_location_reaches_analyst_and_retrieval(self):
+        request = ComplaintRequest(
+            text="Household waste has remained uncollected for two days.",
+            location_context="Near a school",
+        )
+        analysis = make_analysis()
+        analysis.location = "near a school"
+        with (
+            patch.object(agent_client, "call_analyst", return_value=analysis) as analyst,
+            patch.object(agent_client, "call_retrieval", return_value=make_retrieval()) as retrieval,
+            patch.object(agent_client, "call_decision", return_value=make_decision()),
+        ):
+            process_complaint(request.text, request.location_context)
+        self.assertIn("Near a school", analyst.call_args.args[0])
+        self.assertEqual(retrieval.call_args.args[0].location, "near a school")
+
+    def test_text_only_and_already_mentioned_location_are_not_duplicated(self):
+        text = "Household waste is behind the school for two days."
+        self.assertEqual(with_location_context(text, None), text)
+        self.assertEqual(with_location_context(text, "Near a school"), text)
+        self.assertEqual(with_location_context(text, "Other"), text)
 
     def test_adapters_preserve_metadata_and_normalize_decision(self):
         analyzer_module = ModuleType("agents.waste_analyzer.agent")

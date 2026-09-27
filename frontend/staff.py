@@ -239,8 +239,11 @@ class StaffPortal:
     def evidence(case):
         data = case.get("retrieval") or {}
         st.subheader("Supporting Evidence")
-        st.write("Evidence available: " + ("Yes" if data.get("evidence") else "No"))
-        st.caption("Claim verification: Not independently verified.")
+        available = data.get("evidence_available")
+        st.write("Evidence available: " + ("Yes" if available is True else "No" if available is False else "Not recorded"))
+        field("Grounded", "Yes" if data.get("grounded") is True else "No" if data.get("grounded") is False else "Not recorded")
+        st.caption("Grounded means retrieved evidence was available and used. It does not mean every generated claim has been independently verified.")
+        field("Claim verification", label(data.get("claim_verification")) if data.get("claim_verification") else "Not recorded")
         st.caption("Similarity measures semantic relatedness. It is not a probability that the information is correct.")
         if data.get("answer"):
             field("Evidence-based AI summary", data["answer"])
@@ -261,11 +264,19 @@ class StaffPortal:
             return
         field("Priority", label(decision.get("priority")))
         field("Review urgency", label(case.get("review_urgency", "normal")))
+        required = decision.get("requires_human_review")
+        field("Human review required", "Yes" if required is True else "No" if required is False else "Not recorded")
         field("Recommended action", decision.get("recommended_action"))
         field("Explanation", decision.get("explanation"))
         confidence = decision.get("confidence")
         field("Model-reported confidence", f"{confidence:.0%}" if confidence is not None else "Not available")
         st.caption("Not a calibrated probability.")
+        st.caption("Sources cited by the recommendation")
+        sources = {item["source"]: item for item in (case.get("retrieval") or {}).get("sources", [])}
+        for source in decision.get("supporting_sources", []):
+            st.text(sources.get(source, {}).get("title") or source)
+        if not decision.get("supporting_sources"):
+            st.text("No supporting sources cited.")
         for question in decision.get("clarification_questions", []):
             st.text("Clarification needed: " + question)
         issues = [*(decision.get("validation") or {}).get("issues", []), *(case.get("validation") or {}).get("warnings", [])]

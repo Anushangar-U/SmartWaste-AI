@@ -70,11 +70,17 @@ def logout():
 
 
 def render_header():
+    with st.container(key="public_header"):
+        header_navigation()
+    st.divider()
+
+
+def header_navigation():
     brand, report, track, access = st.columns([3, 1.35, 1.45, 1.4], vertical_alignment="center")
     with brand:
         st.markdown('<div class="sw-brand"><span aria-hidden="true">♻</span>SmartWaste AI</div>', unsafe_allow_html=True)
         st.caption("Report waste. Track action.")
-    report.button("Report Issue", key="nav_report", on_click=navigate, args=("report",), width="stretch")
+    report.button("Report Issue", key="nav_report", type="primary", on_click=navigate, args=("report",), width="stretch")
     track.button("Track Complaint", key="nav_track", on_click=navigate, args=("track",), width="stretch")
     if st.session_state.get("auth_token"):
         access.button("Staff Portal", key="nav_staff", on_click=navigate, args=("staff",), width="stretch")
@@ -84,7 +90,6 @@ def render_header():
         exit_col.button("Logout", on_click=logout, width="stretch")
     else:
         access.button("Staff Login", key="nav_login", on_click=navigate, args=("login",), width="stretch")
-    st.divider()
 
 
 def public_mode_notice():
@@ -97,14 +102,15 @@ def public_mode_notice():
 def home():
     public_mode_notice()
     st.markdown("""<section class="sw-hero">
-      <div class="sw-eyebrow">A cleaner community starts with a report</div>
+      <div class="sw-eyebrow">Waste reporting &amp; tracking</div>
       <h1>Report waste.<br>Track action.</h1>
       <p>Report waste problems quickly. AI-assisted triage with human-reviewed decisions.</p>
       <strong>No account required</strong>
     </section>""", unsafe_allow_html=True)
-    left, right, _ = st.columns([1.4, 1.4, 2])
-    left.button("Report an Issue", type="primary", width="stretch", on_click=navigate, args=("report",))
-    right.button("Track Complaint", key="hero_track", width="stretch", on_click=navigate, args=("track",))
+    with st.container(key="hero_actions"):
+        left, right = st.columns(2)
+        left.button("Report an Issue", type="primary", width="stretch", on_click=navigate, args=("report",))
+        right.button("Track Complaint", key="hero_track", width="stretch", on_click=navigate, args=("track",))
     st.caption("AI assists staff. Final decisions are made by authorized personnel.")
     st.subheader("How it works")
     st.markdown("""<section class="sw-steps" aria-label="How SmartWaste works">
@@ -170,7 +176,7 @@ def report_issue():
     with st.form("complaint"):
         st.subheader("1 · Issue details")
         text = st.text_area("Describe what happened", max_chars=2000, height=160,
-            placeholder="Example: Household garbage has not been collected from this street for three days...")
+            placeholder="Example: Several garbage bags have been left beside the market for three days.")
         st.subheader("2 · Location")
         location = st.selectbox("Location type", LOCATIONS)
         area = st.text_input("Public area / landmark (optional)", max_chars=120, placeholder="Example: Outside the public library")
@@ -254,8 +260,7 @@ def sign_in():
 
 def login():
     st.button("Back to Citizen Portal", on_click=navigate, args=("home",))
-    _, middle, _ = st.columns([1, 2, 1])
-    with middle:
+    with st.container(key="login_panel"):
         st.title("Staff Portal")
         st.write("Authorized personnel only")
         if notice := st.session_state.pop("login_notice", None):

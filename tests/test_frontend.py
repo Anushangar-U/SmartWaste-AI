@@ -20,6 +20,31 @@ def click(app, label):
 
 
 class FrontendTests(unittest.TestCase):
+    def test_evidence_and_recommendation_keep_backend_flags_distinct(self):
+        def render(case):
+            from frontend.staff import StaffPortal
+            StaffPortal.evidence(case)
+            StaffPortal.recommendation(case)
+        case = {
+            "retrieval": {"evidence_available": True, "grounded": False,
+                "claim_verification": "not_independently_verified", "evidence": [],
+                "sources": [{"source": "guidance.pdf", "title": "Official guidance"}]},
+            "decision": {"requires_human_review": True, "supporting_sources": ["guidance.pdf"]},
+        }
+        app = AppTest.from_function(render, args=(case,)).run()
+        self.assertFalse(app.exception)
+        self.assertTrue(any(m.value == "Evidence available: Yes" for m in app.markdown))
+        values = [t.value for t in app.text]
+        self.assertEqual(values[0], "No")  # Evidence available does not imply grounded.
+        self.assertIn("Not Independently Verified", values)
+        self.assertIn("Yes", values)
+        self.assertIn("Official guidance", values)
+        self.assertNotIn("guidance.pdf", values)
+        app = AppTest.from_function(render, args=({"decision": {"priority": "low"}},)).run()
+        self.assertFalse(app.exception)
+        self.assertTrue(any(m.value == "Evidence available: Not recorded" for m in app.markdown))
+        self.assertIn("Not recorded", [t.value for t in app.text])
+
     def test_public_default_login_is_opt_in_and_demo_visible(self):
         with patch("requests.request", return_value=response({"mode": "mock_demo"})) as calls:
             app = AppTest.from_file(APP).run()
@@ -72,7 +97,7 @@ class FrontendTests(unittest.TestCase):
             self.assertFalse(app.exception)
             history = next(m.value for m in app.markdown if "sw-timeline" in m.value and "<ol" in m.value)
             self.assertIn("Submitted", history)
-            self.assertIn("Processing Incomplete", history)
+            self.assertIn("Processing Failed", history)
             self.assertNotIn("Resolved", history)
             self.assertTrue(any("still saved" in w.value for w in app.warning))
 
@@ -158,6 +183,23 @@ class FrontendJourneyTests(unittest.TestCase):
     def submit_case(self):
         from backend.services import cases
         return cases.submit("Household garbage uncollected for three days.", "Residential street", area="Library gate")[0]
+
+    def test_invalid_login_and_tracking_show_safe_errors(self):
+        app = AppTest.from_file(APP).run()
+        click(app, "Staff Login")
+        widget(app, "text_input", "Username").set_value("ui_worker")
+        widget(app, "text_input", "Password").set_value("wrong-synthetic-password")
+        click(app, "Sign In")
+        self.assertFalse(app.exception)
+        self.assertNotIn("auth_token", app.session_state)
+        self.assertEqual(widget(app, "text_input", "Password").value, "")
+        self.assertTrue(app.error)
+        self.assertNotIn("wrong-synthetic-password", str([e.value for e in app.error]))
+        app.button(key="nav_track").click().run()
+        widget(app, "text_input", "Tracking ID").set_value("WM-not-a-real-complaint")
+        click(app, "Check Status")
+        self.assertFalse(app.exception)
+        self.assertTrue(any("No matching complaint" in e.value for e in app.error))
 
     def test_citizen_staff_review_assign_resolve_and_track(self):
         citizen = AppTest.from_file(APP).run()

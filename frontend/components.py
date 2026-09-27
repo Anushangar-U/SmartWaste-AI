@@ -4,9 +4,9 @@ from html import escape
 import streamlit as st
 
 STATUS_LABELS = {
-    "submitted": "Submitted", "processing": "AI Processing",
+    "submitted": "Submitted", "processing": "Processing",
     "awaiting_review": "Awaiting Staff Review", "reviewed": "Staff Reviewed",
-    "assigned": "Assigned", "processing_failed": "Processing Incomplete", "resolved": "Resolved",
+    "assigned": "Assigned", "processing_failed": "Processing Failed", "resolved": "Resolved",
 }
 STATUS_TONES = {"awaiting_review": "attention", "processing_failed": "danger",
                 "resolved": "success", "assigned": "info", "processing": "info"}

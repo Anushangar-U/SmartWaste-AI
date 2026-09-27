@@ -1,0 +1,126 @@
+{
+  "reviewed_records": 0,
+  "ignored_unreviewed": 60,
+  "evaluated_records": 0,
+  "metrics": {
+    "severity_agreement": {
+      "value": null,
+      "n": 0
+    },
+    "issue_type_agreement": {
+      "value": null,
+      "n": 0
+    },
+    "location_agreement": {
+      "value": null,
+      "n": 0
+    },
+    "duration_days_agreement": {
+      "value": null,
+      "n": 0
+    },
+    "precision_at_1": {
+      "value": null,
+      "n": 0
+    },
+    "precision_at_3": {
+      "value": null,
+      "n": 0
+    },
+    "precision_at_5": {
+      "value": null,
+      "n": 0
+    },
+    "recall_at_5": {
+      "value": null,
+      "n": 0
+    },
+    "mrr_at_5": {
+      "value": null,
+      "n": 0
+    },
+    "graded_precision_at_1": {
+      "value": null,
+      "n": 0
+    },
+    "graded_precision_at_3": {
+      "value": null,
+      "n": 0
+    },
+    "graded_precision_at_5": {
+      "value": null,
+      "n": 0
+    },
+    "abstention_rate": {
+      "value": null,
+      "n": 0
+    },
+    "correct_abstention": {
+      "value": null,
+      "n": 0
+    },
+    "out_of_domain_rejection": {
+      "value": null,
+      "n": 0
+    },
+    "priority_agreement": {
+      "value": null,
+      "n": 0
+    },
+    "hazardous_case_miss_rate": {
+      "value": null,
+      "n": 0
+    },
+    "unnecessary_review_rate": {
+      "value": null,
+      "n": 0
+    },
+    "review_trigger_accuracy": {
+      "value": null,
+      "n": 0
+    },
+    "invalid_citation_rate": {
+      "value": null,
+      "n": 0
+    },
+    "unsupported_citation_rate": {
+      "value": null,
+      "n": 0
+    },
+    "supported_claim_rate": {
+      "value": null,
+      "n": 0
+    },
+    "latency_seconds": {
+      "value": null,
+      "n": 0
+    },
+    "provider_failure_rate": {
+      "value": null,
+      "n": 0
+    },
+    "api_calls_estimate": {
+      "value": null,
+      "n": 0
+    },
+    "waste_precision": {
+      "value": null,
+      "n": 0
+    },
+    "waste_recall": {
+      "value": null,
+      "n": 0
+    },
+    "waste_f1": {
+      "value": null,
+      "n": 0
+    }
+  },
+  "task": "system",
+  "variant": "rules",
+  "executed_at": "2026-09-27T18:34:02.023547+00:00",
+  "git_sha": "85e55557475389e62c69390392eb8303ed9349ab",
+  "dataset_sha256": "f3396465e78c62f0ad9fef684f62f56693b3157763eda7215054f54ee9d283da",
+  "status": "NO_REVIEWED_CASES",
+  "notes": "Null metrics have no eligible denominator. API calls are estimates excluding SDK retries. No monetary cost is inferred."
+}

@@ -66,3 +66,11 @@ denials, affirmative hazards and uncertainty. Optional pre-submission clarificat
 stored separately from original text; missing facts generate predefined follow-up questions.
 Verification: 25 triage/decision/integration/workflow/frontend tests passed. A direct-rule
 compatibility regression was resolved before proceeding; existing tests were not weakened.
+
+## Phase 8
+60 candidate complaints in 20 paraphrase families, all UNREVIEWED; reviewed file is empty.
+Separate extraction/retrieval/decision/system runners support reviewed-label metrics,
+saved predictions, bounded opt-in provider runs and simple retrieval/rules baselines.
+Claim judgments bind to output hashes. Null metrics and denominators prevent invented scores.
+Verification: 3 metric tests passed. Running the system evaluator on all 60 candidates
+produced NO_REVIEWED_CASES (0 evaluated) with JSON/CSV/Markdown summaries, not accuracy claims.

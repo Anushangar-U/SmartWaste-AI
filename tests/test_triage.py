@@ -12,6 +12,7 @@ class TriageTests(unittest.TestCase):
         self.assertEqual(hazard_mentions("I am not sure if it is chemical waste."), (False, True))
         self.assertEqual(hazard_mentions("Not hazardous, but syringes are present."), (True, False))
         self.assertEqual(hazard_mentions("Not only chemical waste is present."), (True, False))
+        self.assertTrue(any(hazard_mentions("No syringes and chemical containers are present.")))
 
     def test_urgent_review_for_high_severity_even_with_low_priority(self):
         analysis = AnalysisResult(waste_types=["mixed"], severity="high")

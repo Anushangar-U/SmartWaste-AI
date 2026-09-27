@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from pathlib import Path
-import os
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.config import settings
@@ -39,6 +39,13 @@ app.include_router(auth_routes.router)
 app.include_router(agent_routes.router)
 app.include_router(complaint_routes.router)
 
+@app.exception_handler(RequestValidationError)
+async def invalid_input(request: Request, exc: RequestValidationError):
+    # Never echo passwords, tokens or complaint bodies through validation errors.
+    return JSONResponse(status_code=422, content={"detail": [
+        {"loc": error["loc"], "type": error["type"], "msg": "Invalid request field."}
+        for error in exc.errors()]})
+
 @app.exception_handler(Conflict)
 async def conflict_handler(request: Request, exc: Conflict):
     return JSONResponse(status_code=409, content={"detail": str(exc)})
@@ -65,7 +72,7 @@ def ready():
         pass
     root = Path(__file__).resolve().parents[1]
     vector_ok = all((root / "retrieval/vector_store/data" / name).is_file() for name in ["smartwaste.faiss", "metadata.json"])
-    providers = {"analyst": bool(os.getenv("AGENT1_OPENROUTER_API_KEY") or settings.gemini_api_key),
+    providers = {"analyst": bool(settings.agent1_openrouter_api_key or settings.gemini_api_key),
                  "retrieval": bool(settings.openrouter_api_key), "decision": bool(settings.groq_api_key)}
     available = database_ok and (settings.use_mock_agents or (vector_ok and all(providers.values())))
     return JSONResponse(status_code=200 if available else 503, content={"ready": available,

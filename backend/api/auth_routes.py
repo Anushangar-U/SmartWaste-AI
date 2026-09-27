@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel
 from backend.auth import users
 from backend.auth.dependencies import require_role
-from backend.auth.security import hash_password, verify_password, create_access_token
+from backend.auth.security import verify_password, create_access_token
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

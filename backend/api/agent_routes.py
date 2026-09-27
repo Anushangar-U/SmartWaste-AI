@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from backend.schemas import (ComplaintRequest, AnalysisResult, RetrievalRequest,
                              RetrievalResult, DecisionRequest, DecisionResult, FinalResponse)
 from backend.auth.dependencies import require_role
-from backend.services import agent_client, orchestrator
+from backend.services import agent_client
 from backend.services import cases
 
 router = APIRouter(tags=["agents"])
@@ -16,6 +16,8 @@ def process(body: ComplaintRequest, idempotency_key: str | None = Header(default
     if case["status"] in {"processing_failed", "processing", "submitted"}:
         return JSONResponse(status_code=502, content={"detail": "Complaint saved; automated processing is unavailable.",
             "tracking_id": case["tracking_id"]})
+    if not all(case.get(field) for field in ["analysis", "retrieval", "decision", "validation"]):
+        return JSONResponse(status_code=202, content=cases.public_status(case))
     return FinalResponse(request_id=case["id"], analysis=case["analysis"], retrieval=case["retrieval"],
         decision=case["decision"], validation=case["validation"])
 

@@ -15,7 +15,11 @@ def hazard_mentions(text):
                 before = clause[:match.start()]
                 before = re.sub(r"\bnot only\b", "", before)
                 window = " ".join(before.split()[-5:])
-                if not re.search(r"\b(no|not|without|neither)\b", window):
+                negations = list(re.finditer(r"\b(no|not|without|neither)\b", window))
+                if negations and re.search(r"\b(and|but)\b", window[negations[-1].end():]):
+                    # Negation spanning a conjunction is not confidently scoped.
+                    uncertain = True
+                elif not negations:
                     affirmative = True
     return affirmative, uncertain
 

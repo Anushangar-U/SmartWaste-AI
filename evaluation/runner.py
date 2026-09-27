@@ -59,9 +59,16 @@ def main(task):
     parser.add_argument("--variant", choices=["baseline", "deduplicated", "rules"], default="baseline")
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--limit", type=int, default=10)
+    parser.add_argument("--split", choices=["development", "holdout"], help="Restrict to a split; keep holdout separate from tuning")
     parser.add_argument("--output", type=Path, default=ROOT / "evaluation/results" / task)
     args = parser.parse_args()
     records = json.loads(args.dataset.read_text(encoding="utf-8"))
+    if args.split:
+        records = [r for r in records if r.get("split") == args.split]
+    if args.variant == "deduplicated" and task != "retrieval":
+        raise SystemExit("The deduplicated variant applies only to retrieval evaluation")
+    if args.variant == "rules" and task not in {"decision", "system"}:
+        raise SystemExit("The rules baseline applies only to decision/system evaluation")
     if len({r["id"] for r in records}) != len(records):
         raise SystemExit("Duplicate case IDs are not allowed")
     eligible = [r for r in records if r.get("review_status") == "REVIEWED"]
@@ -79,7 +86,10 @@ def main(task):
                 prediction = predict(case, task, args.variant)
                 prediction["output_sha256"] = hashlib.sha256(json.dumps(prediction, sort_keys=True).encode()).hexdigest()
             except Exception as exc:
-                prediction = {"error": type(exc).__name__, "http_status": getattr(exc, "status_code", None)}
+                cause = exc
+                while cause.__cause__ is not None:
+                    cause = cause.__cause__
+                prediction = {"error": type(exc).__name__, "http_status": getattr(cause, "status_code", None)}
             prediction["latency_seconds"] = time.perf_counter() - started
             predictions[case["id"]] = redact(prediction)
             if prediction.get("http_status") in {401,403,429}:

@@ -20,6 +20,10 @@ class ResourceTests(unittest.TestCase):
         resources._requests.clear()
         self.assertEqual(self.client.post("/complaints", json={"text":" "*20}).status_code, 422)
         self.assertEqual(self.client.post("/complaints", content=b"x"*20000).status_code, 413)
+        private = "too-short"
+        invalid = self.client.post("/auth/register", json={"username":"x", "password":private})
+        self.assertEqual(invalid.status_code, 422)
+        self.assertNotIn(private, invalid.text)
 
     def test_correlation_and_safe_tracking_log(self):
         resources._requests.clear()

@@ -40,9 +40,12 @@ def create(text, location, idempotency_key=None, answers=None, area=None):
         if idempotency_key:
             existing = db.execute("SELECT * FROM complaints WHERE idempotency_key=?", (idempotency_key,)).fetchone()
             if existing:
-                if existing["request_hash"] != fingerprint:
+                stored = decode(existing)
+                # Compare persisted inputs, so additive schema upgrades do not invalidate old fingerprints.
+                if (stored["text"], stored["location_context"], stored.get("clarification_answers"), stored.get("area")) != (
+                        text, location, answers, " ".join(area.split()) if area else None):
                     raise Conflict("Idempotency key was already used for different input.")
-                return decode(existing), False
+                return stored, False
         for _ in range(5):
             identity, tracking, timestamp = str(uuid.uuid4()), "WM-" + secrets.token_hex(16), now()
             try:

@@ -96,3 +96,15 @@ trimmed input validation, and shared correlation IDs. Tracking capabilities are 
 from application route-template logs. Controls document their single-process/proxy limits.
 Verification: 9 resource/auth/resilience tests passed. Retention tests deleted only synthetic
 expired resolved cases in temporary databases; no development data was deleted.
+
+## Phase 12
+Provider configuration uses the existing settings layer; operational settings have bounded
+values. Direct dependency versions record the actually installed Python 3.13 environment.
+CI runs deterministic tests and evaluation smoke checks offline without provider secrets or
+a generated FAISS index. README documents setup, migrations, API, evaluation and demo steps.
+Separate interpreter tests verify persisted records survive process restart.
+Verification: full suite passed 57 tests, followed by 6 focused restart/migration/workflow
+checks after adding a legacy-schema migration regression. pip check reported no broken
+requirements. All four evaluation entry points reported no reviewed cases without live calls.
+Final acceptance review also removed validation-error input echoes, preserved urgent review
+on analyst failure, and prevented mixing saved mock/live outputs during retry.

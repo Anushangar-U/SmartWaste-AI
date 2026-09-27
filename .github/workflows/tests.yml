@@ -1,0 +1,27 @@
+name: Deterministic tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: ci-only-signing-key-never-for-deployment
+      USE_MOCK_AGENTS: 'true'
+      ADMIN_PASSWORD: ''
+      DATABASE_PATH: /tmp/smartwaste-ci-unused.sqlite3
+      HF_HUB_OFFLINE: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip check
+      - run: python -m unittest discover -s tests -v
+      - run: python -m tests.test_rules_no_api
+      - run: python -m evaluation.run_system_eval --dataset evaluation/complaints.template.json --variant rules --output /tmp/evaluation-smoke

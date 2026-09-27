@@ -8,6 +8,12 @@ from backend.services import cases, agent_client
 
 class ResilienceTests(unittest.TestCase):
     setUp = test_workflow.WorkflowTests.setUp
+
+    def test_hazard_review_urgency_survives_analyst_failure(self):
+        with patch.object(agent_client, "call_analyst", side_effect=TimeoutError("private")):
+            case,_ = cases.submit("Chemical containers and used syringes are dumped near the school.")
+        self.assertEqual(case["status"], "processing_failed")
+        self.assertEqual(case["review_urgency"], "urgent")
     def test_partial_result_and_resume_without_duplicate_analysis(self):
         with patch.object(settings, "use_mock_agents", True), patch.object(agent_client, "call_retrieval", side_effect=TimeoutError("private-provider-message")):
             case, _ = cases.submit("Household waste has not been collected for two days.")

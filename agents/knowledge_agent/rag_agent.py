@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import os
 from typing import TypedDict
 
-from dotenv import load_dotenv
 from openai import OpenAI
 
 from agents.waste_analyzer.schemas import WasteAnalysis
@@ -33,12 +31,7 @@ class GroundedAnswer(TypedDict):
     evidence: list[RetrievalResult]
 
 
-load_dotenv()
-
-DEFAULT_GENERATION_MODEL = os.getenv(
-    "OPENROUTER_MODEL",
-    "openrouter/free",
-)
+DEFAULT_GENERATION_MODEL = settings.openrouter_model
 
 MIN_EVIDENCE_SCORE = 0.35
 
@@ -107,7 +100,7 @@ def retrieve_for_analysis(
 
 
 def _get_client() -> OpenAI:
-    api_key = os.getenv("OPENROUTER_API_KEY")
+    api_key = settings.openrouter_api_key
 
     if not api_key:
         raise RuntimeError(

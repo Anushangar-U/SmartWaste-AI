@@ -26,6 +26,9 @@ def process(case):
 
 
 def _process(case):
+    mode = "mock_demo" if settings.use_mock_agents else "live"
+    if case.get("processing_mode") not in {None, "unknown", mode}:
+        raise repo.Conflict("Processing mode changed; review this case manually rather than mixing demo and live outputs.")
     if case["status"] == Status.processing.value:
         started = datetime.fromisoformat(case["processing_started_at"])
         if (datetime.now(timezone.utc) - started).total_seconds() <= settings.processing_lease_seconds:
@@ -40,7 +43,10 @@ def _process(case):
         allowed={Status.submitted.value, Status.processing_failed.value}, event="processing")
     try:
         def checkpoint(field, result):
-            repo.update(case["id"], {field: result}, allowed={Status.processing.value})
+            changes = {field: result}
+            if field == "analysis" and result.get("severity") == "high":
+                changes["review_urgency"] = "urgent"
+            repo.update(case["id"], changes, allowed={Status.processing.value})
         text = case["text"]
         if case.get("area"):
             text += "\nReporter supplied public area: " + case["area"]
@@ -64,6 +70,13 @@ def _process(case):
 
 def submit(text, location=None, idempotency_key=None, answers=None, area=None):
     case, created = repo.create(text, location, idempotency_key, answers, area)
+    if created:
+        from agents.decision.triage import hazard_mentions
+        affirmative, uncertain = hazard_mentions(text)
+        if affirmative or (answers or {}).get("hazards") == "visible":
+            case = repo.update(case["id"], {"review_urgency": "urgent"})
+        elif uncertain:
+            case = repo.update(case["id"], {"review_urgency": "elevated"})
     return (process(case) if created else case), created
 
 
@@ -79,7 +92,7 @@ def public_status(case):
 
 def review(case, body, actor):
     if body.decision == "approve":
-        if not case["decision"]:
+        if not case["decision"] or case["status"] != Status.awaiting_review.value:
             raise repo.Conflict("No AI recommendation exists; use an explicit manual override.")
         priority, action = case["decision"]["priority"], case["decision"]["recommended_action"]
     else:

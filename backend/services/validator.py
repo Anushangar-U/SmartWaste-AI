@@ -67,6 +67,14 @@ def validate(
 
     if analysis.severity == Severity.high or decision.priority == Priority.critical:
         decision.requires_human_review = True
+        decision.review_urgency = "urgent"
+    from agents.decision.triage import clarification_questions
+    questions = clarification_questions(analysis.model_dump(mode="json"))
+    decision.clarification_questions = questions
+    if questions:
+        decision.requires_human_review = True
+        if decision.review_urgency != "urgent":
+            decision.review_urgency = "elevated"
 
     return ValidationReport(
         passed=not warnings and decision.validation.passed,

@@ -25,7 +25,7 @@ def connection():
 def initialize():
     with connection() as db:
         version = db.execute("PRAGMA user_version").fetchone()[0]
-        if version > 2:
+        if version > 3:
             raise RuntimeError("Database schema is newer than this application.")
         db.executescript("""
         CREATE TABLE IF NOT EXISTS complaints (
@@ -54,8 +54,12 @@ def initialize():
           status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','disabled')),
           created_at TEXT NOT NULL
         );
-        PRAGMA user_version=2;
         """)
+        columns = {r[1] for r in db.execute("PRAGMA table_info(complaints)")}
+        for name, declaration in {"clarification_answers": "TEXT", "review_urgency": "TEXT NOT NULL DEFAULT 'normal'"}.items():
+            if name not in columns:
+                db.execute(f"ALTER TABLE complaints ADD COLUMN {name} {declaration}")
+        db.execute("PRAGMA user_version=3")
 
 
 if __name__ == "__main__":

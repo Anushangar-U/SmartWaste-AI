@@ -90,6 +90,8 @@ def call_decision(
                 decision.get("human_review", True),
             ),
             "confidence": decision.get("confidence", 0.0),
+            "review_urgency": decision.get("review_urgency", "normal"),
+            "clarification_questions": decision.get("clarification_questions", []),
             "validation": decision.get(
                 "validation",
                 {"passed": True, "issues": []},

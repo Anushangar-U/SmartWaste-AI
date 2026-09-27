@@ -52,6 +52,8 @@ def status_panel(record):
     elif record["status"] == "awaiting_review":
         st.info("Staff must review the recommendation before assignment.")
     st.dataframe(record.get("history", []), hide_index=True, use_container_width=True)
+    for question in record.get("clarification_questions", []):
+        st.info("For staff follow-up: " + question)
 
 
 def citizen():
@@ -65,12 +67,17 @@ def citizen():
     with st.form("complaint"):
         text = st.text_area("Describe the waste issue", max_chars=2000, height=130)
         location = st.selectbox("Location type", LOCATIONS)
+        st.caption("Optional clarification: answer only what you know. You can submit without these details.")
+        duration = st.text_input("How long has it been present? (optional)", max_chars=80)
+        hazards = st.selectbox("Visible chemicals, medical waste or sharp objects? Do not approach to check.", ["unknown", "visible", "none observed"])
         submitted = st.form_submit_button("Submit complaint")
     if submitted:
         if len(text.strip()) < 10:
             st.warning("Please provide at least 10 nonblank characters.")
         else:
             payload = {"text": text.strip(), "location_context": None if location == "Other" else location}
+            if duration.strip() or hazards != "unknown":
+                payload["clarification_answers"] = {"duration": duration.strip() or None, "hazards": hazards}
             fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
             if st.session_state.get("submission_fingerprint") != fingerprint:
                 st.session_state["submission_fingerprint"] = fingerprint
@@ -127,6 +134,9 @@ def case_detail(case):
     decision = case.get("decision") or {}
     st.subheader("AI recommendation")
     st.text("Priority: " + decision.get("priority", "Unavailable"))
+    st.text("Review urgency: " + case.get("review_urgency", "normal"))
+    for question in decision.get("clarification_questions", []):
+        st.info(question)
     st.text(decision.get("recommended_action", "No automated recommendation."))
     st.text(decision.get("explanation", ""))
     st.caption(f"Model-reported confidence: {decision.get('confidence', 0):.0%}; not calibrated probability.")

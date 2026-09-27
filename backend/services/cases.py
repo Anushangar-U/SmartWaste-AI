@@ -31,18 +31,27 @@ def process(case):
     try:
         def checkpoint(field, result):
             repo.update(case["id"], {field: result}, allowed={Status.processing.value})
-        result = process_complaint(case["text"], case["location_context"], resume=case,
+        text = case["text"]
+        answers = case.get("clarification_answers") or {}
+        if answers.get("duration"):
+            text += "\nReporter supplied duration: " + answers["duration"]
+        if answers.get("hazards") == "visible":
+            text += "\nReporter observes potentially hazardous material."
+        elif answers.get("hazards") == "none observed":
+            text += "\nReporter observes no hazardous material."
+        result = process_complaint(text, case["location_context"], resume=case,
             on_stage=checkpoint, request_id=case["id"]).model_dump(mode="json")
         return repo.update(case["id"], {**{k: result[k] for k in repo.JSON_FIELDS},
             "status": Status.awaiting_review.value,
+            "review_urgency": result["decision"].get("review_urgency", "normal"),
             "requires_human_review": result["decision"]["requires_human_review"]}, event="analysis_completed")
     except AgentError as exc:
         return repo.update(case["id"], {"status": Status.processing_failed.value,
             "error_stage": exc.stage, "requires_human_review": True}, event="processing_failed")
 
 
-def submit(text, location=None, idempotency_key=None):
-    case, created = repo.create(text, location, idempotency_key)
+def submit(text, location=None, idempotency_key=None, answers=None):
+    case, created = repo.create(text, location, idempotency_key, answers)
     return (process(case) if created else case), created
 
 
@@ -50,6 +59,7 @@ def public_status(case):
     # Explicit allowlist: never expose complaint text, provider errors or staff notes.
     return {"tracking_id": case["tracking_id"], "status": case["status"],
         "submitted_at": case["submitted_at"], "updated_at": case["updated_at"],
+        "clarification_questions": (case.get("decision") or {}).get("clarification_questions", []),
         "message": "Your complaint is saved. Staff can review it even when automated processing is unavailable.",
         "history": [{"status": e["status"], "at": e["created_at"]} for e in repo.events(case["id"])]}
 

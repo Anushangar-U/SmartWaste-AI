@@ -8,9 +8,10 @@ from datetime import datetime, timezone
 from backend.database import connection
 
 JSON_FIELDS = {"analysis", "retrieval", "decision", "validation"}
+STORED_JSON_FIELDS = JSON_FIELDS | {"clarification_answers"}
 EDITABLE = JSON_FIELDS | {"status", "requires_human_review", "reviewer", "review_decision",
     "review_reason", "reviewed_at", "human_priority", "human_action", "assignee",
-    "resolution_note", "resolved_at", "error_stage", "processing_started_at", "processing_attempts"}
+    "resolution_note", "resolved_at", "error_stage", "processing_started_at", "processing_attempts", "review_urgency"}
 
 
 class Conflict(ValueError):
@@ -25,14 +26,14 @@ def decode(row):
     if row is None:
         return None
     result = dict(row)
-    for field in JSON_FIELDS:
+    for field in STORED_JSON_FIELDS:
         result[field] = json.loads(result[field]) if result[field] else None
     result["requires_human_review"] = bool(result["requires_human_review"])
     return result
 
 
-def create(text, location, idempotency_key=None):
-    fingerprint = hashlib.sha256(json.dumps([text, location]).encode()).hexdigest()
+def create(text, location, idempotency_key=None, answers=None):
+    fingerprint = hashlib.sha256(json.dumps([text, location, answers], sort_keys=True).encode()).hexdigest()
     with connection() as db:
         db.execute("BEGIN IMMEDIATE")
         if idempotency_key:
@@ -55,6 +56,8 @@ def create(text, location, idempotency_key=None):
             raise Conflict("Could not allocate a unique complaint identifier.")
         db.execute("INSERT INTO complaint_events (complaint_id,status,event,created_at) VALUES (?,?,?,?)",
                    (identity, "submitted", "submitted", timestamp))
+        if answers:
+            db.execute("UPDATE complaints SET clarification_answers=? WHERE id=?", (json.dumps(answers), identity))
         return decode(db.execute("SELECT * FROM complaints WHERE id=?", (identity,)).fetchone()), True
 
 
@@ -89,7 +92,7 @@ def list_cases(status=None, search=None, limit=100, offset=0, priority=None, rev
         params.append(int(review_needed))
     sql = "SELECT * FROM complaints" + (" WHERE " + " AND ".join(clauses) if clauses else "")
     with connection() as db:
-        return [decode(r) for r in db.execute(sql + " ORDER BY submitted_at DESC LIMIT ? OFFSET ?", [*params, limit, offset])]
+        return [decode(r) for r in db.execute(sql + " ORDER BY CASE review_urgency WHEN 'urgent' THEN 0 WHEN 'elevated' THEN 1 ELSE 2 END, submitted_at DESC LIMIT ? OFFSET ?", [*params, limit, offset])]
 
 
 def update(identity, changes, *, version=None, allowed=None, event=None, actor=None, note=None):

@@ -37,7 +37,8 @@ def find_case(identity):
 
 @router.post("/complaints", status_code=201)
 def submit(body: ComplaintRequest, idempotency_key: str | None = Header(default=None, min_length=16, max_length=128)):
-    case, _ = cases.submit(body.text, body.location_context, idempotency_key)
+    case, _ = cases.submit(body.text, body.location_context, idempotency_key,
+        body.clarification_answers.model_dump() if body.clarification_answers else None)
     return cases.public_status(case)
 
 

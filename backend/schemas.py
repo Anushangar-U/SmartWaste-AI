@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -17,9 +17,15 @@ class Priority(str, Enum):
     critical = "critical"
 
 
+class ClarificationAnswers(BaseModel):
+    duration: str | None = Field(default=None, max_length=80)
+    hazards: Literal["unknown", "visible", "none observed"] = "unknown"
+
+
 class ComplaintRequest(BaseModel):
     text: str = Field(min_length=10, max_length=2000)
     location_context: Optional[str] = Field(default=None, max_length=120)
+    clarification_answers: ClarificationAnswers | None = None
 
 
 class AnalysisResult(BaseModel):
@@ -82,6 +88,8 @@ class DecisionResult(BaseModel):
     requires_human_review: bool = True
     confidence: float = Field(default=0.0, ge=0.0, le=1.0)
     validation: DecisionValidation = Field(default_factory=DecisionValidation)
+    review_urgency: Literal["normal", "elevated", "urgent"] = "normal"
+    clarification_questions: List[str] = Field(default_factory=list)
 
 
 class ValidationReport(BaseModel):

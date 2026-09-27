@@ -58,3 +58,11 @@ screening is explicitly a conservative heuristic, never an entailment verdict. L
 grounded remains a compatibility flag; new metadata/UI distinguish evidence availability,
 unverified claims and model-reported (uncalibrated) confidence.
 Verification: 24 citation/RAG/decision/integration tests passed, including real PDF passage checks.
+
+## Phase 7
+Documented project triage policy separates model collection priority from deterministic
+review urgency. Queue sorts urgent review first. Conservative English negation distinguishes
+denials, affirmative hazards and uncertainty. Optional pre-submission clarifications are
+stored separately from original text; missing facts generate predefined follow-up questions.
+Verification: 25 triage/decision/integration/workflow/frontend tests passed. A direct-rule
+compatibility regression was resolved before proceeding; existing tests were not weakened.

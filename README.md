@@ -206,16 +206,24 @@ is fabricated. CI runs deterministic checks without external credentials or a fu
 
 ## Best 5-minute lecturer demo
 
-1. Start backend/frontend in labelled mock mode for a predictable demonstration.
-2. In citizen browser A, submit routine waste with duration and a public landmark. Save the tracking ID.
-3. In separate browser B, sign in as staff/admin. Open that same persisted case.
-4. Inspect original complaint, extracted facts, evidence, model recommendation and validation.
+1. Start backend/frontend in labelled mock mode. Home shows **Report an Issue**, **Track Complaint**
+   and **Staff Login**. No citizen account is required.
+2. In citizen browser A, click **Report an Issue**, enter routine waste with duration and a public
+   landmark, then **Submit Complaint**. Save the private tracking ID from the receipt.
+3. In separate browser B, click **Staff Login** and **Sign In**. Show the dashboard, then click
+   **Open Complaints** and **Open Case** for the same persisted report.
+4. Inspect the **AI Analysis**, **Evidence** and **Recommendation** tabs.
    Explain that mock evidence is synthetic; use a separately verified live run to demonstrate real RAG.
-5. Approve with a reason (or override priority/action), assign a team, then mark resolved.
-6. In browser A, look up the ID and show the updated safe status.
+5. In **Human Decision**, approve with a reason (or override priority/action), confirm review and
+   **Save Human Decision**. Enter a team and **Assign Complaint**, then add a note, confirm
+   completion and **Mark Resolved**.
+6. In browser A, click **Track this complaint** then **Check Status** and show the updated safe timeline.
 7. Submit an affirmative chemical/syringe complaint and show urgent human review.
 8. Briefly show actual dashboard counts and mode labels. If time permits, restart the backend
    and look up the original ID again. Provider-failure persistence is covered by deterministic tests.
+
+See the [UI guide](docs/frontend-ux.md) for the screen hierarchy, an isolated mock-demo setup,
+security details, visual-verification limits and a screenshot checklist.
 
 ## Limits and next steps
 

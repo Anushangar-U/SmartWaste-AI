@@ -115,6 +115,8 @@ def case_detail(case):
     st.subheader("Supporting evidence")
     st.caption("Supporting evidence retrieved: " + ("Yes" if retrieval.get("evidence") else "No"))
     st.caption("Claim verification: not independently verified.")
+    for issue in (retrieval.get("citation_validation") or {}).get("issues", []):
+        st.warning(issue)
     if retrieval.get("answer"):
         st.text(retrieval["answer"])
     for number, item in enumerate(retrieval.get("evidence", []), 1):

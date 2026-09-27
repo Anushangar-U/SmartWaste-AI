@@ -59,6 +59,9 @@ class RetrievalResult(BaseModel):
     grounded: bool
     sources: List[SourceReference] = Field(default_factory=list)
     evidence: List[EvidenceItem] = Field(default_factory=list)
+    evidence_available: bool = False
+    claim_verification: str = "not_independently_verified"
+    citation_validation: dict | None = None
 
 
 class DecisionRequest(BaseModel):

@@ -17,6 +17,15 @@ def validate(
     decision: DecisionResult,
 ) -> ValidationReport:
     warnings: list[str] = []
+    if retrieval.citation_validation and not retrieval.citation_validation.get("passed", False):
+        warnings.extend(retrieval.citation_validation.get("issues", ["Evidence citations require review."]))
+        decision.requires_human_review = True
+    from retrieval.citations import sensitive_claim_issues
+    sensitive = sensitive_claim_issues(decision.recommended_action + " " + decision.explanation,
+                                       [item.model_dump() for item in retrieval.evidence])
+    if sensitive:
+        warnings.extend(sensitive)
+        decision.requires_human_review = True
 
     if not retrieval.evidence:
         if not any(

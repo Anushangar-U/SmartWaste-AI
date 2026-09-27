@@ -10,6 +10,7 @@ from agents.waste_analyzer.schemas import WasteAnalysis
 from backend.config import settings
 from retrieval.processing.quality import deduplicate
 from retrieval.sources import display_metadata
+from retrieval.citations import inspect_answer
 from retrieval.vector_store.retriever import RetrievalResult, retrieve
 
 
@@ -213,10 +214,14 @@ def generate_answer(
             "evidence": evidence,
         }
 
+    answer, citation_validation = inspect_answer(answer, evidence)
     return {
         "query": query,
         "answer": answer,
-        "grounded": True,
+        "grounded": True,  # Compatibility: evidence-conditioned generation, not verified truth.
+        "evidence_available": True,
+        "claim_verification": "not_independently_verified",
+        "citation_validation": citation_validation,
         "sources": sources,
         "evidence": evidence,
     }

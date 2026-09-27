@@ -45,6 +45,8 @@ def retrieve(analysis: dict) -> dict:
             "waste near schools."
         ),
         "grounded": True,
+        "evidence_available": True,
+        "claim_verification": "synthetic_demo_not_verified",
         "sources": [
             {"source": item["source"], "page": item["page"]}
             for item in evidence

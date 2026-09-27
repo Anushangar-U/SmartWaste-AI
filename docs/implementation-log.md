@@ -50,3 +50,11 @@ Verification: 10 retrieval/build tests passed. Read-only inspection of 741 extra
 pages identified three excluded pages (two contents, one manually inspected reference-only
 page), corresponding to 28 chunks. Other uncertain pages remain included. These exclusions
 take effect on an explicit rebuild; current generated artifacts were left intact.
+
+## Phase 6
+Numbered citations are checked against retained evidence, manifest hashes, actual PDF pages
+and passage text. Invalid references are removed and review is required. Legal/quantity
+screening is explicitly a conservative heuristic, never an entailment verdict. Legacy
+grounded remains a compatibility flag; new metadata/UI distinguish evidence availability,
+unverified claims and model-reported (uncalibrated) confidence.
+Verification: 24 citation/RAG/decision/integration tests passed, including real PDF passage checks.

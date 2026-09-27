@@ -42,7 +42,7 @@ def apply_styles():
     .sw-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
       margin: 1rem 0 2rem; }
     .sw-step, .sw-empty { background: #fff; border: 1px solid #d9e3db;
-      border-radius: 16px; padding: 1.3rem; }
+      border-radius: 16px; padding: 1.3rem; box-shadow: 0 3px 12px #183d2610; }
     .sw-step-number { display: inline-grid; place-items: center; width: 34px; height: 34px;
       background: #eaf2e9; border-radius: 50%; color: #176448; font-weight: 700; }
     .sw-step h3 { font-size: 1.1rem; margin: .7rem 0 .3rem; }

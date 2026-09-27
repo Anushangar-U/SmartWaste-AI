@@ -9,16 +9,13 @@ import streamlit as st
 from dotenv import load_dotenv
 from frontend.styles import apply_styles
 from frontend.components import (
-    STATUS_LABELS, label, timestamp, badges, status_badge, empty_state,
-    timeline, demo_notice, evidence_card, field,
+    timestamp, status_badge, timeline, demo_notice, field,
 )
 
 load_dotenv()
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000").rstrip("/")
 LOCATIONS = ["Other", "Residential street", "Near a school", "Near a hospital / clinic",
              "Commercial area", "Industrial area", "Near a water source (river/canal/lake)", "Public park"]
-STATUSES = list(STATUS_LABELS)
-PRIORITIES = ["low", "medium", "high", "critical"]
 
 
 class ApiError(Exception):
@@ -269,172 +266,10 @@ def login():
             st.form_submit_button("Sign In", type="primary", width="stretch", on_click=sign_in)
 
 
-def change_case(case, action, data):
-    try:
-        api("POST", f"/staff/complaints/{case['id']}/{action}", protected=True,
-            json={"version": case["version"], **data})
-        st.rerun()
-    except ApiError as exc:
-        show_error(exc)
-
-
-def case_detail(case):
-    st.subheader("Original complaint")
-    st.text(case["text"])
-    st.text("Location: " + (case.get("location_context") or "Not supplied"))
-    st.text("Reported area: " + (case.get("area") or "Not supplied"))
-    st.caption("Submitted: " + case["submitted_at"])
-    st.caption("Processing mode: " + case.get("processing_mode", "unknown"))
-    st.subheader("AI analysis")
-    st.json(case.get("analysis") or {"status": "Not available"})
-    retrieval = case.get("retrieval") or {}
-    st.subheader("Supporting evidence")
-    st.caption("Supporting evidence retrieved: " + ("Yes" if retrieval.get("evidence") else "No"))
-    st.caption("Claim verification: not independently verified.")
-    for issue in (retrieval.get("citation_validation") or {}).get("issues", []):
-        st.warning(issue)
-    if retrieval.get("answer"):
-        st.text(retrieval["answer"])
-    for number, item in enumerate(retrieval.get("evidence", []), 1):
-        with st.expander(f"Passage [{number}]"):
-            st.text(item.get("title") or item["source"])
-            st.caption(f"PDF page {item['page']} | semantic similarity {item['score']:.3f} (not probability)")
-            st.text(item["text"])
-    decision = case.get("decision") or {}
-    st.subheader("AI recommendation")
-    st.text("Priority: " + decision.get("priority", "Unavailable"))
-    st.text("Review urgency: " + case.get("review_urgency", "normal"))
-    for question in decision.get("clarification_questions", []):
-        st.info(question)
-    st.text(decision.get("recommended_action", "No automated recommendation."))
-    st.text(decision.get("explanation", ""))
-    st.caption(f"Model-reported confidence: {decision.get('confidence', 0):.0%}; not calibrated probability.")
-    for note in [*(decision.get("validation") or {}).get("issues", []), *(case.get("validation") or {}).get("warnings", [])]:
-        st.warning(note)
-    st.subheader("Human decision")
-    st.text("Review: " + (case.get("review_decision") or "Pending"))
-    if case.get("reviewer"):
-        st.text(f"Reviewer: {case['reviewer']} | {case.get('reviewed_at')}")
-        st.text(case.get("review_reason") or "")
-        st.text(case.get("human_action") or "")
-    if case.get("error_stage"):
-        st.warning("Automated processing failed at the " + case["error_stage"] + " stage. Partial results are retained.")
-    if case["status"] in {"awaiting_review", "processing_failed"}:
-        with st.form("review"):
-            choice = st.selectbox("Review decision", ["approve", "override"])
-            reason = st.text_area("Review reason", max_chars=2000)
-            priority = st.selectbox("Override priority", PRIORITIES)
-            action = st.text_area("Override action", max_chars=2000)
-            send = st.form_submit_button("Save review")
-        if send:
-            change_case(case, "review", {"decision": choice, "reason": reason,
-                "priority": priority if choice == "override" else None,
-                "action": action if choice == "override" else None})
-    if case["status"] == "reviewed":
-        with st.form("assign"):
-            assignee = st.text_input("Assign to team", max_chars=120)
-            send = st.form_submit_button("Assign complaint")
-        if send:
-            change_case(case, "assign", {"assignee": assignee})
-    if case["status"] == "assigned":
-        st.text("Assigned to: " + (case.get("assignee") or ""))
-        with st.form("resolve"):
-            note = st.text_area("Resolution note (staff only)", max_chars=2000)
-            send = st.form_submit_button("Mark resolved")
-        if send:
-            change_case(case, "resolve", {"note": note})
-    if case["status"] in {"processing_failed", "processing"} and st.button("Retry failed or interrupted processing"):
-        change_case(case, "retry", {})
-    with st.expander("Case history"):
-        st.dataframe(case.get("history", []), hide_index=True)
-    with st.expander("Possible duplicate incidents"):
-        if st.button("Find possible duplicates"):
-            try:
-                st.session_state["duplicates_" + case["id"]] = api("GET", f"/staff/complaints/{case['id']}/duplicates", protected=True)
-            except ApiError as exc:
-                show_error(exc)
-        data = st.session_state.get("duplicates_" + case["id"], {})
-        if data.get("reason"):
-            st.info(data["reason"])
-        for candidate in data.get("suggestions", []):
-            st.text(candidate["tracking_id"])
-            st.caption(candidate["reason"] + f" Similarity: {candidate['similarity']:.3f}")
-            reason = st.text_input("Why are these the same incident?", key="duplicate_reason_" + candidate["id"], max_chars=1000)
-            if st.button("Confirm link (retain both complaints)", key="duplicate_" + candidate["id"]):
-                change_case(case, "duplicate", {"other_id": candidate["id"], "reason": reason})
-        if data.get("confirmed_links"):
-            st.caption("Previously confirmed links")
-            st.dataframe(data["confirmed_links"], hide_index=True)
-
-
 def staff():
-    st.header("Staff workspace")
-    if not st.session_state.get("auth_token"):
-        with st.form("login"):
-            username = st.text_input("Username")
-            password = st.text_input("Password", type="password")
-            send = st.form_submit_button("Log in")
-        if send:
-            try:
-                response = api("POST", "/auth/login", data={"username": username, "password": password})
-                if response.get("role") not in {"admin", "staff"}:
-                    st.error("This account is not authorized for staff access.")
-                else:
-                    st.session_state["auth_token"] = response["access_token"]
-                    st.rerun()
-            except ApiError as exc:
-                show_error(exc)
-        return
-    if st.button("Log out"):
-        st.session_state.pop("auth_token", None)
-        st.rerun()
-    st.caption("This queue is shared through the backend database.")
+    from frontend.staff import staff_portal
     try:
-        stats = api("GET", "/staff/dashboard", protected=True)
-        with st.expander("Operational dashboard", expanded=True):
-            counters = st.columns(4)
-            counters[0].metric("Submitted records", stats["total"])
-            counters[1].metric("Review backlog", stats["review_backlog"])
-            counters[2].metric("Assigned", stats["by_status"].get("assigned", 0))
-            counters[3].metric("Resolved", stats["by_status"].get("resolved", 0))
-            st.caption("Record modes (demo/live/unknown): " + str(stats["record_modes"]))
-            if stats["average_resolution_hours"] is not None:
-                st.caption(f"Resolution hours: average {stats['average_resolution_hours']:.2f}; median {stats['median_resolution_hours']:.2f} ({stats['resolution_samples']} cases)")
-            else:
-                st.caption("Resolution time: not enough completed cases (minimum two).")
-            st.dataframe([{"status": key, "count": value} for key,value in stats["by_status"].items()], hide_index=True)
-            st.dataframe([{"priority": key, "count": value} for key,value in stats["by_priority"].items()], hide_index=True)
-            st.dataframe([{"reported_area": key, "count": value} for key,value in stats["by_area"].items()], hide_index=True)
-    except ApiError as exc:
-        show_error(exc)
-        return
-    cols = st.columns(3)
-    status = cols[0].selectbox("Status filter", ["All", *STATUSES])
-    priority = cols[1].selectbox("Priority filter", ["All", *PRIORITIES])
-    review_needed = cols[2].checkbox("Review needed only")
-    search = st.text_input("Search complaint, tracking ID or location", max_chars=120)
-    page = st.number_input("Queue page", min_value=1, value=1, step=1)
-    params = {"limit": 50, "offset": (page - 1) * 50}
-    if status != "All":
-        params["status"] = status
-    if priority != "All":
-        params["priority"] = priority
-    if review_needed:
-        params["review_needed"] = True
-    if search:
-        params["search"] = search
-    try:
-        records = api("GET", "/staff/complaints", protected=True, params=params)
-        if not records:
-            st.info("No complaints match these filters.")
-            return
-        st.dataframe([{"tracking_id": r["tracking_id"], "status": r["status"],
-            "priority": r.get("human_priority") or (r.get("decision") or {}).get("priority", "unknown"),
-            "location": r.get("location_context"), "review_required": r["requires_human_review"]} for r in records],
-            hide_index=True, use_container_width=True)
-        options = {r["id"]: r["tracking_id"] for r in records}
-        selected = st.selectbox("Open case", list(options), format_func=options.get)
-        case_detail(api("GET", "/staff/complaints/" + selected, protected=True))
+        staff_portal(api)
     except ApiError as exc:
         show_error(exc)
 

@@ -1,11 +1,13 @@
 """
 Validation / Responsible AI safety layer for Agent 3's output.
 
-This runs after every Claude call, before a decision is shown to the user
+This runs after every Groq call, before a decision is shown to the user
 (section 11 of the project plan: "Validation and AI Safety Layer").
 It never talks to an LLM — it's plain Python so it's fast, deterministic,
 and easy to explain in the viva.
 """
+
+import math
 
 ALLOWED_PRIORITIES = {"low", "medium", "high", "critical"}
 REQUIRED_FIELDS = {
@@ -17,9 +19,10 @@ REQUIRED_FIELDS = {
     "confidence",
 }
 
-# Keywords that, if present in the analysis or explanation, should force
-# human review regardless of what the model decided (hazardous / high-risk
-# cases per the Responsible AI section of the plan).
+# Keywords that, if present in Agent 1's structured complaint analysis, should
+# force human review regardless of what Agent 3 decided. Generated explanations
+# and retrieved evidence are deliberately excluded so they cannot create a
+# false positive merely by discussing hazardous-waste guidance.
 HIGH_RISK_KEYWORDS = {
     "hazardous",
     "medical",
@@ -34,7 +37,12 @@ HIGH_RISK_KEYWORDS = {
 LOW_CONFIDENCE_THRESHOLD = 0.6
 
 
-def validate_decision(decision: dict, evidence: list) -> tuple[dict, list[str]]:
+def validate_decision(
+    decision: dict,
+    evidence: list,
+    analysis: dict | None = None,
+    complaint_text: str | None = None,
+) -> tuple[dict, list[str]]:
     """
     Checks the decision dict for completeness and Responsible-AI compliance.
     Mutates a copy of `decision` to safe defaults where needed and returns
@@ -48,15 +56,35 @@ def validate_decision(decision: dict, evidence: list) -> tuple[dict, list[str]]:
     missing = REQUIRED_FIELDS - decision.keys()
     if missing:
         issues.append(f"Missing required fields: {sorted(missing)}")
+        decision["requires_human_review"] = True
+        defaults = {
+            "priority": "medium",
+            "recommended_action": "Manual review required.",
+            "explanation": "",
+            "supporting_sources": [],
+            "confidence": 0.0,
+        }
         for field in missing:
-            decision[field] = None
+            if field in defaults:
+                decision[field] = defaults[field]
 
     # 2. Priority is one of the allowed categories.
-    if decision.get("priority") not in ALLOWED_PRIORITIES:
+    if not isinstance(decision.get("priority"), str) or decision["priority"] not in ALLOWED_PRIORITIES:
         issues.append(
             f"Invalid priority {decision.get('priority')!r}; defaulting to 'medium'."
         )
         decision["priority"] = "medium"
+        decision["requires_human_review"] = True
+
+    action = decision.get("recommended_action")
+    if not isinstance(action, str) or not action.strip():
+        issues.append("Missing or invalid recommended action; manual review required.")
+        decision["recommended_action"] = "Manual review required."
+        decision["requires_human_review"] = True
+    if not isinstance(decision.get("explanation"), str):
+        issues.append("Invalid explanation; manual review required.")
+        decision["explanation"] = ""
+        decision["requires_human_review"] = True
 
     # 3. Supporting sources must actually come from the evidence provided
     #    (never let the model cite a source that wasn't retrieved).
@@ -64,11 +92,16 @@ def validate_decision(decision: dict, evidence: list) -> tuple[dict, list[str]]:
     cited = decision.get("supporting_sources") or []
     if isinstance(cited, str):
         cited = [cited]
-    valid_cited = [s for s in cited if s in known_sources]
+    if not isinstance(cited, list):
+        cited = []
+        issues.append("Invalid supporting sources; manual review required.")
+        decision["requires_human_review"] = True
+    valid_cited = [s for s in cited if isinstance(s, str) and s in known_sources]
     if len(valid_cited) != len(cited):
         issues.append(
             "Removed cited sources that weren't part of the retrieved evidence."
         )
+        decision["requires_human_review"] = True
     decision["supporting_sources"] = valid_cited
 
     if not evidence:
@@ -81,13 +114,27 @@ def validate_decision(decision: dict, evidence: list) -> tuple[dict, list[str]]:
     except (TypeError, ValueError):
         confidence = 0.0
         issues.append("Confidence was missing/invalid; treated as 0.0.")
+    if not math.isfinite(confidence):
+        confidence = 0.0
+        issues.append("Confidence was not finite; treated as 0.0.")
     decision["confidence"] = max(0.0, min(1.0, confidence))
     if decision["confidence"] < LOW_CONFIDENCE_THRESHOLD:
         decision["requires_human_review"] = True
 
-    # 5. High-risk keyword sweep across explanation + recommended action.
+    # 5. Scan citizen-supplied complaint context and Agent 1 analysis only.
+    #    Retrieved evidence and generated recommendation prose are excluded.
+    analysis = analysis or {}
+    waste_types = analysis.get("waste_types") or []
+    if isinstance(waste_types, str):
+        waste_types = [waste_types]
     text_to_scan = " ".join(
-        str(decision.get(field, "")) for field in ("explanation", "recommended_action")
+        [
+            complaint_text or "",
+            *(str(waste_type) for waste_type in waste_types),
+            str(analysis.get("location", "")),
+            str(analysis.get("issue_type", "")),
+            str(analysis.get("summary", "")),
+        ]
     ).lower()
     if any(keyword in text_to_scan for keyword in HIGH_RISK_KEYWORDS):
         decision["requires_human_review"] = True

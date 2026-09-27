@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 DEFAULT_VECTOR_STORE_DIR = Path(__file__).parent / "data"
 DEFAULT_INDEX_FILENAME = "smartwaste.faiss"
 DEFAULT_METADATA_FILENAME = "metadata.json"
-EXPECTED_VECTOR_COUNT = 2716
+DEFAULT_BUILD_INFO_FILENAME = "build_info.json"
 EXPECTED_EMBEDDING_DIMENSION = 384
 
 
@@ -92,6 +92,7 @@ def save_index(
     store_dir: Path = DEFAULT_VECTOR_STORE_DIR,
     index_filename: str = DEFAULT_INDEX_FILENAME,
     metadata_filename: str = DEFAULT_METADATA_FILENAME,
+    build_info: dict | None = None,
 ) -> None:
     """Save a FAISS index and its metadata to local generated files."""
 
@@ -105,6 +106,27 @@ def save_index(
         json.dumps(list(metadata), indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
+    if build_info is not None:
+        (store_dir / DEFAULT_BUILD_INFO_FILENAME).write_text(
+            json.dumps(build_info, indent=2), encoding="utf-8"
+        )
+
+
+def validate_index(
+    index: faiss.Index,
+    metadata: Sequence[ChunkMetadata],
+    expected_vector_count: int,
+    expected_embedding_dimension: int = EXPECTED_EMBEDDING_DIMENSION,
+) -> None:
+    """Check a built or reloaded index against the current corpus and model."""
+    if index.ntotal != expected_vector_count:
+        raise RuntimeError("Indexed vector count does not match processed chunks.")
+    if len(metadata) != index.ntotal:
+        raise RuntimeError("Metadata count does not match indexed vector count.")
+    if index.d != expected_embedding_dimension:
+        raise RuntimeError(
+            f"Expected embedding dimension {expected_embedding_dimension}, got {index.d}."
+        )
 
 
 def load_index(
@@ -132,7 +154,9 @@ def main() -> None:
     """Run the full Phase 5 pipeline as a command-line validation."""
 
     from retrieval.ingest import load_all_pdfs
-    from retrieval.processing.chunker import chunk_page_records
+    from retrieval.processing.chunker import (
+        DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE, chunk_page_records,
+    )
     from retrieval.processing.embedder import DEFAULT_MODEL_NAME, embed_chunks
 
     page_records = load_all_pdfs()
@@ -140,23 +164,20 @@ def main() -> None:
     embedding_records = embed_chunks(chunks)
 
     index, metadata = build_index(embedding_records)
-    save_index(index, metadata)
+    validate_index(index, metadata, expected_vector_count=len(chunks))
+    build_info = {
+        "embedding_model": DEFAULT_MODEL_NAME,
+        "embedding_dimension": index.d,
+        "chunk_size": DEFAULT_CHUNK_SIZE,
+        "chunk_overlap": DEFAULT_CHUNK_OVERLAP,
+        "vector_count": index.ntotal,
+    }
+    save_index(index, metadata, build_info=build_info)
     loaded_store = load_index()
 
     loaded_index = loaded_store["index"]
     loaded_metadata = loaded_store["metadata"]
-    expected_dimension = len(embedding_records[0]["embedding"]) if embedding_records else 0
-
-    if loaded_index.ntotal != len(embedding_records):
-        raise RuntimeError("Indexed vector count does not match embedding count.")
-    if loaded_index.d != expected_dimension:
-        raise RuntimeError("Loaded index dimension does not match embedding dimension.")
-    if len(loaded_metadata) != loaded_index.ntotal:
-        raise RuntimeError("Metadata count does not match indexed vector count.")
-    if loaded_index.ntotal != EXPECTED_VECTOR_COUNT:
-        raise RuntimeError(f"Expected {EXPECTED_VECTOR_COUNT} indexed vectors.")
-    if loaded_index.d != EXPECTED_EMBEDDING_DIMENSION:
-        raise RuntimeError(f"Expected embedding dimension {EXPECTED_EMBEDDING_DIMENSION}.")
+    validate_index(loaded_index, loaded_metadata, expected_vector_count=len(chunks))
 
     print(f"Page records: {len(page_records)}")
     print(f"Chunks embedded: {len(embedding_records)}")

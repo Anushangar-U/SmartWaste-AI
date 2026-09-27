@@ -19,9 +19,13 @@ def validate(
     warnings: list[str] = []
 
     if not retrieval.evidence:
-        warnings.append(
-            "No supporting evidence retrieved; recommendation is unsupported."
-        )
+        if not any(
+            "No evidence was retrieved" in issue
+            for issue in decision.validation.issues
+        ):
+            warnings.append(
+                "No supporting evidence retrieved; recommendation is unsupported."
+            )
         decision.requires_human_review = True
 
     if not retrieval.grounded:
@@ -47,13 +51,15 @@ def validate(
         decision.requires_human_review = True
 
     if not decision.validation.passed:
-        warnings.extend(
-            f"Agent 3 validation: {issue}"
-            for issue in decision.validation.issues
-        )
+        # Agent 3 issues remain available in decision.validation.issues. Do not
+        # copy them into pipeline warnings, because the final response exposes
+        # both lists and the frontend would display the same issue twice.
         decision.requires_human_review = True
 
     if analysis.severity == Severity.high or decision.priority == Priority.critical:
         decision.requires_human_review = True
 
-    return ValidationReport(passed=not warnings, warnings=warnings)
+    return ValidationReport(
+        passed=not warnings and decision.validation.passed,
+        warnings=warnings,
+    )

@@ -33,7 +33,7 @@ load_dotenv()
 
 DEFAULT_GENERATION_MODEL = os.getenv(
     "OPENROUTER_MODEL",
-    "openai/gpt-oss-20b:free",
+    "openrouter/free",
 )
 
 MIN_EVIDENCE_SCORE = 0.35
@@ -161,22 +161,12 @@ def _get_client() -> OpenAI:
     if not api_key:
         raise RuntimeError(
             "OPENROUTER_API_KEY is not set. Add it to the local .env file "
-            "before using GPT generation."
+            "before using OpenRouter generation."
         )
 
     return OpenAI(
         api_key=api_key,
         base_url="https://openrouter.ai/api/v1",
-    )
-
-
-def _has_sufficient_evidence(
-    evidence: list[RetrievalResult],
-    min_score: float,
-) -> bool:
-    return any(
-        item["score"] >= min_score
-        for item in evidence
     )
 
 
@@ -212,13 +202,16 @@ def generate_answer(
     )
 
     query = retrieval_result["query"]
-    evidence = retrieval_result["evidence"]
-    sources = retrieval_result["sources"]
+    evidence = [
+        item for item in retrieval_result["evidence"]
+        if item["score"] >= min_evidence_score
+    ]
+    sources: list[SourceSummary] = [
+        {"source": item["source"], "page": int(item["page"])}
+        for item in evidence
+    ]
 
-    if not evidence or not _has_sufficient_evidence(
-        evidence,
-        min_evidence_score,
-    ):
+    if not evidence:
         return {
             "query": query,
             "answer": INSUFFICIENT_EVIDENCE_MESSAGE,

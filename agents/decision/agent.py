@@ -1,5 +1,5 @@
 """
-Agent 3 - Decision & Recommendation Agent (now powered by Groq's free API).
+Agent 3 - Decision & Recommendation Agent (powered by Groq).
 
 Exposes `decide(analysis, evidence)` which the FastAPI backend calls from
 the POST /agents/decide endpoint. Keeps the API call, JSON parsing, and
@@ -9,7 +9,7 @@ import `decide`.
 Groq uses the same "chat" message format as OpenAI: a list of
 {"role": ..., "content": ...} dicts, with role "system" for instructions
 and role "user" for the actual request. That's the one structural
-difference from calling Claude (which takes system as a separate field).
+difference from some other provider APIs.
 """
 
 import json
@@ -23,9 +23,8 @@ from .rules import validate_decision
 
 load_dotenv()
 
-# Default model can be overridden via env var without touching code.
-# llama-3.3-70b-versatile is Groq's recommended general-purpose chat model.
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+# The model can be overridden through the environment.
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 
 _client = None
 
@@ -43,8 +42,10 @@ def _get_client() -> Groq:
     return _client
 
 
-def _extract_json(text: str) -> dict:
+def _extract_json(text: str | None) -> dict:
     """Best-effort extraction of a JSON object from the model's reply."""
+    if not text:
+        raise ValueError("Decision model returned an empty response.")
     text = text.strip()
     # Strip markdown code fences if the model added them anyway.
     if text.startswith("```"):
@@ -63,6 +64,7 @@ def decide(
     analysis: dict,
     evidence: list,
     grounded_knowledge: str | None = None,
+    complaint_text: str | None = None,
 ) -> dict:
     """
     Calls Groq to produce a decision, then runs it through the
@@ -108,7 +110,9 @@ def decide(
             "confidence": 0.0,
         }
 
-    validated, issues = validate_decision(decision, evidence)
+    validated, issues = validate_decision(
+        decision, evidence, analysis=analysis, complaint_text=complaint_text
+    )
     validated["validation"] = {
         "passed": len(issues) == 0,
         "issues": issues,

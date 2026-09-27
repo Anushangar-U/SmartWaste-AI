@@ -7,7 +7,7 @@ from backend.repositories import complaints as repo
 from backend.services import cases
 
 router = APIRouter(tags=["complaints"])
-staff = require_role("admin")
+staff = require_role("admin", "staff")
 
 
 class ReviewRequest(BaseModel):

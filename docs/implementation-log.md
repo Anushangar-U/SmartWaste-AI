@@ -17,3 +17,10 @@ Original process route retains its successful response contract and now also sav
 New submission returns the tracking record even on provider failure. All case data in tests
 uses a temporary database. No real database or generated index is committed.
 Verification: 12 workflow/integration tests passed (3 new workflow cases).
+
+## Phase 2
+Persistent accounts; bootstrap never resets stored credentials. JWT subjects are looked up
+on every protected request: disabled/deleted users are rejected and current roles apply.
+Registration always creates normal users. Staff/admin share case operations; agent debug
+routes stay admin-only. Lifespan initialization permits fully isolated test databases.
+Verification: 7 auth/workflow tests passed, including two independent ASGI clients.

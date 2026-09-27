@@ -25,7 +25,7 @@ def connection():
 def initialize():
     with connection() as db:
         version = db.execute("PRAGMA user_version").fetchone()[0]
-        if version > 1:
+        if version > 2:
             raise RuntimeError("Database schema is newer than this application.")
         db.executescript("""
         CREATE TABLE IF NOT EXISTS complaints (
@@ -48,7 +48,13 @@ def initialize():
           note TEXT, created_at TEXT NOT NULL
         );
         CREATE INDEX IF NOT EXISTS complaint_status_idx ON complaints(status, submitted_at);
-        PRAGMA user_version=1;
+        CREATE TABLE IF NOT EXISTS users (
+          id TEXT PRIMARY KEY, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL,
+          role TEXT NOT NULL CHECK(role IN ('user','staff','admin')),
+          status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','disabled')),
+          created_at TEXT NOT NULL
+        );
+        PRAGMA user_version=2;
         """)
 
 

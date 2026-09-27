@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -11,11 +12,14 @@ from backend.database import initialize
 from backend.repositories.complaints import Conflict
 from backend.api import complaint_routes
 
-setup_logging()
-initialize()
-seed_admin()
+@asynccontextmanager
+async def lifespan(app):
+    setup_logging()
+    initialize()
+    seed_admin()
+    yield
 
-app = FastAPI(title=settings.app_name, version="0.1.0")
+app = FastAPI(title=settings.app_name, version="0.2.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

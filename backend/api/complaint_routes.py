@@ -71,15 +71,19 @@ async def submit_with_photo(
         clarification_answers=answers,
     )
     raw = await photo.read()
-    case, _ = cases.submit_with_photo(
-        body.text,
-        body.location_context,
-        raw,
-        photo.content_type,
-        idempotency_key,
-        body.clarification_answers.model_dump(),
-        body.area,
-    )
+    from backend.services.image_storage import ImageValidationError
+    try:
+        case, _ = cases.submit_with_photo(
+            body.text,
+            body.location_context,
+            raw,
+            photo.content_type,
+            idempotency_key,
+            body.clarification_answers.model_dump(),
+            body.area,
+        )
+    except ImageValidationError as exc:
+        raise HTTPException(422, str(exc)) from None
     return cases.public_status(case)
 
 

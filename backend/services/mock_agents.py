@@ -23,7 +23,7 @@ def analyze(text: str) -> dict:
     }
 
 
-def retrieve(analysis: dict) -> dict:
+def retrieve(analysis: dict, additional_context: str | None = None) -> dict:
     evidence = [
         {
             "chunk_id": "mock_organic_p1_c01",
@@ -41,7 +41,7 @@ def retrieve(analysis: dict) -> dict:
         },
     ]
     return {
-        "query": "plastic and organic uncollected waste near school for 5 days",
+        "query": "plastic and organic uncollected waste near school for 5 days" + (f" | Image observations: {additional_context}" if additional_context else ""),
         "answer": (
             "The retrieved guidance supports prompt collection and prioritising "
             "waste near schools."

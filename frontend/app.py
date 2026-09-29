@@ -23,7 +23,7 @@ class ApiError(Exception):
         self.status = status
 
 
-def api(method, path, *, protected=False, **kwargs):
+def api(method, path, *, protected=False, raw=False, **kwargs):
     headers = kwargs.pop("headers", {})
     if protected:
         headers["Authorization"] = "Bearer " + st.session_state.get("auth_token", "")
@@ -31,7 +31,7 @@ def api(method, path, *, protected=False, **kwargs):
         response = requests.request(method, BACKEND_URL + path, headers=headers, timeout=180, **kwargs)
         if response.status_code >= 400:
             raise ApiError(response.status_code)
-        return response.json()
+        return response.content if raw else response.json()
     except (requests.RequestException, ValueError):
         raise ApiError(503) from None
 
@@ -186,6 +186,9 @@ def report_issue():
         duration = st.text_input("How long has it been there? (optional)", max_chars=80, placeholder="Example: Three days")
         hazards = st.selectbox("Hazards visible?", ["Unknown", "Yes", "None observed"],
             help="Chemicals, medical waste or sharp objects. Do not touch or approach the waste to check.")
+        st.subheader("4 · Photo evidence")
+        st.caption("Optional. Upload a clear photo only if it is safe to do so. Do not approach hazardous waste to take a photo.")
+        photo = st.file_uploader("Photo (optional)", type=["jpg", "jpeg", "png", "webp"], accept_multiple_files=False)
         submitted = st.form_submit_button("Submit Complaint", type="primary", width="stretch")
     if not submitted:
         return
@@ -201,14 +204,28 @@ def report_issue():
     hazard_value = {"Unknown": "unknown", "Yes": "visible", "None observed": "none observed"}[hazards]
     if duration.strip() or hazard_value != "unknown":
         payload["clarification_answers"] = {"duration": duration.strip() or None, "hazards": hazard_value}
-    fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    photo_bytes = photo.getvalue() if photo is not None else None
+    photo_hash = hashlib.sha256(photo_bytes).hexdigest() if photo_bytes else None
+    fingerprint = hashlib.sha256(json.dumps([payload, photo_hash], sort_keys=True).encode()).hexdigest()
     if st.session_state.get("submission_fingerprint") != fingerprint:
         st.session_state["submission_fingerprint"] = fingerprint
         st.session_state["idempotency_key"] = str(uuid.uuid4())
     try:
         with st.spinner("Saving and processing your complaint..."):
-            receipt = api("POST", "/complaints", json=payload,
-                headers={"Idempotency-Key": st.session_state["idempotency_key"]})
+            headers = {"Idempotency-Key": st.session_state["idempotency_key"]}
+            if photo_bytes:
+                form = {
+                    "text": payload["text"],
+                    "location_context": payload.get("location_context") or "",
+                    "area": payload.get("area") or "",
+                    "duration": (payload.get("clarification_answers") or {}).get("duration") or "",
+                    "hazards": (payload.get("clarification_answers") or {}).get("hazards", "unknown"),
+                }
+                receipt = api("POST", "/complaints/with-photo", data=form,
+                    files={"photo": (photo.name, photo_bytes, photo.type or "application/octet-stream")},
+                    headers=headers)
+            else:
+                receipt = api("POST", "/complaints", json=payload, headers=headers)
         st.session_state["last_tracking"] = receipt["tracking_id"]
         st.session_state["receipt"] = receipt
         st.rerun()

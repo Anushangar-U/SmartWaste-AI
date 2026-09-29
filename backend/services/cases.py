@@ -98,6 +98,12 @@ def _process(case):
             repo.update(case["id"], changes, allowed={Status.processing.value})
 
         text = case["text"]
+        structured_context = None
+        if case.get("structured_intake"):
+            from backend.services.citizen_guidance import structured_context as build_structured_context
+            structured_context = build_structured_context(case["structured_intake"])
+            if structured_context:
+                text += "\n" + structured_context
         if case.get("area"):
             text += "\nReporter supplied public area: " + case["area"]
 
@@ -123,10 +129,17 @@ def _process(case):
             image_context = retrieval_hint(image_analysis)
             image_requirements = review_requirements(image_analysis)
 
+        retrieval_context = structured_context
+        if image_context:
+            retrieval_context = (
+                (retrieval_context + " | " if retrieval_context else "")
+                + "Image observations: " + image_context
+            )
+
         result = process_complaint(
             text,
             case["location_context"],
-            image_context=image_context,
+            image_context=retrieval_context,
             resume=case,
             on_stage=checkpoint,
             request_id=case["id"],
@@ -174,6 +187,123 @@ def submit(text, location=None, idempotency_key=None, answers=None, area=None):
         if urgency != "normal":
             case = repo.update(case["id"], {"review_urgency": urgency})
     return (process(case) if created else case), created
+
+
+
+def submit_structured(text, intake, idempotency_key=None):
+    """Submit the new fully structured citizen intake while preserving legacy APIs."""
+    from backend.schemas import StructuredIntake
+    from backend.services.citizen_guidance import build_guidance
+
+    parsed = intake if isinstance(intake, StructuredIntake) else StructuredIntake.model_validate(intake)
+    data = parsed.model_dump(mode="json")
+    location = parsed.location_type.replace("_", " ")
+    area = parsed.area_landmark
+    answers = {
+        "duration": parsed.duration.replace("_", " "),
+        "hazards": "none observed" if parsed.hazards == ["none_observed"] else (
+            "unknown" if parsed.hazards == ["unknown"] else "visible"
+        ),
+    }
+    case, created = repo.create(
+        text,
+        location,
+        idempotency_key,
+        answers,
+        area,
+        intake=data,
+    )
+    if created:
+        guidance = build_guidance(parsed).model_dump(mode="json")
+        urgency = _reporter_review_urgency(text, answers)
+        if guidance["risk_level"] == "high":
+            urgency = "urgent"
+        elif guidance["risk_level"] == "elevated":
+            urgency = _stronger_urgency(urgency, "elevated")
+        case = repo.update(
+            case["id"],
+            {"citizen_guidance": guidance, "review_urgency": urgency},
+        )
+    return (process(case) if created else case), created
+
+
+def submit_structured_with_photo(
+    text,
+    intake,
+    raw_image: bytes,
+    declared_mime: str | None,
+    idempotency_key=None,
+):
+    """Structured intake plus optional advisory image analysis."""
+    from backend.schemas import StructuredIntake
+    from backend.services import image_storage, vision
+    from backend.services.citizen_guidance import build_guidance
+
+    parsed = intake if isinstance(intake, StructuredIntake) else StructuredIntake.model_validate(intake)
+    data = parsed.model_dump(mode="json")
+    sanitized = image_storage.sanitize_image(raw_image, declared_mime)
+    answers = {
+        "duration": parsed.duration.replace("_", " "),
+        "hazards": "none observed" if parsed.hazards == ["none_observed"] else (
+            "unknown" if parsed.hazards == ["unknown"] else "visible"
+        ),
+    }
+    case, created = repo.create(
+        text,
+        parsed.location_type.replace("_", " "),
+        idempotency_key,
+        answers,
+        parsed.area_landmark,
+        intake=data,
+    )
+    if not created:
+        existing = image_repo.get_for_complaint(case["id"])
+        if not existing or existing["sha256"] != sanitized["sha256"]:
+            raise repo.Conflict(
+                "The idempotency key is already associated with a different submission or photo."
+            )
+        return case, False
+
+    guidance = build_guidance(parsed).model_dump(mode="json")
+    case = repo.update(case["id"], {"citizen_guidance": guidance})
+
+    stored = None
+    try:
+        stored = image_storage.persist_image(sanitized)
+        image_repo.create(case["id"], **stored)
+    except Exception:
+        if stored:
+            image_storage.remove_file(stored.get("stored_path"))
+        raise
+
+    try:
+        image_analysis = vision.reconcile(
+            vision.analyze_image(stored["stored_path"]),
+            answers,
+            text,
+        )
+        image_repo.set_analysis(case["id"], image_analysis.model_dump(mode="json"))
+    except vision.VisionProviderError:
+        image_analysis = vision.reconcile(vision.unavailable_analysis(), answers, text)
+        image_repo.set_analysis(
+            case["id"],
+            image_analysis.model_dump(mode="json"),
+            analysis_error="vision_unavailable",
+        )
+
+    reporter_urgency = _reporter_review_urgency(text, answers)
+    guidance_urgency = "urgent" if guidance["risk_level"] == "high" else (
+        "elevated" if guidance["risk_level"] == "elevated" else "normal"
+    )
+    image_urgency = vision.review_requirements(
+        image_analysis.model_dump(mode="json")
+    )["review_urgency"]
+    urgency = _stronger_urgency(
+        _stronger_urgency(reporter_urgency, guidance_urgency),
+        image_urgency,
+    )
+    case = repo.update(case["id"], {"review_urgency": urgency})
+    return process(case), True
 
 
 def submit_with_photo(
@@ -241,6 +371,7 @@ def public_status(case):
         "clarification_questions": (case.get("decision") or {}).get(
             "clarification_questions", []
         ),
+        "guidance": case.get("citizen_guidance"),
         "message": (
             "Your complaint is saved. Staff can review it even when automated processing is unavailable."
         ),

@@ -25,7 +25,7 @@ def connection():
 def initialize():
     with connection() as db:
         version = db.execute("PRAGMA user_version").fetchone()[0]
-        if version > 5:
+        if version > 6:
             raise RuntimeError("Database schema is newer than this application.")
         db.executescript("""
         CREATE TABLE IF NOT EXISTS complaints (
@@ -64,7 +64,21 @@ def initialize():
           second_id TEXT REFERENCES complaints(id) ON DELETE CASCADE,
           confirmed_by TEXT NOT NULL, reason TEXT NOT NULL, created_at TEXT NOT NULL,
           PRIMARY KEY(first_id,second_id), CHECK(first_id != second_id))""")
-        db.execute("PRAGMA user_version=5")
+        db.execute("""CREATE TABLE IF NOT EXISTS complaint_images (
+          id TEXT PRIMARY KEY,
+          complaint_id TEXT NOT NULL UNIQUE REFERENCES complaints(id) ON DELETE CASCADE,
+          stored_path TEXT NOT NULL,
+          mime_type TEXT NOT NULL,
+          byte_size INTEGER NOT NULL,
+          sha256 TEXT NOT NULL,
+          width INTEGER NOT NULL,
+          height INTEGER NOT NULL,
+          analysis TEXT,
+          analysis_error TEXT,
+          created_at TEXT NOT NULL
+        )""")
+        db.execute("CREATE INDEX IF NOT EXISTS complaint_images_complaint_idx ON complaint_images(complaint_id)")
+        db.execute("PRAGMA user_version=6")
 
 
 if __name__ == "__main__":

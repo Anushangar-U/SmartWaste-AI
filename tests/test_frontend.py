@@ -18,6 +18,25 @@ def widget(app, kind, label):
 def click(app, label):
     return widget(app, "button", label).click().run()
 
+def fill_report_form(app):
+    widget(app, "multiselect", "Waste type(s) *").set_value(["Household / mixed waste"])
+    widget(app, "text_input", "What specific items can you see? *").set_value("Household garbage bags")
+    widget(app, "selectbox", "Main problem *").set_value("Uncollected waste")
+    widget(app, "selectbox", "Estimated amount *").set_value("Medium pile")
+    widget(app, "selectbox", "Condition of the waste *").set_value("Mixed condition")
+    widget(app, "multiselect", "Visible hazards *").set_value(["No hazards observed"])
+    widget(app, "selectbox", "Has anyone been exposed or injured? *").set_value("No one exposed / injured")
+    widget(app, "text_input", "Product / chemical / battery label *").set_value("Unknown")
+    widget(app, "selectbox", "Location type *").set_value("Residential area")
+    widget(app, "text_input", "Public area / landmark *").set_value("Library gate")
+    widget(app, "selectbox", "Nearby sensitive place *").set_value("Residential homes")
+    widget(app, "selectbox", "Where exactly is the waste? *").set_value("Roadside")
+    widget(app, "selectbox", "How long has it been there? *").set_value("1–3 days")
+    widget(app, "selectbox", "Is this a recurring problem? *").set_value("First occurrence")
+    widget(app, "multiselect", "Current effects / impacts *").set_value(["No obvious effect"])
+    app.text_area[0].set_value("Household garbage has not been collected for several days.")
+
+
 
 class FrontendTests(unittest.TestCase):
     def test_evidence_and_recommendation_keep_backend_flags_distinct(self):
@@ -114,7 +133,7 @@ class FrontendTests(unittest.TestCase):
         with patch("requests.request", side_effect=request):
             app = AppTest.from_file(APP).run()
             click(app, "Report an Issue")
-            app.text_area[0].set_value("Synthetic household waste has not been collected.")
+            fill_report_form(app)
             click(app, "Submit Complaint")
             self.assertNotIn("Synthetic private provider message", str([e.value for e in app.error]))
             click(app, "Submit Complaint")
@@ -126,7 +145,7 @@ class FrontendTests(unittest.TestCase):
         with patch("requests.request", return_value=response(receipt)) as request:
             app = AppTest.from_file(APP).run()
             next(b for b in app.button if b.label == "Report an Issue").click().run()
-            app.text_area[0].set_value("Household garbage has been left for two days.")
+            fill_report_form(app)
             next(b for b in app.button if b.label == "Submit Complaint").click().run()
             self.assertFalse(app.exception)
             self.assertEqual(app.code[0].value, "WM-synthetic")
@@ -204,11 +223,7 @@ class FrontendJourneyTests(unittest.TestCase):
     def test_citizen_staff_review_assign_resolve_and_track(self):
         citizen = AppTest.from_file(APP).run()
         click(citizen, "Report an Issue")
-        citizen.text_area[0].set_value("Household garbage uncollected for three days.")
-        widget(citizen, "selectbox", "Location type").set_value("Residential street")
-        widget(citizen, "text_input", "Public area / landmark (optional)").set_value("Library gate")
-        widget(citizen, "text_input", "How long has it been there? (optional)").set_value("Three days")
-        widget(citizen, "selectbox", "Hazards visible?").set_value("None observed")
+        fill_report_form(citizen)
         click(citizen, "Submit Complaint")
         self.assertFalse(citizen.exception)
         tracking = citizen.code[0].value

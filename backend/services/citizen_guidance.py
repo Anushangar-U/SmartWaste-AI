@@ -223,6 +223,24 @@ def build_guidance(intake: dict | StructuredIntake) -> CitizenGuidance:
             "For intact removable batteries, keep terminals from contacting metal objects; use non-conductive tape or separate containment when appropriate.",
             "In Sri Lanka, use CEA-supported or other authorized e-waste collection channels.",
         )
+        if data.condition == "leaking" or "damaged_battery" in hazards:
+            _add_unique(
+                precautions,
+                "For a leaking lead-acid battery, avoid skin contact with the liquid and contact a CEA-registered collector/dealer or licensed recycler promptly.",
+            )
+            _add_unique(
+                disposal,
+                "Keep leaking battery electrolyte out of drains, soil and waterways; do not drain the battery contents.",
+            )
+            _add_unique(
+                exposed,
+                "If leaking battery liquid contacts skin or eyes, stop contact and rinse the affected area with plenty of clean water; seek medical advice for eye exposure, burns, persistent pain or other significant symptoms.",
+            )
+            _add_unique(
+                do_not,
+                "Do not try to drain, dismantle or neutralize a leaking battery yourself.",
+            )
+            source_keys.extend(["cea_lead_battery", "who_chemical"])
         _add_unique(
             do_not,
             "Do not puncture, crush, dismantle, burn or intentionally short-circuit a battery.",

@@ -66,8 +66,8 @@ async def submit_with_photo(
     )
     body = ComplaintRequest(
         text=text,
-        location_context=location_context,
-        area=area,
+        location_context=(location_context or "").strip() or None,
+        area=(area or "").strip() or None,
         clarification_answers=answers,
     )
     raw = await photo.read()

@@ -46,7 +46,7 @@ def processing_slot():
 
 async def resource_limits(request, call_next):
     path = request.url.path
-    if request.method == "POST" and path in {"/complaints", "/complaints/with-photo", "/complaints/process", "/auth/login", "/auth/register"}:
+    if request.method == "POST" and path in {"/complaints", "/complaints/structured", "/complaints/with-photo", "/complaints/structured-with-photo", "/complaints/process", "/auth/login", "/auth/register"}:
         bucket = "auth" if path.startswith("/auth/") else "submission"
         limit = settings.auth_requests_per_minute if bucket == "auth" else settings.public_requests_per_minute
         peer = request.client.host if request.client else "unknown"
@@ -65,7 +65,7 @@ class BodySizeLimit:
         if scope["type"] != "http" or scope["method"] not in {"POST","PATCH","PUT"}:
             return await self.app(scope, receive, send)
         maximum = self.maximum
-        if scope.get("path") == "/complaints/with-photo":
+        if scope.get("path") in {"/complaints/with-photo", "/complaints/structured-with-photo"}:
             maximum = int(settings.vision_max_image_mb * 1024 * 1024) + 128 * 1024
         messages, length = [], 0
         while True:

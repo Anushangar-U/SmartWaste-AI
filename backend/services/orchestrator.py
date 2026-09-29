@@ -43,7 +43,7 @@ def _run(stage: str, fn, *args):
         log.error("rid=%s stage=%s status=failed error=%s", correlation_id.get(), stage, type(e).__name__)
         raise AgentError(stage) from e
 
-def process_complaint(text: str, location_context: str | None = None, *, resume=None, on_stage=None, request_id=None) -> FinalResponse:
+def process_complaint(text: str, location_context: str | None = None, *, image_context: str | None = None, resume=None, on_stage=None, request_id=None) -> FinalResponse:
     request_id = request_id or str(uuid.uuid4())
     log.info("rid=%s case_id=%s pipeline=start", correlation_id.get(), request_id)
 
@@ -57,7 +57,7 @@ def process_complaint(text: str, location_context: str | None = None, *, resume=
             on_stage(field, result.model_dump(mode="json"))
         return result
     analysis = stage("analyst", "analysis", AnalysisResult, agent_client.call_analyst, analyst_input)
-    retrieval = stage("retrieval", "retrieval", RetrievalResult, agent_client.call_retrieval, analysis)
+    retrieval = stage("retrieval", "retrieval", RetrievalResult, agent_client.call_retrieval, analysis, image_context)
     decision = stage("decision", "decision", DecisionResult, agent_client.call_decision, analysis, retrieval, analyst_input)
     report = _run("validation", validate, analysis, retrieval, decision)
 

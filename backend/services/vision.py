@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 import json
+import re
 from pathlib import Path
 
 from openai import OpenAI
@@ -128,17 +129,25 @@ def unavailable_analysis() -> ImageAnalysisResult:
 def reconcile(
     analysis: ImageAnalysisResult,
     clarification_answers: dict | None = None,
+    complaint_text: str | None = None,
 ) -> ImageAnalysisResult:
     answers = clarification_answers or {}
     reasons = list(analysis.review_reasons)
+    text = (complaint_text or "").lower()
+    explicit_denial = bool(
+        re.search(
+            r"\b(?:no|not|without)\b.{0,50}\b(?:hazard(?:ous)?|medical|chemical|syringe|sharps?)\b",
+            text,
+        )
+    )
     conflict = bool(
         analysis.analyzed
         and analysis.visible_hazards
-        and answers.get("hazards") == "none observed"
+        and (answers.get("hazards") == "none observed" or explicit_denial)
     )
     if conflict:
         reasons.append(
-            "Reporter selected 'none observed' for hazards, while the image model flagged a possible visible hazard."
+            "Reporter text or hazard selection denies visible hazards, while the image model flagged a possible visible hazard."
         )
     if analysis.visible_hazards:
         reasons.append("Possible visible image hazard requires staff verification.")

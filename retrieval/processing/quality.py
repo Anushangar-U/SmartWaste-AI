@@ -13,7 +13,7 @@ def exclusion_reason(text):
     heading = " ".join(lines[:6]).lower()
     if re.search(r"\b(table of contents|contents)\b", heading):
         entries = sum(bool(re.search(r"\.{3,}|\s\d+\s*$", line)) for line in lines[2:])
-        if len(lines) >= 6 and entries >= (len(lines) - 2) * 0.5:
+        if len(lines) >= 5 and entries >= max(2, (len(lines) - 2) * 0.5):
             return "contents"
     if re.match(r"^(references|bibliography)\b", heading):
         citations = sum(bool(re.search(r"https?://|doi:|\b(?:19|20)\d{2}\b", line)) for line in lines[1:])

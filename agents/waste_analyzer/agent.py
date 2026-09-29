@@ -1,3 +1,4 @@
+import time
 from google import genai
 from google.genai import types
 from openai import OpenAI
@@ -79,24 +80,65 @@ def _analyze_with_openrouter(complaint: str) -> WasteAnalysis:
 
 
 def _analyze_with_gemini(complaint: str) -> WasteAnalysis:
-    response = _get_gemini_client().models.generate_content(
-        model=settings.gemini_model,
-        contents=f"""
+    models = [
+        settings.gemini_model,
+        "gemini-3.6-flash",
+        "gemini-3.5-flash",
+        "gemini-3.8-flash",
+    ]
+
+    last_error = None
+
+    for model in models:
+        for attempt in range(3):
+            try:
+                print(
+                    f"Trying Gemini model: {model} "
+                    f"(attempt {attempt + 1}/3)"
+                )
+
+                response = _get_gemini_client().models.generate_content(
+                    model=model,
+                    contents=f"""
 {SYSTEM_PROMPT}
 
 USER COMPLAINT:
 {complaint}
 """,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=WasteAnalysis,
-        ),
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=WasteAnalysis,
+                    ),
+                )
+
+                if not response.text:
+                    raise ValueError(
+                        "Gemini returned an empty response."
+                    )
+
+                print(f"Gemini model succeeded: {model}")
+
+                return WasteAnalysis.model_validate_json(
+                    response.text
+                )
+
+            except Exception as error:
+                last_error = error
+
+                print(
+                    f"Gemini request failed: {error}"
+                )
+
+                time.sleep(2 ** attempt)
+
+        print(
+            f"Model {model} failed after 3 attempts. "
+            "Trying next model..."
+        )
+
+    raise RuntimeError(
+        f"All Gemini models failed. Last error: {last_error}"
     )
-
-    if not response.text:
-        raise ValueError("Gemini returned an empty response.")
-
-    return WasteAnalysis.model_validate_json(response.text)
 
 
 def analyze_complaint(complaint: str) -> WasteAnalysis:

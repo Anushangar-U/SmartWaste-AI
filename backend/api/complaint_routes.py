@@ -1,9 +1,10 @@
+import json
 from typing import Literal
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from backend.auth.dependencies import require_role
-from backend.schemas import ClarificationAnswers, ComplaintRequest, Priority
+from backend.schemas import ClarificationAnswers, ComplaintRequest, PublicComplaintRequest, StructuredIntake, Priority
 from backend.repositories import complaints as repo
 from backend.repositories import images as image_repo
 from backend.services import cases
@@ -47,6 +48,48 @@ def find_case(identity):
 def submit(body: ComplaintRequest, idempotency_key: str | None = Header(default=None, min_length=16, max_length=128)):
     case, _ = cases.submit(body.text, body.location_context, idempotency_key,
         body.clarification_answers.model_dump() if body.clarification_answers else None, body.area)
+    return cases.public_status(case)
+
+
+
+@router.post("/complaints/structured", status_code=201)
+def submit_structured(
+    body: PublicComplaintRequest,
+    idempotency_key: str | None = Header(default=None, min_length=16, max_length=128),
+):
+    case, _ = cases.submit_structured(
+        body.text,
+        body.intake,
+        idempotency_key,
+    )
+    return cases.public_status(case)
+
+
+@router.post("/complaints/structured-with-photo", status_code=201)
+async def submit_structured_with_photo(
+    text: str = Form(...),
+    intake_json: str = Form(...),
+    photo: UploadFile = File(...),
+    idempotency_key: str | None = Header(default=None, min_length=16, max_length=128),
+):
+    try:
+        intake = StructuredIntake.model_validate(json.loads(intake_json))
+        body = PublicComplaintRequest(text=text, intake=intake)
+    except (json.JSONDecodeError, ValidationError, TypeError):
+        raise HTTPException(422, "Structured complaint details are invalid or incomplete.") from None
+
+    raw = await photo.read()
+    from backend.services.image_storage import ImageValidationError
+    try:
+        case, _ = cases.submit_structured_with_photo(
+            body.text,
+            body.intake,
+            raw,
+            photo.content_type,
+            idempotency_key,
+        )
+    except ImageValidationError as exc:
+        raise HTTPException(422, str(exc)) from None
     return cases.public_status(case)
 
 

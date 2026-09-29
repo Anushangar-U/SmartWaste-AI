@@ -16,7 +16,9 @@
       "collection",
       "landfill",
       "waste systems"
-    ]
+    ],
+    "source_tier": "A",
+    "authority_score": 1
   },
   {
     "source_id": "who-compendium-2022",
@@ -34,7 +36,9 @@
       "public health",
       "chemicals",
       "sanitation"
-    ]
+    ],
+    "source_tier": "A",
+    "authority_score": 1
   },
   {
     "source_id": "lk-waste-policy-2020",
@@ -53,7 +57,9 @@
       "local authorities",
       "policy",
       "collection"
-    ]
+    ],
+    "source_tier": "A",
+    "authority_score": 1
   },
   {
     "source_id": "lk-plastics-plan-2021",
@@ -71,7 +77,9 @@
       "recycling",
       "local authorities",
       "collection"
-    ]
+    ],
+    "source_tier": "A",
+    "authority_score": 1
   },
   {
     "source_id": "who-healthcare-2014",
@@ -90,6 +98,8 @@
       "syringes",
       "hazardous waste",
       "open dumping"
-    ]
+    ],
+    "source_tier": "A",
+    "authority_score": 1
   }
 ]

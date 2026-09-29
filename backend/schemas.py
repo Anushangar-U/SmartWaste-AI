@@ -34,6 +34,19 @@ class ComplaintRequest(BaseModel):
         return value.strip() if isinstance(value, str) else value
 
 
+class ImageAnalysisResult(BaseModel):
+    visible_waste_types: List[str] = Field(default_factory=list)
+    visible_hazards: List[str] = Field(default_factory=list)
+    scene_summary: str = ""
+    severity_hint: Literal["low", "medium", "high", "unknown"] = "unknown"
+    confidence: float = Field(default=0.0, ge=0.0, le=1.0)
+    uncertainty_notes: List[str] = Field(default_factory=list)
+    analyzed: bool = False
+    provider: str | None = None
+    image_text_conflict: bool = False
+    review_reasons: List[str] = Field(default_factory=list)
+
+
 class AnalysisResult(BaseModel):
     waste_types: List[str]
     location: str = "unknown"

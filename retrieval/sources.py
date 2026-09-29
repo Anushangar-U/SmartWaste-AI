@@ -14,7 +14,7 @@ def manifest():
 
 def display_metadata(filename):
     item = manifest().get(filename, {})
-    return {key: item[key] for key in ["source_id", "title", "issuer", "year", "jurisdiction", "document_type", "topics"] if key in item}
+    return {key: item[key] for key in ["source_id", "title", "issuer", "year", "jurisdiction", "document_type", "topics", "source_tier", "authority_score"] if key in item}
 
 
 def verify_manifest():

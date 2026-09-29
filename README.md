@@ -145,8 +145,13 @@ Review uses a reason and an optimistic version check. Stale or invalid transitio
 Assignment requires an approved/overridden human decision. Resolution requires an assigned case.
 Original AI outputs remain distinct from the human action and priority.
 
-Optional duration, hazard observations, a public area/landmark and a photo can help clarify a
-complaint. Submission is allowed without them. Uploaded JPG/JPEG/PNG/WEBP images are decoded,
+The citizen UI now uses a required structured intake: waste type, specific items, problem type,
+amount, condition, hazards, location type, public landmark, nearby sensitive place, exact placement,
+duration range, recurrence, impacts, exposure/injury status, visible product/material label and a
+free-text description. Unknown/not-sure options are provided where a citizen cannot safely know the
+answer. The backend validates the same structure so the UI cannot be bypassed by an incomplete
+structured request. The photo remains optional because citizens must not approach hazardous waste
+just to take a picture. Uploaded JPG/JPEG/PNG/WEBP images are decoded,
 normalized, stripped of EXIF metadata, resized when necessary and stored under random private
 filenames. Public tracking never exposes image paths or AI image analysis. Authorized staff can
 view the photo and advisory vision output. Image observations may enrich the RAG query but remain
@@ -154,9 +159,13 @@ separately labelled provenance and cannot silently reduce text-derived severity.
 facts generate predefined staff follow-up questions. [Triage policy](docs/triage-policy.md) separates collection priority from review urgency;
 high-severity/hazardous cases appear in the urgent-review group.
 
-The backend generates a random 128-bit tracking capability plus an internal UUID. Keep tracking
-IDs private. Tracking shows only status/timestamps and safe follow-up prompts, not complaint
-text, staff comments or provider errors. The UI reuses an idempotency key when retrying the
+The backend generates a random 128-bit tracking capability plus an internal UUID. The receipt renders
+the tracking ID in a copyable code block. Keep tracking IDs private. Tracking shows status/timestamps,
+safe follow-up prompts and complaint-specific deterministic safety/disposal guidance, but not complaint
+text, staff comments, image paths or provider errors. Hazard guidance covers sharps/rusty metal,
+medical waste, chemicals, pesticides/solvents, batteries/e-waste and burning waste, with conservative
+injury/exposure escalation and named authoritative references. It is educational guidance, not medical
+diagnosis or a substitute for emergency, poison-control, manufacturer or local-authority instructions. The UI reuses an idempotency key when retrying the
 same form payload. API clients should send a stable `Idempotency-Key` of 16–128 characters.
 
 Possible duplicates require an explicitly supplied matching area, a recent time window and
@@ -167,8 +176,10 @@ Dashboard metrics come from stored rows and identify demo/live/unknown processin
 
 | Route | Access / purpose |
 |---|---|
-| POST /complaints | Public persisted text-only submission; returns tracking even if AI processing fails |
-| POST /complaints/with-photo | Public multipart submission with optional-workflow photo evidence; validates and privately stores the image before AI processing |
+| POST /complaints | Legacy-compatible public text submission retained for existing clients |
+| POST /complaints/structured | Required validated structured citizen intake used by the current UI |
+| POST /complaints/with-photo | Legacy-compatible photo submission retained for existing clients |
+| POST /complaints/structured-with-photo | Required structured intake plus optional validated/private photo evidence |
 | GET /complaints/track/{tracking_id} | Public capability lookup, safe fields only |
 | POST /complaints/process | Compatibility route; original successful FinalResponse contract, now persisted |
 | POST /auth/register, /auth/login | Public normal-user registration and login |

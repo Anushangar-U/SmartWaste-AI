@@ -73,7 +73,9 @@ def rerank(results, query, top_k):
         topic_overlap = len(query_words & topic_words)
         lexical_overlap = len(query_words & text_words)
         # Keep semantic score dominant; bonuses are intentionally small.
-        rerank_score = float(item.get("score", 0.0)) + min(topic_overlap, 4) * 0.025 + min(lexical_overlap, 8) * 0.004
+        authority = float(source.get("authority_score", 0.5))
+        rerank_score = (float(item.get("score", 0.0)) + min(topic_overlap, 4) * 0.025
+                        + min(lexical_overlap, 8) * 0.004 + max(0.0, min(authority, 1.0)) * 0.025)
         ranked.append((rerank_score, -position, item))
     ranked.sort(key=lambda row: (row[0], row[1]), reverse=True)
     return [item for _, _, item in ranked[:top_k]]

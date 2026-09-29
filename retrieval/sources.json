@@ -8,7 +8,15 @@
     "jurisdiction": "Global",
     "document_type": "outlook",
     "sha256": "c4dae83327dfe7db69f329b3f0836182047851412a43cfcf18ae27e2dd056c92",
-    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file."
+    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file.",
+    "topics": [
+      "municipal waste",
+      "household waste",
+      "open dumping",
+      "collection",
+      "landfill",
+      "waste systems"
+    ]
   },
   {
     "source_id": "who-compendium-2022",
@@ -19,7 +27,14 @@
     "jurisdiction": "Global",
     "document_type": "guidance",
     "sha256": "f3b9e0473573dac981c3fbe4d1a3d1c1220c511b9cda934187ac793210733f76",
-    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file."
+    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file.",
+    "topics": [
+      "healthcare waste",
+      "hazardous waste",
+      "public health",
+      "chemicals",
+      "sanitation"
+    ]
   },
   {
     "source_id": "lk-waste-policy-2020",
@@ -30,7 +45,15 @@
     "jurisdiction": "Sri Lanka",
     "document_type": "policy",
     "sha256": "9a8ee5aaf27f70440ea13571c8d744bd9a833741d54b8c06d4702e83d96046dd",
-    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file."
+    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file.",
+    "topics": [
+      "sri lanka",
+      "municipal waste",
+      "household waste",
+      "local authorities",
+      "policy",
+      "collection"
+    ]
   },
   {
     "source_id": "lk-plastics-plan-2021",
@@ -41,7 +64,14 @@
     "jurisdiction": "Sri Lanka",
     "document_type": "action plan",
     "sha256": "81e02d8904be0dd8ae5245ec9bc994bdc1fdc44cfffb9edf8531915c90175d44",
-    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file."
+    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file.",
+    "topics": [
+      "sri lanka",
+      "plastic waste",
+      "recycling",
+      "local authorities",
+      "collection"
+    ]
   },
   {
     "source_id": "who-healthcare-2014",
@@ -52,6 +82,14 @@
     "jurisdiction": "Global",
     "document_type": "guidance",
     "sha256": "f36d1498e89cb801d7071e0b7f16ef0bdf9ba5558fcee3b8f90f29b1bd78a56e",
-    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file."
+    "verification": "Title/publication details read from supplied PDF opening pages; hash identifies local file.",
+    "topics": [
+      "healthcare waste",
+      "medical waste",
+      "sharps",
+      "syringes",
+      "hazardous waste",
+      "open dumping"
+    ]
   }
 ]

@@ -5,6 +5,12 @@ from collections import Counter
 # Inspected reference-only page in the hash-verified supplied PDF. Re-review if corpus changes.
 REVIEWED_EXCLUSIONS = {("beyond_age_of_waste.pdf", 90): "references_reviewed"}
 
+HIGH_RISK_TERMS = {
+    "chemical", "chemicals", "pesticide", "pesticides", "solvent", "fuel",
+    "medical", "sharps", "needle", "needles", "syringe", "battery", "batteries",
+    "lithium", "acid", "hazardous", "toxic", "fumes", "fire", "burning", "spill",
+}
+
 
 def exclusion_reason(text):
     lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -78,4 +84,19 @@ def rerank(results, query, top_k):
                         + min(lexical_overlap, 8) * 0.004 + max(0.0, min(authority, 1.0)) * 0.025)
         ranked.append((rerank_score, -position, item))
     ranked.sort(key=lambda row: (row[0], row[1]), reverse=True)
-    return [item for _, _, item in ranked[:top_k]]
+    selected = [item for _, _, item in ranked[:top_k]]
+
+    # High-risk queries must not end up supported only by lower-trust or
+    # operator-only material when an eligible Tier-A authority is already
+    # present in the candidate set. This is a guardrail, not a truth score.
+    if query_words & HIGH_RISK_TERMS:
+        def eligible(item):
+            source = manifest().get(item["source"], {})
+            return source.get("source_tier") == "A" and source.get("safety_eligible", True)
+
+        if selected and not any(eligible(item) for item in selected):
+            replacement = next((item for _, _, item in ranked if eligible(item)), None)
+            if replacement is not None:
+                selected[-1] = replacement
+
+    return selected

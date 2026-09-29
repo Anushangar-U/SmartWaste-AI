@@ -144,11 +144,17 @@ def generate_answer(
     min_evidence_score: float = MIN_EVIDENCE_SCORE,
     additional_context: str | None = None,
 ) -> GroundedAnswer:
-    retrieval_result = retrieve_for_analysis(
-        analysis,
-        top_k=top_k,
-        additional_context=additional_context,
-    )
+    if additional_context:
+        retrieval_result = retrieve_for_analysis(
+            analysis,
+            top_k=top_k,
+            additional_context=additional_context,
+        )
+    else:
+        retrieval_result = retrieve_for_analysis(
+            analysis,
+            top_k=top_k,
+        )
 
     query = retrieval_result["query"]
     evidence = [

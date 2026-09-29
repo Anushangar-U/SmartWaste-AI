@@ -1,9 +1,11 @@
 from typing import Literal
-from fastapi import APIRouter, Depends, Header, HTTPException, Query
+from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Query, UploadFile
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from backend.auth.dependencies import require_role
-from backend.schemas import ComplaintRequest, Priority
+from backend.schemas import ClarificationAnswers, ComplaintRequest, Priority
 from backend.repositories import complaints as repo
+from backend.repositories import images as image_repo
 from backend.services import cases
 
 router = APIRouter(tags=["complaints"])
@@ -48,6 +50,39 @@ def submit(body: ComplaintRequest, idempotency_key: str | None = Header(default=
     return cases.public_status(case)
 
 
+@router.post("/complaints/with-photo", status_code=201)
+async def submit_with_photo(
+    text: str = Form(...),
+    location_context: str | None = Form(default=None),
+    area: str | None = Form(default=None),
+    duration: str | None = Form(default=None),
+    hazards: str = Form(default="unknown"),
+    photo: UploadFile = File(...),
+    idempotency_key: str | None = Header(default=None, min_length=16, max_length=128),
+):
+    answers = ClarificationAnswers(
+        duration=(duration or "").strip() or None,
+        hazards=hazards,
+    )
+    body = ComplaintRequest(
+        text=text,
+        location_context=location_context,
+        area=area,
+        clarification_answers=answers,
+    )
+    raw = await photo.read()
+    case, _ = cases.submit_with_photo(
+        body.text,
+        body.location_context,
+        raw,
+        photo.content_type,
+        idempotency_key,
+        body.clarification_answers.model_dump(),
+        body.area,
+    )
+    return cases.public_status(case)
+
+
 @router.get("/complaints/track/{tracking_id}")
 def track(tracking_id: str):
     case = repo.track(tracking_id)
@@ -67,7 +102,32 @@ def listing(status: cases.Status | None = None, search: str | None = Query(defau
 @router.get("/staff/complaints/{identity}")
 def detail(identity: str, user=Depends(staff)):
     case = find_case(identity)
-    return {**case, "history": repo.events(identity)}
+    image = image_repo.get_for_complaint(identity)
+    return {
+        **case,
+        "photo": image_repo.staff_metadata(image),
+        "history": repo.events(identity),
+    }
+
+
+@router.get("/staff/complaints/{identity}/photo")
+def photo(identity: str, user=Depends(staff)):
+    find_case(identity)
+    image = image_repo.get_for_complaint(identity)
+    if not image:
+        raise HTTPException(404, "Complaint photo not found")
+    from backend.services.image_storage import safe_path
+
+    try:
+        path = safe_path(image["stored_path"])
+    except (FileNotFoundError, ValueError):
+        raise HTTPException(404, "Complaint photo not found") from None
+    return FileResponse(
+        path,
+        media_type=image["mime_type"],
+        filename="complaint-photo.jpg",
+        headers={"Cache-Control": "private, no-store"},
+    )
 
 
 @router.post("/staff/complaints/{identity}/review")

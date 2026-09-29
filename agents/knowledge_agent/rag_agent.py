@@ -71,7 +71,10 @@ def build_retrieval_query(analysis: WasteAnalysis, additional_context: str | Non
     if analysis.duration_days is not None and not re.search(r"\b(day|days|week|weeks|month|months|yesterday|today)\b", " ".join(parts), re.I):
         add(f"for {analysis.duration_days} days")
     if additional_context:
-        add("Image observations: " + additional_context)
+        if additional_context.startswith("Reporter structured intake:"):
+            add(additional_context)
+        else:
+            add("Image observations: " + additional_context)
     return " ".join(parts).strip() or "waste dumping problem"
 
 

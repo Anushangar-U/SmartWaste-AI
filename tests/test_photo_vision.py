@@ -213,15 +213,16 @@ class PhotoApiTests(unittest.TestCase):
             self.client.get(f"/staff/complaints/{case['id']}/photo").status_code,
             401,
         )
+        staff_header = self.staff_header()
         response = self.client.get(
             f"/staff/complaints/{case['id']}/photo",
-            headers=self.staff_header(),
+            headers=staff_header,
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers["content-type"], "image/jpeg")
         detail = self.client.get(
             f"/staff/complaints/{case['id']}",
-            headers=self.staff_header(),
+            headers=staff_header,
         ).json()
         self.assertIn("photo", detail)
         self.assertNotIn("stored_path", str(detail["photo"]))

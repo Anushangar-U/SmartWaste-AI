@@ -209,10 +209,10 @@ def submit_with_photo(
         raise
 
     try:
-        image_analysis = vision.reconcile(vision.analyze_image(stored["stored_path"]), answers)
+        image_analysis = vision.reconcile(vision.analyze_image(stored["stored_path"]), answers, text)
         image_repo.set_analysis(case["id"], image_analysis.model_dump(mode="json"))
     except vision.VisionProviderError:
-        image_analysis = vision.reconcile(vision.unavailable_analysis(), answers)
+        image_analysis = vision.reconcile(vision.unavailable_analysis(), answers, text)
         image_repo.set_analysis(
             case["id"],
             image_analysis.model_dump(mode="json"),

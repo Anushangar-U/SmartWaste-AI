@@ -221,6 +221,22 @@ class StaffPortal:
         if case.get("clarification_answers"):
             field("Reporter-supplied duration", case["clarification_answers"].get("duration"))
             field("Reporter hazard observations", case["clarification_answers"].get("hazards"))
+        intake = case.get("structured_intake")
+        if intake:
+            st.subheader("Structured citizen intake")
+            field("Waste types", ", ".join(item.replace("_", " ") for item in intake.get("waste_types", [])))
+            field("Specific items", intake.get("specific_items"))
+            field("Problem type", label(intake.get("problem_type")))
+            field("Estimated amount", label(intake.get("amount")))
+            field("Condition", label(intake.get("condition")))
+            field("Visible hazards", ", ".join(item.replace("_", " ") for item in intake.get("hazards", [])))
+            field("Nearby sensitive place", label(intake.get("nearby_sensitive_place")))
+            field("Placement", label(intake.get("placement")))
+            field("Duration", label(intake.get("duration")))
+            field("Recurrence", label(intake.get("recurrence")))
+            field("Impacts", ", ".join(item.replace("_", " ") for item in intake.get("impacts", [])))
+            field("Reported exposure / injury", label(intake.get("exposure")))
+            field("Visible product / material label", intake.get("material_label"))
 
     def photo_evidence(self, case):
         photo = case.get("photo")

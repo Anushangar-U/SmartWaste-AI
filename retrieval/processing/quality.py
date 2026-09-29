@@ -52,3 +52,25 @@ def deduplicate(results, top_k):
         if len(kept) >= top_k:
             break
     return kept
+
+
+def rerank(results, query, top_k):
+    """Lightweight deterministic reranking using source topics and lexical overlap.
+
+    FAISS similarity remains the primary signal. This adds small, inspectable
+    bonuses for query/topic overlap and avoids treating the result as a truth score.
+    """
+    from retrieval.sources import manifest
+    query_words = set(re.findall(r"\w+", query.lower()))
+    ranked = []
+    for position, item in enumerate(results):
+        source = manifest().get(item["source"], {})
+        topic_words = set(re.findall(r"\w+", " ".join(source.get("topics", [])).lower()))
+        text_words = set(re.findall(r"\w+", item["text"].lower()))
+        topic_overlap = len(query_words & topic_words)
+        lexical_overlap = len(query_words & text_words)
+        # Keep semantic score dominant; bonuses are intentionally small.
+        rerank_score = float(item.get("score", 0.0)) + min(topic_overlap, 4) * 0.025 + min(lexical_overlap, 8) * 0.004
+        ranked.append((rerank_score, -position, item))
+    ranked.sort(key=lambda row: (row[0], row[1]), reverse=True)
+    return [item for _, _, item in ranked[:top_k]]

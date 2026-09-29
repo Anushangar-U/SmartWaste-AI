@@ -189,6 +189,8 @@ def report_issue():
         st.subheader("4 · Photo evidence")
         st.caption("Optional. Upload a clear photo only if it is safe to do so. Do not approach hazardous waste to take a photo.")
         photo = st.file_uploader("Photo (optional)", type=["jpg", "jpeg", "png", "webp"], accept_multiple_files=False)
+        if photo is not None:
+            st.image(photo, caption="Selected photo preview", width="stretch")
         submitted = st.form_submit_button("Submit Complaint", type="primary", width="stretch")
     if not submitted:
         return

@@ -29,7 +29,7 @@ def call_retrieval(analysis: AnalysisResult, additional_context: str | None = No
     if settings.use_mock_agents:
         from backend.services.mock_agents import retrieve
 
-        raw_retrieval = retrieve(analysis.model_dump(mode="json"))
+        raw_retrieval = retrieve(analysis.model_dump(mode="json"), additional_context)
     else:
         from agents.knowledge_agent.rag_agent import generate_answer
         from agents.waste_analyzer.schemas import WasteAnalysis

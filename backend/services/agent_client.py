@@ -25,7 +25,7 @@ def call_analyst(text: str) -> AnalysisResult:
     return AnalysisResult.model_validate(_as_dict(raw_analysis))
 
 
-def call_retrieval(analysis: AnalysisResult) -> RetrievalResult:
+def call_retrieval(analysis: AnalysisResult, additional_context: str | None = None) -> RetrievalResult:
     if settings.use_mock_agents:
         from backend.services.mock_agents import retrieve
 
@@ -37,7 +37,7 @@ def call_retrieval(analysis: AnalysisResult) -> RetrievalResult:
         waste_analysis = WasteAnalysis.model_validate(
             analysis.model_dump(mode="json")
         )
-        raw_retrieval = generate_answer(waste_analysis)
+        raw_retrieval = generate_answer(waste_analysis, additional_context=additional_context)
 
     return RetrievalResult.model_validate(_as_dict(raw_retrieval))
 

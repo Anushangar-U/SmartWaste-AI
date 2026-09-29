@@ -37,7 +37,10 @@ def call_retrieval(analysis: AnalysisResult, additional_context: str | None = No
         waste_analysis = WasteAnalysis.model_validate(
             analysis.model_dump(mode="json")
         )
-        raw_retrieval = generate_answer(waste_analysis, additional_context=additional_context)
+        if additional_context:
+            raw_retrieval = generate_answer(waste_analysis, additional_context=additional_context)
+        else:
+            raw_retrieval = generate_answer(waste_analysis)
 
     return RetrievalResult.model_validate(_as_dict(raw_retrieval))
 

@@ -27,6 +27,42 @@ SOURCES = {
         "issuer": "World Health Organization",
         "url": "https://www.who.int/news-room/questions-and-answers/item/deliberate-events-chemical-release",
     },
+    "who_chemical_manual": {
+        "source_id": "who-chemical-incidents-2009",
+        "title": "Manual for the Public Health Management of Chemical Incidents",
+        "issuer": "World Health Organization",
+        "url": None,
+    },
+    "who_toxic_prevention": {
+        "source_id": "who-toxic-exposure-prevention-2004",
+        "title": "Guidelines on the prevention of toxic exposures",
+        "issuer": "World Health Organization / ILO / UNEP",
+        "url": None,
+    },
+    "who_healthcare_summary": {
+        "source_id": "who-healthcare-waste-summary-2017",
+        "title": "Safe management of wastes from health-care activities: A summary",
+        "issuer": "World Health Organization",
+        "url": None,
+    },
+    "cea_scheduled": {
+        "source_id": "lk-cea-scheduled-waste-2009",
+        "title": "Guidelines for the Management of Scheduled Waste in Sri Lanka",
+        "issuer": "Central Environmental Authority, Sri Lanka",
+        "url": None,
+    },
+    "cea_lead_battery": {
+        "source_id": "lk-cea-lead-acid-battery-2005",
+        "title": "Technical Guidelines on Management of Used Lead Acid Batteries",
+        "issuer": "Central Environmental Authority, Sri Lanka",
+        "url": None,
+    },
+    "cea_ev_battery": {
+        "source_id": "lk-cea-ev-lithium-battery",
+        "title": "Guideline on Importation and Disposal of Used Lithium-Ion Batteries for Electric Vehicles in Sri Lanka",
+        "issuer": "Central Environmental Authority, Sri Lanka",
+        "url": None,
+    },
     "epa_hhw": {
         "source_id": "epa-household-hazardous-waste",
         "title": "Household Hazardous Waste",
@@ -135,7 +171,7 @@ def build_guidance(intake: dict | StructuredIntake) -> CitizenGuidance:
             urgent,
             "Seek urgent medical care for severe or uncontrolled bleeding, a deep wound, an embedded object, loss of sensation or movement, or rapidly worsening symptoms.",
         )
-        source_keys.append("cdc_tetanus")
+        source_keys.extend(["who_healthcare_summary", "cdc_tetanus"])
         reasons.append("Sharp or medical waste can cause puncture, contamination and infection risks.")
 
     if waste & {"chemicals", "pesticides", "paint_solvent_oil_fuel"} or hazards & {
@@ -170,7 +206,7 @@ def build_guidance(intake: dict | StructuredIntake) -> CitizenGuidance:
             urgent,
             "Seek emergency help for breathing difficulty, collapse, severe burns, persistent eye pain, confusion, seizures, or significant exposure to an unknown chemical.",
         )
-        source_keys.extend(["who_chemical", "epa_hhw"])
+        source_keys.extend(["cea_scheduled", "who_chemical_manual", "who_toxic_prevention", "who_chemical", "epa_hhw"])
         reasons.append("Chemical exposure and disposal instructions can be substance-specific.")
 
     if waste & {"e_waste", "batteries"} or hazards & {"damaged_battery"} or data.condition == "swollen_battery":
@@ -197,7 +233,7 @@ def build_guidance(intake: dict | StructuredIntake) -> CitizenGuidance:
                 urgent,
                 "If a battery is smoking, very hot, hissing or on fire, move away and contact emergency services rather than attempting to handle it.",
             )
-        source_keys.extend(["epa_lithium", "cea_ewaste"])
+        source_keys.extend(["cea_lead_battery", "cea_ev_battery", "epa_lithium", "cea_ewaste"])
         reasons.append("Electronic waste and batteries can contain hazardous materials and damaged lithium batteries can create fire risk.")
 
     if "smoke_fire" in hazards or data.condition == "burning_smoking" or data.problem_type == "burning":

@@ -64,6 +64,9 @@ def rerank(results, query, top_k):
     query_words = set(re.findall(r"\w+", query.lower()))
     ranked = []
     for position, item in enumerate(results):
+        reason = REVIEWED_EXCLUSIONS.get((item["source"], item["page"])) or exclusion_reason(item["text"])
+        if reason:
+            continue
         source = manifest().get(item["source"], {})
         topic_words = set(re.findall(r"\w+", " ".join(source.get("topics", [])).lower()))
         text_words = set(re.findall(r"\w+", item["text"].lower()))

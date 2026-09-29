@@ -98,6 +98,33 @@ class StructuredComplaintApiTests(unittest.TestCase):
         self.assertTrue(any(source["source_id"] == "cdc-tetanus-wound-guidance"
                             for source in guidance["sources"]))
 
+    def test_leaking_battery_guidance_covers_exposure_and_cea_handover(self):
+        intake = copy.deepcopy(VALID_INTAKE)
+        intake.update({
+            "waste_types": ["batteries"],
+            "specific_items": "Leaking used lead-acid vehicle battery",
+            "problem_type": "leaking_spill",
+            "condition": "leaking",
+            "hazards": ["damaged_battery"],
+            "exposure": "skin_contact",
+            "material_label": "Lead-acid battery",
+        })
+        response = self.client.post(
+            "/complaints/structured",
+            json={"text": "A used lead-acid battery is leaking liquid beside the roadside.", "intake": intake},
+        )
+        self.assertEqual(response.status_code, 201)
+        guidance = response.json()["guidance"]
+        self.assertEqual(guidance["risk_level"], "high")
+        self.assertTrue(any("registered collector" in item.lower() or "licensed recycler" in item.lower()
+                            for item in guidance["immediate_precautions"]))
+        self.assertTrue(any("rinse" in item.lower() and "water" in item.lower()
+                            for item in guidance["if_exposed"]))
+        self.assertTrue(any("do not drain" in item.lower()
+                            for item in guidance["disposal_steps"]))
+        self.assertTrue(any(source["source_id"] == "lk-cea-lead-acid-battery-2005"
+                            for source in guidance["sources"]))
+
     def test_unknown_chemical_guidance_avoids_guessing(self):
         intake = copy.deepcopy(VALID_INTAKE)
         intake.update({

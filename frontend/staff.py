@@ -187,6 +187,7 @@ class StaffPortal:
         tabs = st.tabs(["Overview", "AI Analysis", "Evidence", "Recommendation", "Human Decision", "History"])
         with tabs[0]:
             self.overview(case)
+            self.photo_evidence(case)
             self.duplicates(case)
         with tabs[1]:
             self.analysis(case)
@@ -220,6 +221,42 @@ class StaffPortal:
         if case.get("clarification_answers"):
             field("Reporter-supplied duration", case["clarification_answers"].get("duration"))
             field("Reporter hazard observations", case["clarification_answers"].get("hazards"))
+
+    def photo_evidence(self, case):
+        photo = case.get("photo")
+        st.subheader("Photo Evidence")
+        if not photo:
+            st.caption("No photo was supplied with this complaint.")
+            return
+        try:
+            image_bytes = self.api(
+                "GET",
+                f"/staff/complaints/{case['id']}/photo",
+                protected=True,
+                raw=True,
+            )
+            st.image(image_bytes, caption="Citizen-supplied photo evidence", width="stretch")
+        except Exception:
+            st.warning("The stored photo could not be displayed. Review the remaining case evidence.")
+
+        st.caption("AI Image Analysis · advisory only. Staff must verify visible conditions before acting.")
+        analysis = photo.get("analysis") or {}
+        if not analysis:
+            st.info("Automated image analysis is not available. The photo can still be reviewed manually.")
+            return
+        field("Visible waste types", ", ".join(analysis.get("visible_waste_types", [])) or "Not identified")
+        field("Possible visible hazards", ", ".join(analysis.get("visible_hazards", [])) or "None identified")
+        field("Scene summary", analysis.get("scene_summary") or "Not available")
+        field("Severity hint", label(analysis.get("severity_hint")))
+        confidence = analysis.get("confidence")
+        field("Model-reported confidence", f"{confidence:.0%}" if confidence is not None else "Not available")
+        st.caption("Image confidence is model-reported and is not a calibrated probability.")
+        if analysis.get("image_text_conflict"):
+            st.warning("Reporter information and AI image observations may conflict. Human review is required.")
+        for note in analysis.get("uncertainty_notes", []):
+            st.info(note)
+        for reason in analysis.get("review_reasons", []):
+            st.warning(reason)
 
     @staticmethod
     def analysis(case):

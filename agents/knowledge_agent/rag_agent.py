@@ -136,6 +136,22 @@ def _format_evidence(
     return "\n\n".join(blocks)
 
 
+def _message_text(content) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for item in content:
+            if isinstance(item, dict):
+                text = item.get("text") or item.get("content")
+            else:
+                text = getattr(item, "text", None) or getattr(item, "content", None)
+            if text:
+                parts.append(str(text))
+        return "\n".join(parts)
+    return str(content or "")
+
+
 def generate_answer(
     analysis: WasteAnalysis,
     top_k: int = 5,
@@ -194,9 +210,7 @@ def generate_answer(
         ],
     )
 
-    answer = (
-        response.choices[0].message.content or ""
-    ).strip()
+    answer = _message_text(response.choices[0].message.content).strip()
 
     if not answer:
         return {

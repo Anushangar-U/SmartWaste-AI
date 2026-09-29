@@ -27,7 +27,7 @@ def chunk(source, page, score):
 
 
 class EvidenceFilteringTests(unittest.TestCase):
-    def generate(self, chunks):
+    def generate(self, chunks, content="Use guidance [1]."):
         retrieval = {
             "query": "household waste",
             "evidence": chunks,
@@ -37,7 +37,7 @@ class EvidenceFilteringTests(unittest.TestCase):
             ],
         }
         response = SimpleNamespace(
-            choices=[SimpleNamespace(message=SimpleNamespace(content="Use guidance [1]."))]
+            choices=[SimpleNamespace(message=SimpleNamespace(content=content))]
         )
         client = SimpleNamespace(
             chat=SimpleNamespace(
@@ -83,6 +83,14 @@ class EvidenceFilteringTests(unittest.TestCase):
         self.assertEqual(result["sources"], [])
         self.assertEqual(calls, 0)
         self.assertIsNone(prompt_call)
+
+    def test_structured_message_content_is_normalized(self):
+        result, _, _ = self.generate(
+            [chunk("one.pdf", 2, 0.8)],
+            content=[{"type": "text", "text": "Use guidance [1]."}],
+        )
+        self.assertTrue(result["grounded"])
+        self.assertEqual(result["answer"], "Use guidance [citation removed].")
 
     def test_exact_threshold_is_included(self):
         exact = chunk("boundary.pdf", 11, 0.35)

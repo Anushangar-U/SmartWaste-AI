@@ -228,16 +228,13 @@ class StaffPortal:
         if not photo:
             st.caption("No photo was supplied with this complaint.")
             return
-        try:
-            image_bytes = self.api(
-                "GET",
-                f"/staff/complaints/{case['id']}/photo",
-                protected=True,
-                raw=True,
-            )
-            st.image(image_bytes, caption="Citizen-supplied photo evidence", width="stretch")
-        except Exception:
-            st.warning("The stored photo could not be displayed. Review the remaining case evidence.")
+        image_bytes = self.api(
+            "GET",
+            f"/staff/complaints/{case['id']}/photo",
+            protected=True,
+            raw=True,
+        )
+        st.image(image_bytes, caption="Citizen-supplied photo evidence", width="stretch")
 
         st.caption("AI Image Analysis · advisory only. Staff must verify visible conditions before acting.")
         analysis = photo.get("analysis") or {}

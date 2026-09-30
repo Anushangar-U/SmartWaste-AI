@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     gemini_model: str = "gemini-3.6-flash"
     agent1_openrouter_api_key: str = ""
     agent1_openrouter_model: str = "nex-agi/nex-n2.5-mini:free"
+    # Shared OpenRouter credentials used by Agent 2 and as a live fallback
+    # for Agent 1, Agent 3, and optional vision analysis.
     openrouter_api_key: str = ""
     openrouter_fallback_api_key: str = ""
     openrouter_model: str = "openrouter/free"

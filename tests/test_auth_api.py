@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from backend.config import settings
 from backend.main import app
 from backend.database import connection, initialize
+from backend.repositories import complaints as repo
 from backend.auth import users, security
 
 

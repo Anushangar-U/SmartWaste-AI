@@ -1,35 +1,20 @@
 from google import genai
 from google.genai import types
 from groq import Groq
-from openai import OpenAI
-
 from .prompts import SYSTEM_PROMPT
 from .schemas import WasteAnalysis
 from backend.config import settings
+from backend.services.provider_failover import (
+    has_openrouter_credentials,
+    openrouter_chat_create,
+    should_failover_provider_error,
+)
 
 
 AGENT1_OPENROUTER_MODEL = settings.agent1_openrouter_model
 
-_openrouter_client: OpenAI | None = None
 _gemini_client: genai.Client | None = None
 _groq_client: Groq | None = None
-
-
-def _get_openrouter_client() -> OpenAI:
-    global _openrouter_client
-
-    if not settings.agent1_openrouter_api_key:
-        raise RuntimeError("AGENT1_OPENROUTER_API_KEY is not configured.")
-
-    if _openrouter_client is None:
-        _openrouter_client = OpenAI(
-            api_key=settings.agent1_openrouter_api_key,
-            base_url="https://openrouter.ai/api/v1",
-            timeout=settings.provider_timeout_seconds,
-            max_retries=settings.provider_max_retries,
-        )
-
-    return _openrouter_client
 
 
 def _get_gemini_client() -> genai.Client:
@@ -69,27 +54,30 @@ def _get_groq_client() -> Groq:
 
 
 def _analyze_with_openrouter(complaint: str) -> WasteAnalysis:
-    response = _get_openrouter_client().chat.completions.create(
-        model=AGENT1_OPENROUTER_MODEL,
-        temperature=0,
-        response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "waste_analysis",
-                "strict": True,
-                "schema": WasteAnalysis.model_json_schema(),
+    response = openrouter_chat_create(
+        agent_specific_key=settings.agent1_openrouter_api_key,
+        request={
+            "model": AGENT1_OPENROUTER_MODEL,
+            "temperature": 0,
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "waste_analysis",
+                    "strict": True,
+                    "schema": WasteAnalysis.model_json_schema(),
+                },
             },
+            "messages": [
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT,
+                },
+                {
+                    "role": "user",
+                    "content": f"USER COMPLAINT:\n{complaint}",
+                },
+            ],
         },
-        messages=[
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": f"USER COMPLAINT:\n{complaint}",
-            },
-        ],
     )
 
     content = response.choices[0].message.content
@@ -145,6 +133,24 @@ def _analyze_with_groq(complaint: str) -> WasteAnalysis:
     return WasteAnalysis.model_validate_json(content)
 
 
+def _with_openrouter_fallback(primary, complaint: str, configured: bool) -> WasteAnalysis:
+    """Use OpenRouter when the selected primary provider is unavailable."""
+    if not configured:
+        if has_openrouter_credentials(settings.agent1_openrouter_api_key):
+            return _analyze_with_openrouter(complaint)
+        return primary(complaint)
+
+    try:
+        return primary(complaint)
+    except Exception as exc:
+        if (
+            should_failover_provider_error(exc)
+            and has_openrouter_credentials(settings.agent1_openrouter_api_key)
+        ):
+            return _analyze_with_openrouter(complaint)
+        raise
+
+
 def analyze_complaint(complaint: str) -> WasteAnalysis:
     """
     Analyze a waste complaint using the configured Agent 1 provider.
@@ -160,17 +166,25 @@ def analyze_complaint(complaint: str) -> WasteAnalysis:
     provider = settings.agent1_provider.strip().lower()
 
     if provider == "groq":
-        return _analyze_with_groq(complaint)
+        return _with_openrouter_fallback(
+            _analyze_with_groq,
+            complaint,
+            bool(settings.groq_api_key.strip()),
+        )
     if provider == "openrouter":
         return _analyze_with_openrouter(complaint)
     if provider == "gemini":
-        return _analyze_with_gemini(complaint)
+        return _with_openrouter_fallback(
+            _analyze_with_gemini,
+            complaint,
+            bool(settings.gemini_api_key.strip()),
+        )
     if provider != "auto":
         raise RuntimeError(
             "AGENT1_PROVIDER must be one of: auto, groq, openrouter, gemini."
         )
 
-    if settings.agent1_openrouter_api_key:
+    if has_openrouter_credentials(settings.agent1_openrouter_api_key):
         return _analyze_with_openrouter(complaint)
 
     return _analyze_with_gemini(complaint)

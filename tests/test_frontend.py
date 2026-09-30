@@ -109,7 +109,7 @@ class FrontendTests(unittest.TestCase):
                         {"status": "processing_failed", "at": "2026-01-01T00:00:01+00:00"}]}
         with patch("requests.request", return_value=response(record)):
             app = AppTest.from_file(APP).run()
-            app.button(key="nav_track").click().run()
+            click(app, "Track Complaint")
             self.assertFalse(app.text_area)
             widget(app, "text_input", "Tracking ID").set_value("WM-synthetic")
             click(app, "Check Status")
@@ -214,7 +214,7 @@ class FrontendJourneyTests(unittest.TestCase):
         self.assertEqual(widget(app, "text_input", "Password").value, "")
         self.assertTrue(app.error)
         self.assertNotIn("wrong-synthetic-password", str([e.value for e in app.error]))
-        app.button(key="nav_track").click().run()
+        click(app, "Track Complaint")
         widget(app, "text_input", "Tracking ID").set_value("WM-not-a-real-complaint")
         click(app, "Check Status")
         self.assertFalse(app.exception)

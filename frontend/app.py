@@ -144,19 +144,18 @@ def render_header():
 
 
 def header_navigation():
-    brand, report, track, access = st.columns([3, 1.35, 1.45, 1.4], vertical_alignment="center")
-    with brand:
-        st.markdown('<div class="sw-brand"><span aria-hidden="true">♻</span>SmartWaste AI</div>', unsafe_allow_html=True)
-        st.caption("Report waste. Track action.")
-    report.button("Report Issue", key="nav_report", type="primary", on_click=navigate, args=("report",), width="stretch")
-    track.button("Track Complaint", key="nav_track", on_click=navigate, args=("track",), width="stretch")
     if st.session_state.get("auth_token"):
-        access.button("Staff Portal", key="nav_staff", on_click=navigate, args=("staff",), width="stretch")
-        person, back, exit_col = st.columns([4, 1.5, 1])
-        person.text("Signed in as " + st.session_state.get("auth_username", "staff"))
-        back.button("Citizen Portal", on_click=navigate, args=("home",), width="stretch")
+        brand, track, exit_col = st.columns([5, 1.5, 1.1], vertical_alignment="center")
+        with brand:
+            st.markdown('<div class="sw-brand"><span aria-hidden="true">♻</span>SmartWaste AI</div>', unsafe_allow_html=True)
+            st.caption("Report waste. Track action.")
+        track.button("Track Complaint", key="nav_track_staff", on_click=navigate, args=("track",), width="stretch")
         exit_col.button("Logout", on_click=logout, width="stretch")
     else:
+        brand, access = st.columns([5, 1.4], vertical_alignment="center")
+        with brand:
+            st.markdown('<div class="sw-brand"><span aria-hidden="true">♻</span>SmartWaste AI</div>', unsafe_allow_html=True)
+            st.caption("Report waste. Track action.")
         access.button("Staff Login", key="nav_login", on_click=navigate, args=("login",), width="stretch")
 
 

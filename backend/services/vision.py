@@ -6,9 +6,11 @@ import json
 import re
 from pathlib import Path
 
-from openai import OpenAI
-
 from backend.config import settings
+from backend.services.provider_failover import (
+    has_openrouter_credentials,
+    openrouter_chat_create,
+)
 from backend.schemas import ImageAnalysisResult
 
 
@@ -66,7 +68,7 @@ def analyze_image(path: str) -> ImageAnalysisResult:
     if settings.use_mock_agents:
         return _mock_analysis()
 
-    if not settings.openrouter_api_key:
+    if not has_openrouter_credentials():
         raise VisionProviderError("Vision provider credential is not configured.")
     if not settings.vision_model:
         raise VisionProviderError("VISION_MODEL is not configured.")
@@ -74,31 +76,27 @@ def analyze_image(path: str) -> ImageAnalysisResult:
     try:
         image_bytes = Path(path).read_bytes()
         data_url = "data:image/jpeg;base64," + base64.b64encode(image_bytes).decode("ascii")
-        client = OpenAI(
-            api_key=settings.openrouter_api_key,
-            base_url="https://openrouter.ai/api/v1",
-            timeout=settings.provider_timeout_seconds,
-            max_retries=settings.provider_max_retries,
-        )
-        response = client.chat.completions.create(
-            model=settings.vision_model,
-            temperature=0,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": (
-                                "Inspect this complaint photo. Return the requested JSON. "
-                                "Treat the image as advisory evidence only."
-                            ),
-                        },
-                        {"type": "image_url", "image_url": {"url": data_url}},
-                    ],
-                },
-            ],
+        response = openrouter_chat_create(
+            request={
+                "model": settings.vision_model,
+                "temperature": 0,
+                "messages": [
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": (
+                                    "Inspect this complaint photo. Return the requested JSON. "
+                                    "Treat the image as advisory evidence only."
+                                ),
+                            },
+                            {"type": "image_url", "image_url": {"url": data_url}},
+                        ],
+                    },
+                ],
+            },
         )
         content = response.choices[0].message.content
         if not content:

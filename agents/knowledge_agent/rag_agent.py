@@ -2,10 +2,9 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from openai import OpenAI
-
 from agents.waste_analyzer.schemas import WasteAnalysis
 from backend.config import settings
+from backend.services.provider_failover import openrouter_chat_create
 from retrieval.processing.quality import deduplicate, rerank
 from retrieval.sources import display_metadata
 from retrieval.citations import inspect_answer
@@ -103,23 +102,6 @@ def retrieve_for_analysis(
     }
 
 
-def _get_client() -> OpenAI:
-    api_key = settings.openrouter_api_key
-
-    if not api_key:
-        raise RuntimeError(
-            "OPENROUTER_API_KEY is not set. Add it to the local .env file "
-            "before using OpenRouter generation."
-        )
-
-    return OpenAI(
-        api_key=api_key,
-        base_url="https://openrouter.ai/api/v1",
-        timeout=settings.provider_timeout_seconds,
-        max_retries=settings.provider_max_retries,
-    )
-
-
 def _format_evidence(
     evidence: list[RetrievalResult],
 ) -> str:
@@ -191,19 +173,21 @@ def generate_answer(
         "say so instead of guessing."
     )
 
-    response = _get_client().chat.completions.create(
-        model=model or DEFAULT_GENERATION_MODEL,
-        temperature=0,
-        messages=[
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": user_prompt,
-            },
-        ],
+    response = openrouter_chat_create(
+        request={
+            "model": model or DEFAULT_GENERATION_MODEL,
+            "temperature": 0,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT,
+                },
+                {
+                    "role": "user",
+                    "content": user_prompt,
+                },
+            ],
+        },
     )
 
     answer = (

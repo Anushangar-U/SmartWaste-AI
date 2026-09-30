@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     agent1_openrouter_api_key: str = ""
     agent1_openrouter_model: str = "nex-agi/nex-n2.5-mini:free"
     openrouter_api_key: str = ""
+    openrouter_fallback_api_key: str = ""
     openrouter_model: str = "openrouter/free"
     groq_api_key: str = ""
     groq_model: str = "openai/gpt-oss-120b"

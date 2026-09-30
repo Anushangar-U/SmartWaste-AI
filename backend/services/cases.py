@@ -164,7 +164,11 @@ def _process(case):
                 **{key: result[key] for key in repo.JSON_FIELDS},
                 "status": Status.awaiting_review.value,
                 "review_urgency": result["decision"].get("review_urgency", "normal"),
-                "requires_human_review": result["decision"]["requires_human_review"],
+                # Every AI-assisted recommendation requires an authorized staff
+                # decision before assignment. The nested decision flag remains the
+                # agent's extra safety-escalation signal; this top-level flag is the
+                # workflow requirement used by the staff review queue.
+                "requires_human_review": True,
             },
             event="analysis_completed",
         )

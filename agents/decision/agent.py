@@ -19,6 +19,11 @@ from groq import Groq
 from .prompts import SYSTEM_PROMPT, build_user_prompt
 from .rules import validate_decision
 from backend.config import settings
+from backend.services.provider_failover import (
+    has_openrouter_credentials,
+    openrouter_chat_create,
+    should_failover_provider_error,
+)
 
 # The model can be overridden through the environment.
 GROQ_MODEL = settings.groq_model
@@ -38,6 +43,40 @@ def _get_client() -> Groq:
         _client = Groq(api_key=api_key, timeout=settings.provider_timeout_seconds,
                        max_retries=settings.provider_max_retries)
     return _client
+
+
+def _decision_response(messages: list[dict]):
+    """Use Groq first, then shared OpenRouter credentials when Groq is unavailable."""
+    if settings.groq_api_key.strip():
+        try:
+            return _get_client().chat.completions.create(
+                model=GROQ_MODEL,
+                max_tokens=1024,
+                temperature=0.2,
+                messages=messages,
+            )
+        except Exception as exc:
+            if not (
+                should_failover_provider_error(exc)
+                and has_openrouter_credentials()
+            ):
+                raise
+    elif not has_openrouter_credentials():
+        return _get_client().chat.completions.create(
+            model=GROQ_MODEL,
+            max_tokens=1024,
+            temperature=0.2,
+            messages=messages,
+        )
+
+    return openrouter_chat_create(
+        request={
+            "model": settings.openrouter_model,
+            "max_tokens": 1024,
+            "temperature": 0.2,
+            "messages": messages,
+        },
+    )
 
 
 def _extract_json(text: str | None) -> dict:
@@ -71,26 +110,18 @@ def decide(
     Returns a dict shaped like DECISION_OUTPUT_SCHEMA in prompts.py, plus a
     "validation" key describing any issues the rules layer caught.
     """
-    client = _get_client()
-
-    response = client.chat.completions.create(
-        model=GROQ_MODEL,
-        max_tokens=1024,
-        # Groq's free tier can be a little less obedient about "JSON only"
-        # than larger hosted models, so we lower temperature for consistency.
-        temperature=0.2,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": build_user_prompt(
-                    analysis,
-                    evidence,
-                    grounded_knowledge=grounded_knowledge,
-                ),
-            },
-        ],
-    )
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": build_user_prompt(
+                analysis,
+                evidence,
+                grounded_knowledge=grounded_knowledge,
+            ),
+        },
+    ]
+    response = _decision_response(messages)
 
     raw_text = response.choices[0].message.content
 

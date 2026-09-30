@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     use_mock_agents: bool = True
     allowed_origins: str = "http://localhost:8501,http://localhost:3000,http://127.0.0.1:5500"
 
+    agent1_provider: str = "auto"
+    agent1_groq_model: str = ""
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.6-flash"
     agent1_openrouter_api_key: str = ""

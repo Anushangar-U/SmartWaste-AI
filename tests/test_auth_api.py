@@ -63,6 +63,27 @@ class AuthApiTests(unittest.TestCase):
         self.assertEqual(self.client.post("/auth/login", data={"username": "new_user", "password": "synthetic-password"}).status_code, 200)
         self.assertEqual(self.client.post("/auth/register", json={"username": "another", "password": "\u0b85" * 30}).status_code, 422)
 
+    def test_routine_processed_case_still_enters_staff_review_queue(self):
+        reply = self.client.post(
+            "/complaints",
+            json={"text": "Household garbage uncollected for two days."},
+        )
+        self.assertEqual(reply.status_code, 201)
+        case = repo.track(reply.json()["tracking_id"])
+        self.assertEqual(case["status"], "awaiting_review")
+        self.assertTrue(case["requires_human_review"])
+        # Preserve the decision agent's separate safety-escalation meaning.
+        self.assertFalse(case["decision"]["requires_human_review"])
+
+        header = self.header("queue_reviewer", "staff")
+        queue = self.client.get(
+            "/staff/complaints",
+            params={"review_needed": "true"},
+            headers=header,
+        )
+        self.assertEqual(queue.status_code, 200)
+        self.assertTrue(any(item["id"] == case["id"] for item in queue.json()))
+
     def test_separate_clients_share_persisted_tracking(self):
         reply = self.client.post("/complaints", json={"text": "Household garbage uncollected for two days."})
         self.assertEqual(reply.status_code, 201)

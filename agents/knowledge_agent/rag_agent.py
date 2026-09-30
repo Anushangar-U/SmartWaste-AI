@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TypedDict
 
-from openai import OpenAI
+from openai import APIConnectionError, APITimeoutError, InternalServerError, OpenAI, RateLimitError
 
 from agents.waste_analyzer.schemas import WasteAnalysis
 from backend.config import settings
@@ -103,21 +103,72 @@ def retrieve_for_analysis(
     }
 
 
-def _get_client() -> OpenAI:
-    api_key = settings.openrouter_api_key
+TRANSIENT_OPENROUTER_ERRORS = (
+    RateLimitError,
+    APITimeoutError,
+    APIConnectionError,
+    InternalServerError,
+)
 
-    if not api_key:
-        raise RuntimeError(
-            "OPENROUTER_API_KEY is not set. Add it to the local .env file "
-            "before using OpenRouter generation."
-        )
 
+def _openrouter_api_keys() -> list[str]:
+    """Return configured Agent 2 keys in failover order without duplicates."""
+    keys = [
+        settings.openrouter_api_key.strip(),
+        settings.openrouter_fallback_api_key.strip(),
+    ]
+    return list(dict.fromkeys(key for key in keys if key))
+
+
+def _get_client(api_key: str) -> OpenAI:
     return OpenAI(
         api_key=api_key,
         base_url="https://openrouter.ai/api/v1",
         timeout=settings.provider_timeout_seconds,
         max_retries=settings.provider_max_retries,
     )
+
+
+def _generate_with_openrouter(user_prompt: str, model: str) -> object:
+    keys = _openrouter_api_keys()
+    if not keys:
+        raise RuntimeError(
+            "OPENROUTER_API_KEY is not set. Add it to the local .env file "
+            "before using OpenRouter generation."
+        )
+
+    try:
+        return _get_client(keys[0]).chat.completions.create(
+            model=model,
+            temperature=0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT,
+                },
+                {
+                    "role": "user",
+                    "content": user_prompt,
+                },
+            ],
+        )
+    except TRANSIENT_OPENROUTER_ERRORS:
+        if len(keys) < 2:
+            raise
+        return _get_client(keys[1]).chat.completions.create(
+            model=model,
+            temperature=0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT,
+                },
+                {
+                    "role": "user",
+                    "content": user_prompt,
+                },
+            ],
+        )
 
 
 def _format_evidence(
@@ -191,19 +242,9 @@ def generate_answer(
         "say so instead of guessing."
     )
 
-    response = _get_client().chat.completions.create(
-        model=model or DEFAULT_GENERATION_MODEL,
-        temperature=0,
-        messages=[
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-            },
-            {
-                "role": "user",
-                "content": user_prompt,
-            },
-        ],
+    response = _generate_with_openrouter(
+        user_prompt,
+        model or DEFAULT_GENERATION_MODEL,
     )
 
     answer = (

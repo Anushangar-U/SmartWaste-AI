@@ -1,8 +1,8 @@
 import unittest
 from agents.knowledge_agent.rag_agent import build_retrieval_query
 from agents.waste_analyzer.schemas import WasteAnalysis
-from retrieval.processing.quality import select_guidance_pages, deduplicate
-from retrieval.sources import display_metadata, verify_manifest
+from retrieval.processing.quality import select_guidance_pages, deduplicate, rerank
+from retrieval.sources import approved_filenames, display_metadata, verify_manifest
 
 
 class RetrievalQualityTests(unittest.TestCase):

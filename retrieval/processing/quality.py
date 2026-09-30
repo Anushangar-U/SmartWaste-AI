@@ -5,6 +5,12 @@ from collections import Counter
 # Inspected reference-only page in the hash-verified supplied PDF. Re-review if corpus changes.
 REVIEWED_EXCLUSIONS = {("beyond_age_of_waste.pdf", 90): "references_reviewed"}
 
+HIGH_RISK_TERMS = {
+    "chemical", "chemicals", "pesticide", "pesticides", "solvent", "fuel",
+    "medical", "sharps", "needle", "needles", "syringe", "battery", "batteries",
+    "lithium", "acid", "hazardous", "toxic", "fumes", "fire", "burning", "spill",
+}
+
 
 def exclusion_reason(text):
     lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -13,7 +19,7 @@ def exclusion_reason(text):
     heading = " ".join(lines[:6]).lower()
     if re.search(r"\b(table of contents|contents)\b", heading):
         entries = sum(bool(re.search(r"\.{3,}|\s\d+\s*$", line)) for line in lines[2:])
-        if len(lines) >= 6 and entries >= (len(lines) - 2) * 0.5:
+        if len(lines) >= 5 and entries >= max(2, (len(lines) - 2) * 0.5):
             return "contents"
     if re.match(r"^(references|bibliography)\b", heading):
         citations = sum(bool(re.search(r"https?://|doi:|\b(?:19|20)\d{2}\b", line)) for line in lines[1:])
@@ -52,3 +58,45 @@ def deduplicate(results, top_k):
         if len(kept) >= top_k:
             break
     return kept
+
+
+def rerank(results, query, top_k):
+    """Lightweight deterministic reranking using source topics and lexical overlap.
+
+    FAISS similarity remains the primary signal. This adds small, inspectable
+    bonuses for query/topic overlap and avoids treating the result as a truth score.
+    """
+    from retrieval.sources import manifest
+    query_words = set(re.findall(r"\w+", query.lower()))
+    ranked = []
+    for position, item in enumerate(results):
+        reason = REVIEWED_EXCLUSIONS.get((item["source"], item["page"])) or exclusion_reason(item["text"])
+        if reason:
+            continue
+        source = manifest().get(item["source"], {})
+        topic_words = set(re.findall(r"\w+", " ".join(source.get("topics", [])).lower()))
+        text_words = set(re.findall(r"\w+", item["text"].lower()))
+        topic_overlap = len(query_words & topic_words)
+        lexical_overlap = len(query_words & text_words)
+        # Keep semantic score dominant; bonuses are intentionally small.
+        authority = float(source.get("authority_score", 0.5))
+        rerank_score = (float(item.get("score", 0.0)) + min(topic_overlap, 4) * 0.025
+                        + min(lexical_overlap, 8) * 0.004 + max(0.0, min(authority, 1.0)) * 0.025)
+        ranked.append((rerank_score, -position, item))
+    ranked.sort(key=lambda row: (row[0], row[1]), reverse=True)
+    selected = [item for _, _, item in ranked[:top_k]]
+
+    # High-risk queries must not end up supported only by lower-trust or
+    # operator-only material when an eligible Tier-A authority is already
+    # present in the candidate set. This is a guardrail, not a truth score.
+    if query_words & HIGH_RISK_TERMS:
+        def eligible(item):
+            source = manifest().get(item["source"], {})
+            return source.get("source_tier") == "A" and source.get("safety_eligible", True)
+
+        if selected and not any(eligible(item) for item in selected):
+            replacement = next((item for _, _, item in ranked if eligible(item)), None)
+            if replacement is not None:
+                selected[-1] = replacement
+
+    return selected

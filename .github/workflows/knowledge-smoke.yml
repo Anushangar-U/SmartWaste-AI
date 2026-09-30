@@ -1,0 +1,48 @@
+name: Knowledge corpus smoke
+
+on:
+  push:
+    paths:
+      - 'retrieval/documents/**'
+      - 'retrieval/sources.json'
+      - 'retrieval/ingest.py'
+      - 'retrieval/processing/**'
+      - 'retrieval/vector_store/**'
+      - 'evaluation/run_knowledge_smoke.py'
+      - '.github/workflows/knowledge-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  knowledge-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip check
+      - name: Verify approved source hashes
+        run: python -c "from retrieval.sources import verify_manifest; bad=verify_manifest(); print('manifest failures:', bad); raise SystemExit(1 if bad else 0)"
+      - name: Rebuild FAISS corpus
+        run: python -m retrieval.vector_store.faiss_store
+      - name: Run real retrieval smoke evaluation
+        run: python -m evaluation.run_knowledge_smoke | tee knowledge-smoke.json
+      - name: Upload generated retrieval artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: smartwaste-knowledge-smoke
+          path: |
+            retrieval/vector_store/data/build_info.json
+            retrieval/vector_store/data/metadata.json
+            retrieval/vector_store/data/smartwaste.faiss
+            knowledge-smoke.json
+          retention-days: 7

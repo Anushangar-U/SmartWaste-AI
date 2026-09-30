@@ -187,6 +187,7 @@ class StaffPortal:
         tabs = st.tabs(["Overview", "AI Analysis", "Evidence", "Recommendation", "Human Decision", "History"])
         with tabs[0]:
             self.overview(case)
+            self.photo_evidence(case)
             self.duplicates(case)
         with tabs[1]:
             self.analysis(case)
@@ -220,6 +221,55 @@ class StaffPortal:
         if case.get("clarification_answers"):
             field("Reporter-supplied duration", case["clarification_answers"].get("duration"))
             field("Reporter hazard observations", case["clarification_answers"].get("hazards"))
+        intake = case.get("structured_intake")
+        if intake:
+            st.subheader("Structured citizen intake")
+            field("Waste types", ", ".join(item.replace("_", " ") for item in intake.get("waste_types", [])))
+            field("Specific items", intake.get("specific_items"))
+            field("Problem type", label(intake.get("problem_type")))
+            field("Estimated amount", label(intake.get("amount")))
+            field("Condition", label(intake.get("condition")))
+            field("Visible hazards", ", ".join(item.replace("_", " ") for item in intake.get("hazards", [])))
+            field("Nearby sensitive place", label(intake.get("nearby_sensitive_place")))
+            field("Placement", label(intake.get("placement")))
+            field("Duration", label(intake.get("duration")))
+            field("Recurrence", label(intake.get("recurrence")))
+            field("Impacts", ", ".join(item.replace("_", " ") for item in intake.get("impacts", [])))
+            field("Reported exposure / injury", label(intake.get("exposure")))
+            field("Visible product / material label", intake.get("material_label"))
+
+    def photo_evidence(self, case):
+        photo = case.get("photo")
+        st.subheader("Photo Evidence")
+        if not photo:
+            st.caption("No photo was supplied with this complaint.")
+            return
+        image_bytes = self.api(
+            "GET",
+            f"/staff/complaints/{case['id']}/photo",
+            protected=True,
+            raw=True,
+        )
+        st.image(image_bytes, caption="Citizen-supplied photo evidence", width="stretch")
+
+        st.caption("AI Image Analysis · advisory only. Staff must verify visible conditions before acting.")
+        analysis = photo.get("analysis") or {}
+        if not analysis:
+            st.info("Automated image analysis is not available. The photo can still be reviewed manually.")
+            return
+        field("Visible waste types", ", ".join(analysis.get("visible_waste_types", [])) or "Not identified")
+        field("Possible visible hazards", ", ".join(analysis.get("visible_hazards", [])) or "None identified")
+        field("Scene summary", analysis.get("scene_summary") or "Not available")
+        field("Severity hint", label(analysis.get("severity_hint")))
+        confidence = analysis.get("confidence")
+        field("Model-reported confidence", f"{confidence:.0%}" if confidence is not None else "Not available")
+        st.caption("Image confidence is model-reported and is not a calibrated probability.")
+        if analysis.get("image_text_conflict"):
+            st.warning("Reporter information and AI image observations may conflict. Human review is required.")
+        for note in analysis.get("uncertainty_notes", []):
+            st.info(note)
+        for reason in analysis.get("review_reasons", []):
+            st.warning(reason)
 
     @staticmethod
     def analysis(case):

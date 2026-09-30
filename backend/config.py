@@ -20,6 +20,12 @@ class Settings(BaseSettings):
     groq_api_key: str = ""
     groq_model: str = "openai/gpt-oss-120b"
 
+    # Optional citizen photo / vision analysis. Uses the existing OpenRouter key.
+    vision_model: str = ""
+    vision_max_image_mb: float = Field(default=5, ge=1, le=10)
+    vision_max_dimension: int = Field(default=1800, ge=512, le=4096)
+    upload_dir: str = "data/uploads"
+
     admin_username: str = "admin"
     admin_password: str = ""
     database_path: str = "data/smartwaste.sqlite3"

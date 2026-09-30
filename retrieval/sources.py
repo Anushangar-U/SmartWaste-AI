@@ -12,9 +12,16 @@ def manifest():
     return {s["filename"]: s for s in json.loads((ROOT / "sources.json").read_text(encoding="utf-8"))}
 
 
+def approved_filenames():
+    return set(manifest())
+
+
 def display_metadata(filename):
     item = manifest().get(filename, {})
-    return {key: item[key] for key in ["source_id", "title", "issuer", "year", "jurisdiction"] if key in item}
+    return {key: item[key] for key in [
+        "source_id", "title", "issuer", "year", "jurisdiction", "document_type",
+        "topics", "source_tier", "authority_score", "audience", "safety_eligible"
+    ] if key in item}
 
 
 def verify_manifest():

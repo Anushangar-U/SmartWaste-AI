@@ -5,9 +5,11 @@ demonstration. Citizens submit and track complaints; authorized staff inspect AI
 approve or override recommendations, assign a team and record resolution.
 
 The three-agent pipeline remains intact: structured complaint analysis, local RAG knowledge
-retrieval, then a decision model and deterministic validation. AI recommendations require
-staff sign-off before assignment. This project does not establish legal deadlines or
-automatically dispatch crews.
+retrieval, then a decision model and deterministic validation. Citizens may optionally attach
+a waste photo. A separate vision step records advisory image observations without overwriting
+the reporter text or Agent 1 analysis; disagreements and possible visible hazards require staff
+review. AI recommendations require staff sign-off before assignment. This project does not
+establish legal deadlines or automatically dispatch crews.
 
 ## Architecture
 
@@ -16,8 +18,10 @@ flowchart TD
     Citizen --> Streamlit
     Streamlit --> API[FastAPI]
     API --> DB[(SQLite: complaint saved first)]
-    DB --> A1[Agent 1: structured analysis]
-    A1 --> A2[Agent 2: MiniLM / FAISS / evidence / OpenRouter]
+    DB --> A1[Agent 1: structured text analysis]
+    DB --> VSN[Optional photo: advisory vision analysis]
+    A1 --> A2[Agent 2: MiniLM / FAISS / reranking / evidence / OpenRouter]
+    VSN --> A2
     A2 --> A3[Agent 3: Groq recommendation]
     A3 --> V[Deterministic validation and review urgency]
     V --> DB
@@ -55,6 +59,9 @@ Provider keys are optional for the mock demonstration.
 - Gemini is an alternate configured Agent 1 path, not automatic failover after a rejected
   OpenRouter request. Provider/model availability must be checked separately.
 - Settings are loaded once at startup; restart after changing configuration.
+- Optional live photo analysis reuses `OPENROUTER_API_KEY` and requires a configured
+  vision-capable `VISION_MODEL`. Photo submission still works when vision analysis fails;
+  the stored photo remains available to authorized staff for manual review.
 
 Initialize and run:
 
@@ -101,9 +108,13 @@ records actual titles, issuers, years, jurisdictions and hashes, correcting misl
 without breaking paths.
 
 MiniLM creates 384-dimensional embeddings. FAISS IndexFlatIP searches normalized vectors.
-The system retrieves candidates and retains up to five diverse passages, then applies the
-unchanged inclusive similarity threshold **0.35**. Similarity is not probability or factual
-confidence. Conservative contents/reference filtering records its exclusions during rebuild.
+The system retrieves a wider candidate set, suppresses clearly non-guidance material,
+applies small inspectable source-topic/lexical reranking bonuses, deduplicates, and retains up
+to five passages before the unchanged inclusive similarity threshold **0.35** is applied.
+FAISS semantic similarity remains the primary signal; topic bonuses do not establish truth or
+legal authority. Similarity is not probability or factual confidence. Conservative
+contents/reference filtering records its exclusions during rebuild and is also applied during
+runtime reranking for the existing index.
 
 ```powershell
 python -m retrieval.vector_store.faiss_store
@@ -134,14 +145,27 @@ Review uses a reason and an optimistic version check. Stale or invalid transitio
 Assignment requires an approved/overridden human decision. Resolution requires an assigned case.
 Original AI outputs remain distinct from the human action and priority.
 
-Optional duration, hazard observations and a public area/landmark help clarify a complaint.
-Submission is allowed without them. Missing extracted facts generate predefined staff follow-up
-questions. [Triage policy](docs/triage-policy.md) separates collection priority from review urgency;
+The citizen UI now uses a required structured intake: waste type, specific items, problem type,
+amount, condition, hazards, location type, public landmark, nearby sensitive place, exact placement,
+duration range, recurrence, impacts, exposure/injury status, visible product/material label and a
+free-text description. Unknown/not-sure options are provided where a citizen cannot safely know the
+answer. The backend validates the same structure so the UI cannot be bypassed by an incomplete
+structured request. The photo remains optional because citizens must not approach hazardous waste
+just to take a picture. Uploaded JPG/JPEG/PNG/WEBP images are decoded,
+normalized, stripped of EXIF metadata, resized when necessary and stored under random private
+filenames. Public tracking never exposes image paths or AI image analysis. Authorized staff can
+view the photo and advisory vision output. Image observations may enrich the RAG query but remain
+separately labelled provenance and cannot silently reduce text-derived severity. Missing extracted
+facts generate predefined staff follow-up questions. [Triage policy](docs/triage-policy.md) separates collection priority from review urgency;
 high-severity/hazardous cases appear in the urgent-review group.
 
-The backend generates a random 128-bit tracking capability plus an internal UUID. Keep tracking
-IDs private. Tracking shows only status/timestamps and safe follow-up prompts, not complaint
-text, staff comments or provider errors. The UI reuses an idempotency key when retrying the
+The backend generates a random 128-bit tracking capability plus an internal UUID. The receipt renders
+the tracking ID in a copyable code block. Keep tracking IDs private. Tracking shows status/timestamps,
+safe follow-up prompts and complaint-specific deterministic safety/disposal guidance, but not complaint
+text, staff comments, image paths or provider errors. Hazard guidance covers sharps/rusty metal,
+medical waste, chemicals, pesticides/solvents, batteries/e-waste and burning waste, with conservative
+injury/exposure escalation and named authoritative references. It is educational guidance, not medical
+diagnosis or a substitute for emergency, poison-control, manufacturer or local-authority instructions. The UI reuses an idempotency key when retrying the
 same form payload. API clients should send a stable `Idempotency-Key` of 16–128 characters.
 
 Possible duplicates require an explicitly supplied matching area, a recent time window and
@@ -152,13 +176,17 @@ Dashboard metrics come from stored rows and identify demo/live/unknown processin
 
 | Route | Access / purpose |
 |---|---|
-| POST /complaints | Public persisted submission; returns tracking even if AI processing fails |
+| POST /complaints | Legacy-compatible public text submission retained for existing clients |
+| POST /complaints/structured | Required validated structured citizen intake used by the current UI |
+| POST /complaints/with-photo | Legacy-compatible photo submission retained for existing clients |
+| POST /complaints/structured-with-photo | Required structured intake plus optional validated/private photo evidence |
 | GET /complaints/track/{tracking_id} | Public capability lookup, safe fields only |
 | POST /complaints/process | Compatibility route; original successful FinalResponse contract, now persisted |
 | POST /auth/register, /auth/login | Public normal-user registration and login |
 | GET /auth/users; PATCH /auth/users/{username} | Admin-only account listing / role / active state |
 | GET /staff/complaints | Staff/admin queue: status, priority, review_needed, search, limit, offset |
-| GET /staff/complaints/{id} | Staff/admin case and internal history |
+| GET /staff/complaints/{id} | Staff/admin case, safe photo metadata and internal history |
+| GET /staff/complaints/{id}/photo | Staff/admin-only complaint photo bytes; filesystem path is never returned |
 | POST /staff/complaints/{id}/review | approve/override with version, reason; override also priority/action |
 | POST /staff/complaints/{id}/assign | version and assignee |
 | POST /staff/complaints/{id}/resolve | version and staff-only resolution note |
@@ -227,8 +255,9 @@ security details, visual-verification limits and a screenshot checklist.
 
 ## Limits and next steps
 
-No evaluated multilingual support, autonomous dispatch, image recognition, IoT or route
-optimization is claimed. [Multilingual plan](docs/multilingual-plan.md) is design-only.
+No evaluated multilingual support, autonomous dispatch, IoT or route optimization is claimed.
+Photo analysis is an advisory prototype feature, not verified computer-vision ground truth; live
+accuracy depends on the configured external vision model and has not been calibrated. [Multilingual plan](docs/multilingual-plan.md) is design-only.
 The default rate/concurrency limits are process-local and SQLite suits this single-host demo;
 distributed deployment needs shared controls and further operational work. Clarification is
 optional initial input plus staff follow-up prompts, not an automated conversational agent.

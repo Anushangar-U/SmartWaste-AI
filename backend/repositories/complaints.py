@@ -9,10 +9,10 @@ from backend.database import connection
 from backend.config import settings
 
 JSON_FIELDS = {"analysis", "retrieval", "decision", "validation"}
-STORED_JSON_FIELDS = JSON_FIELDS | {"clarification_answers"}
+STORED_JSON_FIELDS = JSON_FIELDS | {"clarification_answers", "structured_intake", "citizen_guidance"}
 EDITABLE = JSON_FIELDS | {"status", "requires_human_review", "reviewer", "review_decision",
     "review_reason", "reviewed_at", "human_priority", "human_action", "assignee",
-    "resolution_note", "resolved_at", "error_stage", "processing_started_at", "processing_attempts", "review_urgency"}
+    "resolution_note", "resolved_at", "error_stage", "processing_started_at", "processing_attempts", "review_urgency", "structured_intake", "citizen_guidance"}
 
 
 class Conflict(ValueError):
@@ -33,8 +33,8 @@ def decode(row):
     return result
 
 
-def create(text, location, idempotency_key=None, answers=None, area=None):
-    fingerprint = hashlib.sha256(json.dumps([text, location, answers, area], sort_keys=True).encode()).hexdigest()
+def create(text, location, idempotency_key=None, answers=None, area=None, intake=None):
+    fingerprint = hashlib.sha256(json.dumps([text, location, answers, area, intake], sort_keys=True).encode()).hexdigest()
     with connection() as db:
         db.execute("BEGIN IMMEDIATE")
         if idempotency_key:
@@ -42,8 +42,8 @@ def create(text, location, idempotency_key=None, answers=None, area=None):
             if existing:
                 stored = decode(existing)
                 # Compare persisted inputs, so additive schema upgrades do not invalidate old fingerprints.
-                if (stored["text"], stored["location_context"], stored.get("clarification_answers"), stored.get("area")) != (
-                        text, location, answers, " ".join(area.split()) if area else None):
+                if (stored["text"], stored["location_context"], stored.get("clarification_answers"), stored.get("area"), stored.get("structured_intake")) != (
+                        text, location, answers, " ".join(area.split()) if area else None, intake):
                     raise Conflict("Idempotency key was already used for different input.")
                 return stored, False
         for _ in range(5):
@@ -64,6 +64,8 @@ def create(text, location, idempotency_key=None, answers=None, area=None):
             db.execute("UPDATE complaints SET clarification_answers=? WHERE id=?", (json.dumps(answers), identity))
         if area:
             db.execute("UPDATE complaints SET area=? WHERE id=?", (" ".join(area.split()), identity))
+        if intake:
+            db.execute("UPDATE complaints SET structured_intake=? WHERE id=?", (json.dumps(intake, ensure_ascii=False), identity))
         db.execute("UPDATE complaints SET processing_mode=? WHERE id=?", ("mock_demo" if settings.use_mock_agents else "live", identity))
         return decode(db.execute("SELECT * FROM complaints WHERE id=?", (identity,)).fetchone()), True
 
@@ -112,7 +114,7 @@ def update(identity, changes, *, version=None, allowed=None, event=None, actor=N
             raise KeyError(identity)
         if (version is not None and old["version"] != version) or (allowed and old["status"] not in allowed):
             raise Conflict("Case changed or this action is not allowed in its current status. Refresh the case.")
-        encoded = {k: json.dumps(v, ensure_ascii=False) if k in JSON_FIELDS and v is not None else v for k,v in changes.items()}
+        encoded = {k: json.dumps(v, ensure_ascii=False) if k in (JSON_FIELDS | {"structured_intake", "citizen_guidance"}) and v is not None else v for k,v in changes.items()}
         encoded["updated_at"] = now()
         db.execute("UPDATE complaints SET " + ",".join(f"{k}=?" for k in encoded) + ",version=version+1 WHERE id=?", [*encoded.values(), identity])
         if event:

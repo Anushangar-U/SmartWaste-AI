@@ -49,16 +49,32 @@ def clean_text(text: str) -> str:
 
 
 def find_pdf_files(documents_dir: Path | str = DEFAULT_DOCUMENTS_DIR) -> list[Path]:
-    """Return the PDF files in a documents directory in a stable order."""
+    """Return approved PDF files in a stable order for the production corpus.
+
+    Temporary/test directories remain unrestricted so ingestion unit tests can use
+    synthetic PDFs. The repository corpus only ingests files present in sources.json,
+    preventing stray uploads from silently becoming RAG evidence.
+    """
 
     directory = Path(documents_dir)
     if not directory.is_dir():
         raise FileNotFoundError(f"Documents directory not found: {directory}")
 
-    return sorted(
-        (path for path in directory.iterdir() if path.is_file() and path.suffix.lower() == ".pdf"),
-        key=lambda path: path.name.lower(),
-    )
+    pdfs = [
+        path for path in directory.iterdir()
+        if path.is_file() and path.suffix.lower() == ".pdf"
+    ]
+    try:
+        is_default_corpus = directory.resolve() == DEFAULT_DOCUMENTS_DIR.resolve()
+    except OSError:
+        is_default_corpus = False
+
+    if is_default_corpus:
+        from retrieval.sources import approved_filenames
+        approved = approved_filenames()
+        pdfs = [path for path in pdfs if path.name in approved]
+
+    return sorted(pdfs, key=lambda path: path.name.lower())
 
 
 def load_all_pdfs(documents_dir: Path | str = DEFAULT_DOCUMENTS_DIR) -> list[PageRecord]:

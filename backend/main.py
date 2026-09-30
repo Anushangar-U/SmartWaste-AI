@@ -29,7 +29,7 @@ app.add_middleware(
     allow_origins=[o.strip() for o in settings.allowed_origins.split(",")],
     allow_credentials=True,
     allow_methods=["GET", "POST"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_headers=["Authorization", "Content-Type", "Idempotency-Key"],
 )
 app.middleware("http")(log_requests)
 app.middleware("http")(resource_limits)
@@ -73,8 +73,10 @@ def ready():
     root = Path(__file__).resolve().parents[1]
     vector_ok = all((root / "retrieval/vector_store/data" / name).is_file() for name in ["smartwaste.faiss", "metadata.json"])
     providers = {"analyst": bool(settings.agent1_openrouter_api_key or settings.gemini_api_key),
-                 "retrieval": bool(settings.openrouter_api_key), "decision": bool(settings.groq_api_key)}
-    available = database_ok and (settings.use_mock_agents or (vector_ok and all(providers.values())))
+                 "retrieval": bool(settings.openrouter_api_key), "decision": bool(settings.groq_api_key),
+                 "vision_optional": bool(settings.openrouter_api_key and settings.vision_model)}
+    required = {key: value for key, value in providers.items() if key != "vision_optional"}
+    available = database_ok and (settings.use_mock_agents or (vector_ok and all(required.values())))
     return JSONResponse(status_code=200 if available else 503, content={"ready": available,
         "database_reachable": database_ok, "vector_files_available": vector_ok,
         "providers_configured": providers, "mode": "mock_demo" if settings.use_mock_agents else "live",

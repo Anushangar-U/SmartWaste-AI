@@ -14,8 +14,76 @@ from frontend.components import (
 
 load_dotenv()
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000").rstrip("/")
-LOCATIONS = ["Other", "Residential street", "Near a school", "Near a hospital / clinic",
-             "Commercial area", "Industrial area", "Near a water source (river/canal/lake)", "Public park"]
+WASTE_TYPES = {
+    "Household / mixed waste": "household_mixed",
+    "Food / organic waste": "food_organic",
+    "Plastic": "plastic",
+    "Paper / cardboard": "paper_cardboard",
+    "Glass": "glass",
+    "Sharp / rusty metal": "metal_sharp",
+    "Construction debris": "construction_debris",
+    "Electronic waste": "e_waste",
+    "Batteries": "batteries",
+    "Medical waste": "medical_waste",
+    "Needles / sharps": "sharps_needles",
+    "Chemicals": "chemicals",
+    "Pesticides / herbicides": "pesticides",
+    "Paint / solvent / oil / fuel": "paint_solvent_oil_fuel",
+    "Industrial waste": "industrial_waste",
+    "Garden waste": "garden_waste",
+    "Animal waste / carcass": "animal_waste_carcass",
+    "Other": "other",
+    "Unknown / not sure": "unknown",
+}
+PROBLEM_TYPES = {
+    "Uncollected waste": "uncollected", "Illegal dumping": "illegal_dumping",
+    "Overflowing bin": "overflowing_bin", "Roadside litter": "roadside_litter",
+    "Burning waste": "burning", "Leaking / spilled waste": "leaking_spill",
+    "Blocked drain caused by waste": "blocked_drain", "Repeated dumping": "recurring_dumping",
+    "Abandoned electronics": "abandoned_electronics", "Other": "other", "Unknown / not sure": "unknown",
+}
+AMOUNTS = {"Single item": "single_item", "Very small": "very_small", "Small": "small",
+    "Medium pile": "medium", "Large pile": "large", "Very large / truck-load size": "very_large",
+    "Unknown / not sure": "unknown"}
+CONDITIONS = {"Dry": "dry", "Wet": "wet", "Leaking": "leaking", "Burning / smoking": "burning_smoking",
+    "Decomposing": "decomposing", "Damaged / broken": "damaged_broken", "Swollen battery": "swollen_battery",
+    "Mixed condition": "mixed", "Unknown / not sure": "unknown"}
+HAZARDS = {"No hazards observed": "none_observed", "Unknown / not sure": "unknown",
+    "Needles / sharps": "sharps_needles", "Broken glass": "broken_glass",
+    "Rusty / sharp metal": "rusty_sharp_metal", "Medical material": "medical_material",
+    "Chemical container": "chemical_container", "Chemical leak / spill": "chemical_leak",
+    "Damaged / swollen battery": "damaged_battery", "Smoke / fire": "smoke_fire",
+    "Strong fumes": "strong_fumes", "Animal carcass": "animal_carcass",
+    "Insects / rodents": "pests", "Other": "other"}
+LOCATION_TYPES = {"Residential area": "residential", "School area": "school_area",
+    "Hospital / clinic area": "hospital_clinic", "Commercial area": "commercial",
+    "Industrial area": "industrial", "Park": "park", "Roadside": "roadside",
+    "Open land": "open_land", "Waterway / drain": "waterway_drain",
+    "Collection point / bin area": "collection_point", "Other": "other", "Unknown / not sure": "unknown"}
+NEARBY = {"None": "none", "School": "school", "Hospital / clinic": "hospital",
+    "Food market": "food_market", "Playground": "playground", "Waterway": "waterway",
+    "Storm drain": "storm_drain", "Busy road": "busy_road", "Residential homes": "residential_homes",
+    "Other": "other", "Unknown / not sure": "unknown"}
+PLACEMENTS = {"Roadside": "roadside", "Footpath": "footpath", "Inside drain": "inside_drain",
+    "Beside water": "beside_water", "Open land": "open_land", "Alley": "alley",
+    "Collection point / bin": "collection_point_bin", "Public area": "public_area",
+    "Private property visible from public area": "private_property_visible_from_public",
+    "Other": "other", "Unknown / not sure": "unknown"}
+DURATIONS = {"Less than 24 hours": "less_than_24h", "1–3 days": "one_to_three_days",
+    "4–7 days": "four_to_seven_days", "1–4 weeks": "one_to_four_weeks",
+    "Over one month": "over_one_month", "Unknown / not sure": "unknown"}
+RECURRENCE = {"First occurrence": "first_occurrence", "Has happened before": "happened_before",
+    "Repeatedly happens here": "repeated_here", "Continuously present": "continuously_present",
+    "Unknown / not sure": "unknown"}
+IMPACTS = {"No obvious effect": "none_observed", "Unknown / not sure": "unknown",
+    "Bad smell": "bad_smell", "Insects / rodents": "pests", "Blocked drainage": "blocked_drainage",
+    "Water contamination concern": "water_contamination_concern", "Smoke": "smoke",
+    "Blocking road / footpath": "road_or_footpath_obstruction",
+    "People / children nearby": "people_children_nearby", "Other": "other"}
+EXPOSURES = {"No one exposed / injured": "none", "Cut or puncture": "cut_or_puncture",
+    "Needlestick": "needlestick", "Skin contact": "skin_contact", "Eye contact": "eye_contact",
+    "Inhaled fumes / smoke": "inhalation", "Swallowed material": "ingestion",
+    "Burn": "burn", "Other": "other", "Unknown / not sure": "unknown"}
 
 
 class ApiError(Exception):
@@ -23,7 +91,7 @@ class ApiError(Exception):
         self.status = status
 
 
-def api(method, path, *, protected=False, **kwargs):
+def api(method, path, *, protected=False, raw=False, **kwargs):
     headers = kwargs.pop("headers", {})
     if protected:
         headers["Authorization"] = "Bearer " + st.session_state.get("auth_token", "")
@@ -31,7 +99,7 @@ def api(method, path, *, protected=False, **kwargs):
         response = requests.request(method, BACKEND_URL + path, headers=headers, timeout=180, **kwargs)
         if response.status_code >= 400:
             raise ApiError(response.status_code)
-        return response.json()
+        return response.content if raw else response.json()
     except (requests.RequestException, ValueError):
         raise ApiError(503) from None
 
@@ -153,68 +221,168 @@ def receipt_panel(record, *, submitted=False):
         for question in record.get("clarification_questions", []):
             st.text("For staff follow-up: " + question)
 
+        guidance = record.get("guidance")
+        if guidance:
+            st.divider()
+            st.subheader("Safety & disposal guidance for this report")
+            field("Risk level", guidance.get("risk_level", "Not recorded").replace("_", " ").title())
+            field("Reported waste", guidance.get("waste_summary"))
+            st.caption(guidance.get("reason", ""))
+            sections = [
+                ("Immediate precautions", guidance.get("immediate_precautions", [])),
+                ("How to dispose / hand over safely", guidance.get("disposal_steps", [])),
+                ("If someone was exposed or injured", guidance.get("if_exposed", [])),
+                ("Seek urgent help if", guidance.get("seek_urgent_help", [])),
+                ("Do not", guidance.get("do_not", [])),
+            ]
+            for title, items in sections:
+                if items:
+                    st.markdown("**" + title + "**")
+                    for item in items:
+                        st.markdown("- " + item)
+            if guidance.get("sources"):
+                st.markdown("**Authoritative references used for safety rules**")
+                for source in guidance["sources"]:
+                    st.text(source.get("issuer", "") + " — " + source.get("title", ""))
+            st.info(guidance.get("evidence_note", ""))
+
 
 def report_issue():
     st.button("Back to Home", on_click=navigate, args=("home",))
     st.title("Report a Waste Issue")
-    st.write("Tell us what happened and where. No citizen account is required.")
+    st.write("Complete the required details so the system can triage the complaint accurately.")
     public_mode_notice()
     if st.session_state.get("receipt"):
         receipt_panel(st.session_state["receipt"], submitted=True)
         cols = st.columns(2)
         cols[0].button("Track this complaint", type="primary", on_click=navigate, args=("track",))
         if cols[1].button("Report another issue"):
-            st.session_state.pop("receipt", None)
-            st.session_state.pop("submission_fingerprint", None)
-            st.session_state.pop("idempotency_key", None)
+            for key in ["receipt", "submission_fingerprint", "idempotency_key"]:
+                st.session_state.pop(key, None)
             st.rerun()
         return
-    st.markdown("""<aside class="sw-trust"><strong>Your report, handled with care</strong><br>
-      Avoid unnecessary personal information. Keep your tracking ID private.<br>
-      AI assists staff; humans make final decisions. External AI providers may process
-      complaint text when live mode is enabled.</aside>""", unsafe_allow_html=True)
+
+    st.markdown("""<aside class="sw-trust"><strong>Required structured report</strong><br>
+      Choose <em>Unknown / not sure</em> when you genuinely do not know an answer.
+      Do not approach, touch or smell hazardous waste just to complete this form.
+      Photo evidence is optional.</aside>""", unsafe_allow_html=True)
+
     with st.form("complaint"):
-        st.subheader("1 · Issue details")
-        text = st.text_area("Describe what happened", max_chars=2000, height=160,
-            placeholder="Example: Several garbage bags have been left beside the market for three days.")
-        st.subheader("2 · Location")
-        location = st.selectbox("Location type", LOCATIONS)
-        area = st.text_input("Public area / landmark (optional)", max_chars=120, placeholder="Example: Outside the public library")
-        st.caption("Avoid entering a private home address unless necessary.")
-        st.subheader("3 · Additional details")
-        st.caption("Optional: answer only what you know. Missing details will not prevent submission.")
-        duration = st.text_input("How long has it been there? (optional)", max_chars=80, placeholder="Example: Three days")
-        hazards = st.selectbox("Hazards visible?", ["Unknown", "Yes", "None observed"],
-            help="Chemicals, medical waste or sharp objects. Do not touch or approach the waste to check.")
+        st.subheader("1 · Waste details")
+        waste_labels = st.multiselect("Waste type(s) *", list(WASTE_TYPES), placeholder="Select one or more")
+        specific_items = st.text_input("What specific items can you see? *", max_chars=240,
+            placeholder="Example: old laptop, swollen battery, broken metal sheets")
+        problem_label = st.selectbox("Main problem *", list(PROBLEM_TYPES), index=None, placeholder="Select")
+        amount_label = st.selectbox("Estimated amount *", list(AMOUNTS), index=None, placeholder="Select")
+        condition_label = st.selectbox("Condition of the waste *", list(CONDITIONS), index=None, placeholder="Select")
+
+        st.subheader("2 · Safety details")
+        hazard_labels = st.multiselect("Visible hazards *", list(HAZARDS), placeholder="Select at least one")
+        exposure_label = st.selectbox("Has anyone been exposed or injured? *", list(EXPOSURES), index=None, placeholder="Select")
+        material_label = st.text_input("Product / chemical / battery label *", max_chars=160,
+            placeholder="Type the visible name, or type Unknown if no label is safely visible")
+
+        st.subheader("3 · Location")
+        location_label = st.selectbox("Location type *", list(LOCATION_TYPES), index=None, placeholder="Select")
+        area = st.text_input("Public area / landmark *", max_chars=160,
+            placeholder="Example: Outside Nugegoda public market")
+        nearby_label = st.selectbox("Nearby sensitive place *", list(NEARBY), index=None, placeholder="Select")
+        placement_label = st.selectbox("Where exactly is the waste? *", list(PLACEMENTS), index=None, placeholder="Select")
+        st.caption("Use a public landmark. Avoid unnecessary private home addresses.")
+
+        st.subheader("4 · Time and impact")
+        duration_label = st.selectbox("How long has it been there? *", list(DURATIONS), index=None, placeholder="Select")
+        recurrence_label = st.selectbox("Is this a recurring problem? *", list(RECURRENCE), index=None, placeholder="Select")
+        impact_labels = st.multiselect("Current effects / impacts *", list(IMPACTS), placeholder="Select at least one")
+
+        st.subheader("5 · Description")
+        text = st.text_area("Describe what happened *", max_chars=2000, height=160,
+            placeholder="Add useful context that is not already captured above.")
+
+        st.subheader("6 · Photo evidence")
+        st.caption("Optional. Upload a clear photo only if it is safe to do so. Never approach hazardous waste for a photo.")
+        photo = st.file_uploader("Photo (optional)", type=["jpg", "jpeg", "png", "webp",], accept_multiple_files=False)
+        if photo is not None:
+            st.image(photo, caption="Selected photo preview", width="stretch")
         submitted = st.form_submit_button("Submit Complaint", type="primary", width="stretch")
+
     if not submitted:
         return
-    if len(text.strip()) < 10:
-        st.warning("Please describe the issue in at least 10 characters.")
+
+    missing = []
+    if not waste_labels: missing.append("waste type")
+    if len(specific_items.strip()) < 3: missing.append("specific items")
+    if not problem_label: missing.append("main problem")
+    if not amount_label: missing.append("amount")
+    if not condition_label: missing.append("condition")
+    if not hazard_labels: missing.append("visible hazards")
+    if not exposure_label: missing.append("exposure / injury")
+    if len(material_label.strip()) < 2: missing.append("product/material label")
+    if not location_label: missing.append("location type")
+    if len(area.strip()) < 3: missing.append("public area / landmark")
+    if not nearby_label: missing.append("nearby sensitive place")
+    if not placement_label: missing.append("waste placement")
+    if not duration_label: missing.append("duration")
+    if not recurrence_label: missing.append("recurrence")
+    if not impact_labels: missing.append("effects / impacts")
+    if len(text.strip()) < 20: missing.append("description (at least 20 characters)")
+    if missing:
+        st.warning("Complete all required fields: " + ", ".join(missing) + ".")
         return
-    if area.strip() and len(area.strip()) < 3:
-        st.warning("Please use at least three characters for the public area, or leave it blank.")
+
+    waste_values = [WASTE_TYPES[label] for label in waste_labels]
+    hazard_values = [HAZARDS[label] for label in hazard_labels]
+    impact_values = [IMPACTS[label] for label in impact_labels]
+    if "unknown" in waste_values and len(waste_values) > 1:
+        st.warning("Choose either 'Unknown / not sure' or identified waste types, not both.")
         return
-    payload = {"text": text.strip(), "location_context": None if location == "Other" else location}
-    if area.strip():
-        payload["area"] = area.strip()
-    hazard_value = {"Unknown": "unknown", "Yes": "visible", "None observed": "none observed"}[hazards]
-    if duration.strip() or hazard_value != "unknown":
-        payload["clarification_answers"] = {"duration": duration.strip() or None, "hazards": hazard_value}
-    fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+    if any(value in hazard_values for value in ["none_observed", "unknown"]) and len(hazard_values) > 1:
+        st.warning("Choose either 'No hazards observed' / 'Unknown' or specific hazards, not both.")
+        return
+    if any(value in impact_values for value in ["none_observed", "unknown"]) and len(impact_values) > 1:
+        st.warning("Choose either 'No obvious effect' / 'Unknown' or specific effects, not both.")
+        return
+
+    intake = {
+        "waste_types": waste_values,
+        "specific_items": specific_items.strip(),
+        "problem_type": PROBLEM_TYPES[problem_label],
+        "amount": AMOUNTS[amount_label],
+        "condition": CONDITIONS[condition_label],
+        "hazards": hazard_values,
+        "location_type": LOCATION_TYPES[location_label],
+        "area_landmark": area.strip(),
+        "nearby_sensitive_place": NEARBY[nearby_label],
+        "placement": PLACEMENTS[placement_label],
+        "duration": DURATIONS[duration_label],
+        "recurrence": RECURRENCE[recurrence_label],
+        "impacts": impact_values,
+        "exposure": EXPOSURES[exposure_label],
+        "material_label": material_label.strip(),
+    }
+    payload = {"text": text.strip(), "intake": intake}
+    photo_bytes = photo.getvalue() if photo is not None else None
+    photo_hash = hashlib.sha256(photo_bytes).hexdigest() if photo_bytes else None
+    fingerprint = hashlib.sha256(json.dumps([payload, photo_hash], sort_keys=True).encode()).hexdigest()
     if st.session_state.get("submission_fingerprint") != fingerprint:
         st.session_state["submission_fingerprint"] = fingerprint
         st.session_state["idempotency_key"] = str(uuid.uuid4())
+
     try:
         with st.spinner("Saving and processing your complaint..."):
-            receipt = api("POST", "/complaints", json=payload,
-                headers={"Idempotency-Key": st.session_state["idempotency_key"]})
+            headers = {"Idempotency-Key": st.session_state["idempotency_key"]}
+            if photo_bytes:
+                receipt = api("POST", "/complaints/structured-with-photo",
+                    data={"text": payload["text"], "intake_json": json.dumps(intake)},
+                    files={"photo": (photo.name, photo_bytes, photo.type or "application/octet-stream")},
+                    headers=headers)
+            else:
+                receipt = api("POST", "/complaints/structured", json=payload, headers=headers)
         st.session_state["last_tracking"] = receipt["tracking_id"]
         st.session_state["receipt"] = receipt
         st.rerun()
     except ApiError as exc:
         show_error(exc)
-
 
 def track_complaint():
     st.button("Back to Home", on_click=navigate, args=("home",))

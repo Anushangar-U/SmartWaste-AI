@@ -6,7 +6,7 @@ from openai import OpenAI
 
 from agents.waste_analyzer.schemas import WasteAnalysis
 from backend.config import settings
-from retrieval.processing.quality import deduplicate
+from retrieval.processing.quality import deduplicate, rerank
 from retrieval.sources import display_metadata
 from retrieval.citations import inspect_answer
 from retrieval.vector_store.retriever import RetrievalResult, retrieve
@@ -54,7 +54,7 @@ SYSTEM_PROMPT = (
 )
 
 
-def build_retrieval_query(analysis: WasteAnalysis) -> str:
+def build_retrieval_query(analysis: WasteAnalysis, additional_context: str | None = None) -> str:
     """Use the summary once; append only context not already represented."""
     import re
     parts = [analysis.summary.strip().rstrip(".")] if analysis.summary.strip() else []
@@ -70,19 +70,23 @@ def build_retrieval_query(analysis: WasteAnalysis) -> str:
     add(analysis.location)
     if analysis.duration_days is not None and not re.search(r"\b(day|days|week|weeks|month|months|yesterday|today)\b", " ".join(parts), re.I):
         add(f"for {analysis.duration_days} days")
+    if additional_context:
+        if additional_context.startswith("Reporter structured intake:"):
+            add(additional_context)
+        else:
+            add("Image observations: " + additional_context)
     return " ".join(parts).strip() or "waste dumping problem"
 
 
 def retrieve_for_analysis(
     analysis: WasteAnalysis,
     top_k: int = 5,
+    additional_context: str | None = None,
 ) -> KnowledgeAgentResult:
-    query = build_retrieval_query(analysis)
+    query = build_retrieval_query(analysis, additional_context)
 
-    evidence = deduplicate(retrieve(
-        query,
-        top_k=top_k * 3,
-    ), top_k)
+    candidates = retrieve(query, top_k=top_k * 4)
+    evidence = deduplicate(rerank(candidates, query, top_k * 2), top_k)
 
     sources: list[SourceSummary] = [
         {
@@ -141,11 +145,19 @@ def generate_answer(
     top_k: int = 5,
     model: str | None = None,
     min_evidence_score: float = MIN_EVIDENCE_SCORE,
+    additional_context: str | None = None,
 ) -> GroundedAnswer:
-    retrieval_result = retrieve_for_analysis(
-        analysis,
-        top_k=top_k,
-    )
+    if additional_context:
+        retrieval_result = retrieve_for_analysis(
+            analysis,
+            top_k=top_k,
+            additional_context=additional_context,
+        )
+    else:
+        retrieval_result = retrieve_for_analysis(
+            analysis,
+            top_k=top_k,
+        )
 
     query = retrieval_result["query"]
     evidence = [
